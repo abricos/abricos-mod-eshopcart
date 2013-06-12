@@ -6,8 +6,6 @@
  * @author Alexander Kuzmin <roosit@abricos.org>
  */
 
-return;
-
 class EShopCartModule extends Ab_Module {
 	
 	/**

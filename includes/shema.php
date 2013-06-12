@@ -2,7 +2,7 @@
 /**
  * Схема таблиц модуля
  * @package Abricos
- * @subpackage TodoList
+ * @subpackage EShopCart
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
  * @author Alexander Kuzmin <roosit@abricos.org>
  */

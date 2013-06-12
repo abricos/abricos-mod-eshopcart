@@ -1,0 +1,24 @@
+/* * * Editor * * */
+.aw-eshopcart .paymenteditor input.title {
+	width: 98%;
+	margin-bottom: 5px;
+}
+.aw-eshopcart .paymenteditor .descript textarea.inp,
+.aw-eshopcart .paymenteditor .grp select {
+	width: 510px !important;
+}
+
+.aw-eshopcart .elrow .paymenteditor {
+	margin: 5px;
+	padding: 0 5px;
+}
+.aw-eshopcart .paymentlist .neweditor .paymenteditor {
+	border: 1px solid #D1D3DC;
+	border-radius: 5px;
+	background-color: #FFF0C6;
+	padding: 8px 8px 0px 8px;
+}
+
+.aw-eshopcart .paymenteditor .priority dd {
+	padding-bottom: 0px;
+}

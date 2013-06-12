@@ -1,0 +1,63 @@
+<!--{widget}-->
+<div id="{i#id}" class="aw-eshopcart">
+	<div class="paymentlist">
+		<div id="{i#neweditor}" class="neweditor"></div>
+		<div id="{i#list}"></div>	
+	</div>
+</div>
+
+<!--{row}-->
+<div id="{i#id}" class="elrow">
+	<div id="{i#wrap}">
+		<table class="tline" id="{i#tline}"><tbody><tr>
+			<td class="chk">
+				<input id="{i#chk}" type="radio" />
+			</td>
+			<td class="tl">
+				<div class="tln">
+					<div id="{i#tl}" class="vl"></div>
+					<div class="shadow"></div>
+				</div>
+			</td>
+		</tr></tbody></table>
+		<div class="clear"></div>
+		
+		<div id="{i#menu}" class="boxbutton elrmenu">
+			<div id="{i#border}" style="display: none" class="b bm" title="Переместить">
+				<div id="{i#borderc}" class="border bc"></div>
+			</div>
+			<div id="{i#bedit}" class="b" title="Редактировать">
+				<div id="{i#beditc}" class="bedit bc"></div>
+			</div>
+			<div id="{i#bremove}" class="b" title="Удалить">
+				<div id="{i#bremovec}" class="bremove bc"></div>
+			</div>
+		</div>
+		
+		<div id="{i#easyeditor}"></div>
+		
+		<div id="{i#detail}" class="detail" style="display: none">
+			<div id="{i#desc}" class="descript"></div>
+		</div>
+	</div>
+</div>
+
+<!--{removepanel}-->
+<div class='hd'>Удаление</div>
+<div class='bd aw-paymentlist'>
+	<div id="{i#dialogremove}" class="field">
+		<p>
+			Вы действительно хотите удалить способ оплаты со всем его содержимым?
+		</p>
+		<div class="buttons right">
+			<span id="{i#btns}">
+				<input id="{i#bremove}" value="Удалить" type="button" />
+				<input id="{i#bcancel}" value="Отмена" type="button" />
+			</span>
+			<span id="{i#bloading}" style="display: none">
+				<img src="/images/loading.gif" /> Удаление...
+			</span>
+		</div>
+	</div>
+</div>
+
