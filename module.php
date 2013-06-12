@@ -57,9 +57,11 @@ class EShopCartPermission extends Ab_UserPermission {
 	public function EShopCartPermission(EShopCartModule $module){
 		
 		$defRoles = array(
+			new Ab_UserRole(EShopCartAction::VIEW, Ab_UserGroup::GUEST),
 			new Ab_UserRole(EShopCartAction::VIEW, Ab_UserGroup::REGISTERED),
 			new Ab_UserRole(EShopCartAction::VIEW, Ab_UserGroup::ADMIN),
 
+			new Ab_UserRole(EShopCartAction::WRITE, Ab_UserGroup::GUEST),
 			new Ab_UserRole(EShopCartAction::WRITE, Ab_UserGroup::REGISTERED),
 			new Ab_UserRole(EShopCartAction::WRITE, Ab_UserGroup::ADMIN),
 				

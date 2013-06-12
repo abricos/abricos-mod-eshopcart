@@ -52,7 +52,8 @@ class EShopCartManager extends Ab_ModuleManager {
 	public function AJAX($d){
 
 		switch($d->do){
-			// case "initdata": return $this->InitDataToAJAX();
+			case "initdata": return $this->InitDataToAJAX();
+			case "paymentlist": return $this->PaymentListToAJAX();
 		}
 
 		return null;
@@ -63,10 +64,41 @@ class EShopCartManager extends Ab_ModuleManager {
 		
 		$ret = new stdClass();
 		
-		// $obj = $this->UserConfig();
-		// $ret->userconfig = $obj->userconfig;
+		$obj = $this->PaymentListToAJAX();
+		$ret->payments = $obj->payments;
 		
 		return $ret;
+	}
+	
+	/**
+	 * @return EShopCartPaymentList
+	 */
+	public function PaymentList(){
+		if (!$this->IsViewRole()){ return null; }
+		
+		$list = new EShopCartPaymentList();
+		$rows = EShopCartQuery::PaymentList($this->db);
+		while (($d = $this->db->fetch_array($rows))){
+			$list->Add(new EShopCartPayment($d));
+		}
+		return $list;
+	}
+	
+	public function PaymentListToAJAX(){
+		$list = $this->PaymentList();
+		if (empty($list)){ return null; }
+		
+		$ret = new stdClass();
+		$ret->payments = $list->ToAJAX();
+		return $ret;
+	}
+	
+	/**
+	 * @return EShopCartDeliveryList
+	 */
+	public function DeliveryList(){
+		if (!$this->IsViewRole()){ return null; }
+		
 	}
 	
 	public function ArrayToObject($o){
