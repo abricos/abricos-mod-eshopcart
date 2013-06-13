@@ -17,7 +17,7 @@ class EShopCartPayment extends AbricosItem {
 	
 	public function __construct($d){
 		parent::__construct($d);
-	
+
 		$this->title = strval($d['tl']);
 		$this->order = intval($d['ord']);
 		$this->disabled = intval($d['dis']);

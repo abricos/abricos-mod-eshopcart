@@ -47,7 +47,9 @@ Component.entryPoint = function(NS){
 	NS.Payment = Payment;
 	
 	var PaymentList = function(d){
-		PaymentList.superclass.constructor.call(this, d, Payment);
+		PaymentList.superclass.constructor.call(this, d, Payment, {
+			'order': '!order'
+		});
 	};
 	YAHOO.extend(PaymentList, SysNS.ItemList, {
 		getDefaultId: function(){
@@ -120,6 +122,16 @@ Component.entryPoint = function(NS){
 					payment = list.get(d['paymentid']);
 				}
 				NS.life(callback, payment);
+			});
+		},
+		paymentListOrderSave: function(orders, callback){
+			var __self = this;
+			this.ajax({
+				'do': 'paymentlistorder',
+				'paymentorders': orders
+			}, function(d){
+				__self._updatePaymentList(d);
+				NS.life(callback);
 			});
 		},
 		paymentRemove: function(paymentid, callback){

@@ -55,6 +55,7 @@ class EShopCartManager extends Ab_ModuleManager {
 			case "initdata": return $this->InitDataToAJAX();
 			case "paymentlist": return $this->PaymentListToAJAX();
 			case "paymentsave": return $this->PaymentSaveToAJAX($d->savedata);
+			case "paymentlistorder": return $this->PaymentListSetOrder($d->paymentorders);
 			case "paymentremove": return $this->PaymentRemove($d->paymentid);
 		}
 
@@ -119,7 +120,7 @@ class EShopCartManager extends Ab_ModuleManager {
 		}
 		
 		if (!empty($sd->def)){
-			EShopCartQuery::PaymentDefaultSet($this->db, $payemntid);
+			EShopCartQuery::PaymentDefaultSet($this->db, $paymentid);
 		}
 		
 		return $paymentid;
@@ -133,6 +134,14 @@ class EShopCartManager extends Ab_ModuleManager {
 		$ret = $this->PaymentListToAJAX();
 		$ret->paymentid = $paymentid;
 		return $ret;
+	}
+	
+	public function PaymentListSetOrder($orders){
+		if (!$this->IsAdminRole()){ return null; }
+	
+		EShopCartQuery::PaymentListSetOrder($this->db, $orders);
+	
+		return true;
 	}
 	
 	public function PaymentRemove($paymentid){

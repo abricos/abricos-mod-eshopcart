@@ -73,12 +73,15 @@ Component.entryPoint = function(NS){
 				new NS.RowDragItem(div, {
 					'endDragCallback': function(dgi, elDiv){
 						var chs = elList.childNodes, ordb = NS.manager.paymentList.count();
-						var orders = {};
+						var orders = [];
 						for (var i=0;i<chs.length;i++){
 							var pay = chs[i]['pay'];
 							if (pay){
 								pay.order = ordb;
-								orders[pay.id] = ordb;
+								orders[orders.length] = {
+									'id': pay.id,
+									'o': ordb
+								};
 								ordb--;
 							}
 						}

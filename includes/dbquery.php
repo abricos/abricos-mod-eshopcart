@@ -18,6 +18,7 @@ class EShopCartQuery {
 				def
 			FROM ".$db->prefix."eshp_payment
 			WHERE deldate=0
+			ORDER BY ord DESC
 		";
 		return $db->query_read($sql);
 	}
@@ -49,11 +50,10 @@ class EShopCartQuery {
 		$db->query_write($sql);
 	}
 		
-	public static function PaymentDefaultSet(Ab_Database $db, $payemntid){
+	public static function PaymentDefaultSet(Ab_Database $db, $paymentid){
 		$sql = "
 			UPDATE ".$db->prefix."eshp_payment
 			SET def=0
-			WHERE paymentid<>".bkint($paymentid)."
 		";
 		$db->query_write($sql);
 		
@@ -65,6 +65,22 @@ class EShopCartQuery {
 		";
 		$db->query_write($sql);
 	}
+	
+	public static function PaymentListSetOrder(Ab_Database $db, $orders){
+		if (count($orders) == 0){ return; }
+
+		for ($i=0; $i<count($orders); $i++){
+			$di = $orders[$i];
+			$sql = "
+				UPDATE ".$db->prefix."eshp_payment
+				SET ord=".bkint($di->o)."
+				WHERE paymentid=".bkint($di->id)."
+				LIMIT 1
+			";
+			$db->query_write($sql);
+		}
+	}
+	
 	
 	public static function PaymentRemove(Ab_Database $db, $paymentid){
 		$sql = "
