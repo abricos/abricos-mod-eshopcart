@@ -50,7 +50,6 @@ Component.entryPoint = function(NS){
 				'tl': pay.title,
 				'dsc': pay.descript
 			});
-			this.gel('def').checked = !!pay.isDefault;
 			
 			var elTitle = this.gel('tl');
 			setTimeout(function(){try{elTitle.focus();}catch(e){}}, 100);
@@ -79,8 +78,7 @@ Component.entryPoint = function(NS){
 			var sd = {
 				'id': pay.id,
 				'tl': this.gel('tl').value,
-				'dsc': this.gel('dsc').value,
-				'def': this.gel('def').checked ? 1 : 0
+				'dsc': this.gel('dsc').value
 			};
 			
 			this.elHide('btnsc');

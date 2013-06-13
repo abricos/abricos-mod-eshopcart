@@ -181,11 +181,11 @@ class EShopCartQuery {
 		$sql = "
 			SELECT
 				discountid as id,
-				dtype as tp,
+				dtype as dtp,
 				title as tl,
 				descript as dsc,
 				price as pc,
-				ispercent as ipc,
+				ispercent as ptp,
 				fromsum as bpc,
 				endsum as epc,
 				disabled as dis

@@ -10,12 +10,47 @@
 		<div class="r">
 			<input id="{i#tl}" class="title inp" onfocus="this.select();" />
 
-			<dl class="default">
-				<dt>По умолчанию</dt>
+			<dl class="dtp">
+				<dt>Тип скидки</dt>
 				<dd>
-					<input id="{i#def}" type="checkbox" />
+					<select id="{i#dtp}" class="inp">
+						<option value="0">Разовая</option>
+						<option value="1">Накопительная</option>
+					</select>
 				</dd>
 			</dl>
+			
+			<dl class="ptp">
+				<dt>Тип числа</dt>
+				<dd>
+					<select id="{i#ptp}" class="inp">
+						<option value="0">В рублях</option>
+						<option value="1">В процентах</option>
+					</select>
+				</dd>
+			</dl>
+			
+			<dl class="pc">
+				<dt>Значение скидки</dt>
+				<dd>
+					<input id="{i#pc}" type="text" class="inp" />
+				</dd>
+			</dl>
+
+			<dl class="pc">
+				<dt>Начальная цена</dt>
+				<dd>
+					<input id="{i#bpc}" type="text" class="inp" />
+				</dd>
+			</dl>
+
+			<dl class="pc">
+				<dt>Конечная цена</dt>
+				<dd>
+					<input id="{i#epc}" type="text" class="inp" />
+				</dd>
+			</dl>
+			
 			<dl class="descript">
 				<dt>Описание</dt>
 				<dd>
