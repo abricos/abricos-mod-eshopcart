@@ -30,16 +30,16 @@ Component.entryPoint = function(NS){
 	var Payment = function(d){
 		d = L.merge({
 			'tl': '',
+			'dsc': '',
 			'def': 0,
-			'ord': 0,
-			'clr': ''
+			'ord': 0
 		}, d || {});
 		Payment.superclass.constructor.call(this, d);
 	};
 	YAHOO.extend(Payment, SysNS.Item, {
 		update: function(d){
 			this.title = d['tl'];
-			this.color = d['clr'];
+			this.descript = d['dsc'];
 			this.isDefault = (d['def']|0)>0;
 			this.order = d['ord']|0;
 		}
@@ -54,9 +54,9 @@ Component.entryPoint = function(NS){
 	YAHOO.extend(PaymentList, SysNS.ItemList, {
 		getDefaultId: function(){
 			var defid = 0;
-			this.foreach(function(priotiry){
-				if (priotiry.isDefault){
-					defid = priotiry.id;
+			this.foreach(function(payment){
+				if (payment.isDefault){
+					defid = payment.id;
 					return true;
 				}
 			});
@@ -64,6 +64,45 @@ Component.entryPoint = function(NS){
 		}
 	});
 	NS.PaymentList = PaymentList;
+	
+	var Delivery = function(d){
+		d = L.merge({
+			'tl': '',
+			'dsc': '',
+			'def': 0,
+			'ord': 0
+		}, d || {});
+		Delivery.superclass.constructor.call(this, d);
+	};
+	YAHOO.extend(Delivery, SysNS.Item, {
+		update: function(d){
+			this.title = d['tl'];
+			this.descript = d['dsc'];
+			this.isDefault = (d['def']|0)>0;
+			this.order = d['ord']|0;
+		}
+	});
+	NS.Delivery = Delivery;
+	
+	var DeliveryList = function(d){
+		DeliveryList.superclass.constructor.call(this, d, Delivery, {
+			'order': '!order'
+		});
+	};
+	YAHOO.extend(DeliveryList, SysNS.ItemList, {
+		getDefaultId: function(){
+			var defid = 0;
+			this.foreach(function(delivery){
+				if (delivery.isDefault){
+					defid = delivery.id;
+					return true;
+				}
+			});
+			return defid;
+		}
+	});
+	NS.DeliveryList = DeliveryList;
+	
 	
 	var Manager = function (callback){
 		this.init(callback);
@@ -73,6 +112,7 @@ Component.entryPoint = function(NS){
 			NS.manager = this;
 			
 			this.paymentList = new PaymentList();
+			this.deliveryList = new DeliveryList();
 			
 			var __self = this;
 			R.load(function(){
@@ -80,6 +120,7 @@ Component.entryPoint = function(NS){
 					'do': 'initdata'
 				}, function(d){
 					__self._updatePaymentList(d);
+					__self._updateDeliveryList(d);
 					NS.life(callback, __self);
 				});
 			});
@@ -142,8 +183,59 @@ Component.entryPoint = function(NS){
 			}, function(d){
 				__self.paymentList.remove(paymentid);
 				NS.life(callback);
+			});
+		},
+		
+		_updateDeliveryList: function(d){
+			if (!L.isValue(d) || !L.isValue(d['deliverys']) || !L.isValue(d['deliverys']['list'])){
+				return null;
+			}
+			this.deliveryList.update(d['deliverys']['list']);
+		},
+		deliveryListLoad: function(callback){
+			var __self = this;
+			this.ajax({
+				'do': 'deliverylist'
+			}, function(d){
+				__self._updateDeliveryList(d);
+				NS.life(callback);
+			});
+		},
+		deliverySave: function(deliveryid, sd, callback){
+			var list = this.deliveryList, delivery = null;
+			var __self = this;
+			this.ajax({
+				'do': 'deliverysave',
+				'deliveryid': deliveryid,
+				'savedata': sd
+			}, function(d){
+				__self._updateDeliveryList(d);
+				if (L.isValue(d) && L.isValue(d['deliveryid'])){
+					delivery = list.get(d['deliveryid']);
+				}
+				NS.life(callback, delivery);
+			});
+		},
+		deliveryListOrderSave: function(orders, callback){
+			var __self = this;
+			this.ajax({
+				'do': 'deliverylistorder',
+				'deliveryorders': orders
+			}, function(d){
+				__self._updateDeliveryList(d);
+				NS.life(callback);
+			});
+		},
+		deliveryRemove: function(deliveryid, callback){
+			var __self = this;
+			this.ajax({
+				'do': 'deliveryremove',
+				'deliveryid': deliveryid
+			}, function(d){
+				__self.deliveryList.remove(deliveryid);
+				NS.life(callback);
 			});			
-		}
+		}		
 	};
 	NS.manager = null;
 	

@@ -123,5 +123,13 @@ if ($updateManager->isUpdate('0.1.0.1')){
 			ADD `dateline` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
 			ADD `deldate` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
 	");
+
+	$db->query_write("
+		ALTER TABLE ".$pfx."eshp_delivery
+			ADD `def` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT 'По умолчанию',
+			ADD `descript` TEXT NOT NULL COMMENT '',
+			ADD `dateline` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
+			ADD `deldate` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
+	");
 }
 ?>

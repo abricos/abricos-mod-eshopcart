@@ -57,6 +57,11 @@ class EShopCartManager extends Ab_ModuleManager {
 			case "paymentsave": return $this->PaymentSaveToAJAX($d->savedata);
 			case "paymentlistorder": return $this->PaymentListSetOrder($d->paymentorders);
 			case "paymentremove": return $this->PaymentRemove($d->paymentid);
+
+			case "deliverylist": return $this->DeliveryListToAJAX();
+			case "deliverysave": return $this->DeliverySaveToAJAX($d->savedata);
+			case "deliverylistorder": return $this->DeliveryListSetOrder($d->deliveryorders);
+			case "deliveryremove": return $this->DeliveryRemove($d->deliveryid);
 		}
 
 		return null;
@@ -69,6 +74,9 @@ class EShopCartManager extends Ab_ModuleManager {
 		
 		$obj = $this->PaymentListToAJAX();
 		$ret->payments = $obj->payments;
+
+		$obj = $this->DeliveryListToAJAX();
+		$ret->deliverys = $obj->deliverys;
 		
 		return $ret;
 	}
@@ -158,6 +166,77 @@ class EShopCartManager extends Ab_ModuleManager {
 	public function DeliveryList(){
 		if (!$this->IsViewRole()){ return null; }
 		
+		$list = new EShopCartDeliveryList();
+		$rows = EShopCartQuery::DeliveryList($this->db);
+		while (($d = $this->db->fetch_array($rows))){
+			$list->Add(new EShopCartDelivery($d));
+		}
+		return $list;
+	}
+	
+	public function DeliveryListToAJAX(){
+		$list = $this->DeliveryList();
+		if (empty($list)){ return null; }
+		
+		$ret = new stdClass();
+		$ret->deliverys = $list->ToAJAX();
+		return $ret;
+	}
+	
+	/**
+	 * @param object $sd
+	 * @return EShopCartDelivery
+	 */
+	public function DeliverySave($sd){
+		if (!$this->IsAdminRole()){ return null; }
+
+		$deliveryid = intval($sd->id);
+		
+		$utm  = Abricos::TextParser(true);
+		$utm->jevix->cfgSetAutoBrMode(true);
+		
+		$utmf  = Abricos::TextParser(true);
+		
+		$sd->tl = $utmf->Parser($sd->tl);
+		$sd->dsc = $utm->Parser($sd->dsc);
+
+		if ($deliveryid == 0){
+			$deliveryid = EShopCartQuery::DeliveryAppend($this->db, $sd);
+		}else{
+			EShopCartQuery::DeliveryUpdate($this->db, $deliveryid, $sd);
+		}
+		
+		if (!empty($sd->def)){
+			EShopCartQuery::DeliveryDefaultSet($this->db, $deliveryid);
+		}
+		
+		return $deliveryid;
+	}
+	
+	public function DeliverySaveToAJAX($sd){
+		$deliveryid = $this->DeliverySave($sd);
+		
+		if (empty($deliveryid)){ return null; }
+		
+		$ret = $this->DeliveryListToAJAX();
+		$ret->deliveryid = $deliveryid;
+		return $ret;
+	}
+	
+	public function DeliveryListSetOrder($orders){
+		if (!$this->IsAdminRole()){ return null; }
+	
+		EShopCartQuery::DeliveryListSetOrder($this->db, $orders);
+	
+		return true;
+	}
+	
+	public function DeliveryRemove($deliveryid){
+		if (!$this->IsAdminRole()){ return null; }
+		
+		EShopCartQuery::DeliveryRemove($this->db, $deliveryid);
+		
+		return true;
 	}
 	
 	public function ArrayToObject($o){
