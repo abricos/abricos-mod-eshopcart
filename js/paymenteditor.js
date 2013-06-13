@@ -17,18 +17,18 @@ Component.entryPoint = function(NS){
 		buildTemplate = this.buildTemplate,
 		BW = Brick.mod.widget.Widget;
 
-	var PaymentEditorWidget = function(container, todo, cfg){
+	var PaymentEditorWidget = function(container, pay, cfg){
 		cfg = L.merge({
 			'onCancelClick': null,
 			'onSave': null
 		}, cfg || {});
 		PaymentEditorWidget.superclass.constructor.call(this, container, {
 			'buildTemplate': buildTemplate, 'tnames': 'widget' 
-		}, todo, cfg);
+		}, pay, cfg);
 	};
 	YAHOO.extend(PaymentEditorWidget, BW, {
-		init: function(todo, cfg){
-			this.todo = todo;
+		init: function(pay, cfg){
+			this.pay = pay;
 			this.cfg = cfg;
 		},
 		destroy: function(){
@@ -37,33 +37,20 @@ Component.entryPoint = function(NS){
 			} 
 			PaymentEditorWidget.superclass.destroy.call(this);
 		},
-		onLoad: function(todo){
+		onLoad: function(pay){
 			if (YAHOO.util.DragDropMgr){
 				YAHOO.util.DragDropMgr.lock();
 			} 
-			this.todo = todo;
+			this.pay = pay;
 
 			this.elHide('loading');
 			this.elShow('view');
 			
-			this.groupSelectWidget = new NS.SelectWidget(this.gel('groupselect'), NS.manager.groupList, {
-				'value': todo.groupid
-			});
-			
-			this.prioritySelectWidget = new NS.PrioritySelectWidget(this.gel('priorityselect'), {
-				'value': todo.priorityid
-			});
-			
-			this.dependsEditorWidget = new NS.DependsEditorWidget(this.gel('depends'), todo);
-
-			this.timeInputWidget = new NS.TimeInputWidget(this.gel('time'), {
-				'value': todo.plantime
-			});
-			
 			this.elSetValue({
-				'tl': todo.title,
-				'dsc': NS.textToEdit(todo.descript)
+				'tl': pay.title,
+				'dsc': pay.descript
 			});
+			this.gel('def').checked = !!pay.isDefault;
 			
 			var elTitle = this.gel('tl');
 			setTimeout(function(){try{elTitle.focus();}catch(e){}}, 100);
@@ -71,12 +58,6 @@ Component.entryPoint = function(NS){
 			var __self = this;
 			E.on(this.gel('id'), 'keypress', function(e){
 				if ((e.keyCode == 13 || e.keyCode == 10) && e.ctrlKey){ 
-					__self.save(); return true; 
-				}
-				return false;
-			});
-			E.on(this.gel('tl'), 'keypress', function(e){
-				if (e.keyCode == 13 || e.keyCode == 10){ 
 					__self.save(); return true; 
 				}
 				return false;
@@ -94,25 +75,23 @@ Component.entryPoint = function(NS){
 		},
 		save: function(){
 			var cfg = this.cfg;
-			var todo = this.todo;
+			var pay = this.pay;
 			var sd = {
+				'id': pay.id,
 				'tl': this.gel('tl').value,
 				'dsc': this.gel('dsc').value,
-				'prtid': this.prioritySelectWidget.getValue()|0,
-				'gid': this.groupSelectWidget.getValue()|0,
-				'ptm': this.timeInputWidget.getValue(),
-				'deps': this.dependsEditorWidget.getSaveData()
+				'def': this.gel('def').checked ? 1 : 0
 			};
 			
 			this.elHide('btnsc');
 			this.elShow('btnpc');
 
 			var __self = this;
-			NS.manager.todoSave(todo.id, sd, function(todo){
+			NS.manager.paymentSave(pay.id, sd, function(pay){
 				__self.elShow('btnsc,btnscc');
 				__self.elHide('btnpc,btnpcc');
-				NS.life(cfg['onSave'], __self, todo);
-			}, todo);
+				NS.life(cfg['onSave'], __self, pay);
+			}, pay);
 		}
 	});
 	NS.PaymentEditorWidget = PaymentEditorWidget;

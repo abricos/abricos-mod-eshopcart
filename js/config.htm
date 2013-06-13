@@ -3,5 +3,14 @@
 	<div id="{i#loading}" class="loading">
 		<img src="/images/loading.gif" /> Идет загрузка данных <br /> Пожалуйста, подождите...
 	</div>
-	<div id="{i#view}"></div>
+	<div id="{i#view}" style="display: none" class="yui-navset">
+		<ul class="yui-nav">
+			<li class="selected"><a href="#{i#config}"><em>Способ оплаты</em></a></li>
+			<li><a href="#{i#catalog}"><em>Доставка</em></a></li>
+		</ul>            
+		<div class="yui-content">
+			<div id="{i#payment}"></div>
+			<div id="{i#delivery}"></div>
+		</div>
+	</div>
 </div>

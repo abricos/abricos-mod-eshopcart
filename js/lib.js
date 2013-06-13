@@ -109,24 +109,28 @@ Component.entryPoint = function(NS){
 		},
 		paymentSave: function(paymentid, sd, callback){
 			var list = this.paymentList, payment = null;
-			if (paymentid > 0){
-				payment = list.get(paymentid);
-			}
+			var __self = this;
 			this.ajax({
 				'do': 'paymentsave',
 				'paymentid': paymentid,
 				'savedata': sd
 			}, function(d){
-				if (L.isValue(d) && L.isValue(d['payment'])){
-					if (L.isNull(payment)){
-						payment = new Payment(d['payment']);
-						list.add(payment);
-					}else{
-						payment.update(d['payment']);
-					}
+				__self._updatePaymentList(d);
+				if (L.isValue(d) && L.isValue(d['paymentid'])){
+					payment = list.get(d['paymentid']);
 				}
 				NS.life(callback, payment);
 			});
+		},
+		paymentRemove: function(paymentid, callback){
+			var __self = this;
+			this.ajax({
+				'do': 'paymentremove',
+				'paymentid': paymentid
+			}, function(d){
+				__self.paymentList.remove(paymentid);
+				NS.life(callback);
+			});			
 		}
 	};
 	NS.manager = null;

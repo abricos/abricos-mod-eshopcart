@@ -9,35 +9,13 @@
 	
 		<div class="r">
 			<input id="{i#tl}" class="title inp" onfocus="this.select();" />
-			
-			<div class="grp">
-				<dl class="priority">
-					<dt>Приоритет</dt>
-					<dd>
-						<div id="{i#priorityselect}"></div>
-					</dd>
-				</dl>
-	
-				<dl>
-					<dt>Раздел</dt>
-					<dd>
-						<div id="{i#groupselect}"></div>
-					</dd>
-				</dl>
-			</div>
-			
-			<dl class="grp">
-				<dt>Зависит от дела</dt>
+
+			<dl class="default">
+				<dt>По умолчанию</dt>
 				<dd>
-					<div id="{i#depends}"></div>
+					<input id="{i#def}" type="checkbox" />
 				</dd>
 			</dl>
-			
-			<dl>
-				<dt>Время на решение</dt>
-				<dd id="{i#time}"></dd>
-			</dl>
-
 			<dl class="descript">
 				<dt>Описание</dt>
 				<dd>

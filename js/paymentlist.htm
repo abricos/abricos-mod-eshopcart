@@ -1,6 +1,9 @@
 <!--{widget}-->
-<div id="{i#id}" class="aw-eshopcart">
+<div id="{i#id}" class="aw-eshop aw-eshopcart aw-catalog">
 	<div class="paymentlist">
+		<div id="{i#manbtns}" class="mangroup">
+			<a id="{i#badd}" class="habtn" href="#">Добавить способ оплаты</a>
+		</div>
 		<div id="{i#neweditor}" class="neweditor"></div>
 		<div id="{i#list}"></div>	
 	</div>
@@ -10,22 +13,15 @@
 <div id="{i#id}" class="elrow">
 	<div id="{i#wrap}">
 		<table class="tline" id="{i#tline}"><tbody><tr>
-			<td class="chk">
-				<input id="{i#chk}" type="radio" />
-			</td>
 			<td class="tl">
 				<div class="tln">
 					<div id="{i#tl}" class="vl"></div>
-					<div class="shadow"></div>
 				</div>
 			</td>
 		</tr></tbody></table>
 		<div class="clear"></div>
 		
 		<div id="{i#menu}" class="boxbutton elrmenu">
-			<div id="{i#border}" style="display: none" class="b bm" title="Переместить">
-				<div id="{i#borderc}" class="border bc"></div>
-			</div>
 			<div id="{i#bedit}" class="b" title="Редактировать">
 				<div id="{i#beditc}" class="bedit bc"></div>
 			</div>
@@ -47,7 +43,7 @@
 <div class='bd aw-paymentlist'>
 	<div id="{i#dialogremove}" class="field">
 		<p>
-			Вы действительно хотите удалить способ оплаты со всем его содержимым?
+			Вы действительно хотите удалить способ оплаты?
 		</p>
 		<div class="buttons right">
 			<span id="{i#btns}">

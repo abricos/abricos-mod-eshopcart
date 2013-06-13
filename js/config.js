@@ -5,6 +5,7 @@
 
 var Component = new Brick.Component();
 Component.requires = {
+	yahoo: ['tabview'],
 	mod:[
 		{name: '{C#MODNAME}', files: ['paymentlist.js']}
 	]
@@ -21,27 +22,27 @@ Component.entryPoint = function(NS){
 	};
 	YAHOO.extend(ConfigWidget, Brick.mod.widget.Widget, {
 		init: function(cfg){
-			this.wsMenuItem = 'cartconfig'; // использует wspace.js
-			this.viewWidget = null;
+			this.paymentWidget = null;
 		},
 		destroy: function(){
-			if (L.isValue(this.viewWidget)){
-				this.viewWidget.destroy();
+			if (L.isValue(this.paymentWidget)){
+				this.paymentWidget.destroy();
 			}
 			ConfigWidget.superclass.destroy.call(this);
 		},
 		onLoad: function(){
 			var __self = this;
-			Brick.ff('eshopcart', 'config', function(){
-				__self._onLoadWidget();
+			NS.initManager(function(){
+				__self._onLoadManager();
 			});
 		},
-		_onLoadWidget: function(){
+		_onLoadManager: function(){
 			this.elHide('loading');
-			this.viewWidget = new NS.PaymentListWidget(this.gel('view'), this.cfg);
+			this.elShow('view');
+			
+			new YAHOO.widget.TabView(this.gel('view'));
+			this.paymentWidget = new NS.PaymentListWidget(this.gel('payment'), this.cfg);
 		}
 	});
 	NS.ConfigWidget = ConfigWidget;
-	
-	
 };

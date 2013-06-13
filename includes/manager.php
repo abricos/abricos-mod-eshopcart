@@ -54,6 +54,8 @@ class EShopCartManager extends Ab_ModuleManager {
 		switch($d->do){
 			case "initdata": return $this->InitDataToAJAX();
 			case "paymentlist": return $this->PaymentListToAJAX();
+			case "paymentsave": return $this->PaymentSaveToAJAX($d->savedata);
+			case "paymentremove": return $this->PaymentRemove($d->paymentid);
 		}
 
 		return null;
@@ -91,6 +93,54 @@ class EShopCartManager extends Ab_ModuleManager {
 		$ret = new stdClass();
 		$ret->payments = $list->ToAJAX();
 		return $ret;
+	}
+	
+	/**
+	 * @param object $sd
+	 * @return EShopCartPayment
+	 */
+	public function PaymentSave($sd){
+		if (!$this->IsAdminRole()){ return null; }
+
+		$paymentid = intval($sd->id);
+		
+		$utm  = Abricos::TextParser(true);
+		$utm->jevix->cfgSetAutoBrMode(true);
+		
+		$utmf  = Abricos::TextParser(true);
+		
+		$sd->tl = $utmf->Parser($sd->tl);
+		$sd->dsc = $utm->Parser($sd->dsc);
+
+		if ($paymentid == 0){
+			$paymentid = EShopCartQuery::PaymentAppend($this->db, $sd);
+		}else{
+			EShopCartQuery::PaymentUpdate($this->db, $paymentid, $sd);
+		}
+		
+		if (!empty($sd->def)){
+			EShopCartQuery::PaymentDefaultSet($this->db, $payemntid);
+		}
+		
+		return $paymentid;
+	}
+	
+	public function PaymentSaveToAJAX($sd){
+		$paymentid = $this->PaymentSave($sd);
+		
+		if (empty($paymentid)){ return null; }
+		
+		$ret = $this->PaymentListToAJAX();
+		$ret->paymentid = $paymentid;
+		return $ret;
+	}
+	
+	public function PaymentRemove($paymentid){
+		if (!$this->IsAdminRole()){ return null; }
+		
+		EShopCartQuery::PaymentRemove($this->db, $paymentid);
+		
+		return true;
 	}
 	
 	/**

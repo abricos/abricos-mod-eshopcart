@@ -16,7 +16,7 @@ Component.entryPoint = function(NS){
 		L = YAHOO.lang,
 		buildTemplate = this.buildTemplate,
 		BW = Brick.mod.widget.Widget;
-	
+
 	var PaymentListWidget = function(container, cfg){
 		cfg = L.merge({
 		}, cfg || {});
@@ -121,7 +121,7 @@ Component.entryPoint = function(NS){
 		onPaymentSelectClick: function(w){
 			this.allEditorClose(w);
 		},
-		showNewEditor: function(fel){
+		showNewEditor: function(){
 			if (!L.isNull(this.newEditorWidget)){ return; }
 			
 			this.allEditorClose();
@@ -140,6 +140,13 @@ Component.entryPoint = function(NS){
 			if (L.isNull(this.newEditorWidget)){ return; }
 			this.newEditorWidget.destroy();
 			this.newEditorWidget = null;
+		},
+		onClick: function(el, tp){
+			switch(el.id){
+			case tp['badd']:
+				this.showNewEditor();
+				return true;
+			}
 		}
 	});
 	NS.PaymentListWidget = PaymentListWidget;
@@ -211,7 +218,7 @@ Component.entryPoint = function(NS){
 						__self.onSave();
 					}
 				});
-			
+
 			Dom.addClass(this.gel('wrap'), 'rborder');
 			Dom.addClass(this.gel('id'), 'rowselect');
 			this.elHide('menu');

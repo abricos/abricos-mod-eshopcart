@@ -116,5 +116,12 @@ if ($updateManager->isInstall()){
 	
 }
 
-
+if ($updateManager->isUpdate('0.1.0.1')){
+	
+	$db->query_write("
+		ALTER TABLE ".$pfx."eshp_payment
+			ADD `dateline` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
+			ADD `deldate` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
+	");
+}
 ?>
