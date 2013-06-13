@@ -8,11 +8,30 @@
 
 require_once 'dbquery.php';
 
+class EShopCartDiscount extends AbricosItem {
+	
+	public $title;
+	
+	public function __construct($d){
+		parent::__construct($d);
+	
+		$this->title = strval($d['tl']);
+	}
+	
+	public function ToAJAX(){
+		$ret = parent::ToAJAX();
+		$ret->tl = $this->title;
+		return $ret;
+	}
+	
+}
+
+class EShopCartDiscountList extends AbricosList {}
+
 class EShopCartPayment extends AbricosItem {
 	
 	public $title;
 	public $order;
-	public $disabled;
 	public $default;
 	
 	public function __construct($d){
@@ -20,7 +39,6 @@ class EShopCartPayment extends AbricosItem {
 
 		$this->title = strval($d['tl']);
 		$this->order = intval($d['ord']);
-		$this->disabled = intval($d['dis']);
 		$this->default = intval($d['def']);
 	}
 	
@@ -28,7 +46,6 @@ class EShopCartPayment extends AbricosItem {
 		$ret = parent::ToAJAX();
 		$ret->tl = $this->title;
 		$ret->ord = $this->order;
-		$ret->dis = $this->disabled;
 		$ret->def = $this->default;
 		return $ret;
 	}
@@ -40,18 +57,21 @@ class EShopCartDelivery extends AbricosItem {
 	
 	public $title;
 	public $order;
+	public $default;
 	
 	public function __construct($d){
 		parent::__construct($d);
 		
 		$this->title = strval($d['tl']);
 		$this->order = intval($d['ord']);
+		$this->default = intval($d['def']);
 	}
 	
 	public function ToAJAX(){
 		$ret = parent::ToAJAX();
 		$ret->tl = $this->title;
 		$ret->ord = $this->order;
+		$ret->def = $this->default;
 		return $ret;
 	}
 }

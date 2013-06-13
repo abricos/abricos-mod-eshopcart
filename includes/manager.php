@@ -62,6 +62,10 @@ class EShopCartManager extends Ab_ModuleManager {
 			case "deliverysave": return $this->DeliverySaveToAJAX($d->savedata);
 			case "deliverylistorder": return $this->DeliveryListSetOrder($d->deliveryorders);
 			case "deliveryremove": return $this->DeliveryRemove($d->deliveryid);
+			
+			case "discountlist": return $this->DiscountListToAJAX();
+			case "discountsave": return $this->DiscountSaveToAJAX($d->savedata);
+			case "discountremove": return $this->DiscountRemove($d->discountid);
 		}
 
 		return null;
@@ -77,6 +81,9 @@ class EShopCartManager extends Ab_ModuleManager {
 
 		$obj = $this->DeliveryListToAJAX();
 		$ret->deliverys = $obj->deliverys;
+		
+		$obj = $this->DiscountListToAJAX();
+		$ret->discounts = $obj->discounts;
 		
 		return $ret;
 	}
@@ -238,7 +245,79 @@ class EShopCartManager extends Ab_ModuleManager {
 		
 		return true;
 	}
+
 	
+	/**
+	 * @return EShopCartDiscountList
+	 */
+	public function DiscountList(){
+		if (!$this->IsViewRole()){ return null; }
+	
+		$list = new EShopCartDiscountList();
+		$rows = EShopCartQuery::DiscountList($this->db);
+		while (($d = $this->db->fetch_array($rows))){
+			$list->Add(new EShopCartDiscount($d));
+		}
+		return $list;
+	}
+	
+	public function DiscountListToAJAX(){
+		$list = $this->DiscountList();
+		if (empty($list)){ return null; }
+	
+		$ret = new stdClass();
+		$ret->discounts = $list->ToAJAX();
+		return $ret;
+	}
+	
+	/**
+	 * @param object $sd
+	 * @return EShopCartDiscount
+	 */
+	public function DiscountSave($sd){
+		if (!$this->IsAdminRole()){ return null; }
+	
+		$discountid = intval($sd->id);
+	
+		$utm  = Abricos::TextParser(true);
+		$utm->jevix->cfgSetAutoBrMode(true);
+	
+		$utmf  = Abricos::TextParser(true);
+	
+		$sd->tl = $utmf->Parser($sd->tl);
+		$sd->dsc = $utm->Parser($sd->dsc);
+	
+		if ($discountid == 0){
+			$discountid = EShopCartQuery::DiscountAppend($this->db, $sd);
+		}else{
+			EShopCartQuery::DiscountUpdate($this->db, $discountid, $sd);
+		}
+	
+		if (!empty($sd->def)){
+			EShopCartQuery::DiscountDefaultSet($this->db, $discountid);
+		}
+	
+		return $discountid;
+	}
+	
+	public function DiscountSaveToAJAX($sd){
+		$discountid = $this->DiscountSave($sd);
+	
+		if (empty($discountid)){ return null; }
+	
+		$ret = $this->DiscountListToAJAX();
+		$ret->discountid = $discountid;
+		return $ret;
+	}
+	
+	public function DiscountRemove($discountid){
+		if (!$this->IsAdminRole()){ return null; }
+	
+		EShopCartQuery::DiscountRemove($this->db, $discountid);
+	
+		return true;
+	}
+		
 	public function ArrayToObject($o){
 		if (is_array($o)){
 			$ret = new stdClass();

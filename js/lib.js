@@ -104,6 +104,32 @@ Component.entryPoint = function(NS){
 	NS.DeliveryList = DeliveryList;
 	
 	
+	var Discount = function(d){
+		d = L.merge({
+			'tl': '',
+			'dsc': '',
+			'ord': 0
+		}, d || {});
+		Discount.superclass.constructor.call(this, d);
+	};
+	YAHOO.extend(Discount, SysNS.Item, {
+		update: function(d){
+			this.title = d['tl'];
+			this.descript = d['dsc'];
+			this.order = d['ord']|0;
+		}
+	});
+	NS.Discount = Discount;
+	
+	var DiscountList = function(d){
+		DiscountList.superclass.constructor.call(this, d, Discount, {
+			'order': '!order'
+		});
+	};
+	YAHOO.extend(DiscountList, SysNS.ItemList, {});
+	NS.DiscountList = DiscountList;
+	
+	
 	var Manager = function (callback){
 		this.init(callback);
 	};
@@ -111,6 +137,7 @@ Component.entryPoint = function(NS){
 		init: function(callback){
 			NS.manager = this;
 			
+			this.discountList = new PaymentList();
 			this.paymentList = new PaymentList();
 			this.deliveryList = new DeliveryList();
 			
@@ -119,6 +146,7 @@ Component.entryPoint = function(NS){
 				__self.ajax({
 					'do': 'initdata'
 				}, function(d){
+					__self._updateDiscountList(d);
 					__self._updatePaymentList(d);
 					__self._updateDeliveryList(d);
 					NS.life(callback, __self);
@@ -233,6 +261,47 @@ Component.entryPoint = function(NS){
 				'deliveryid': deliveryid
 			}, function(d){
 				__self.deliveryList.remove(deliveryid);
+				NS.life(callback);
+			});			
+		},
+		
+		_updateDiscountList: function(d){
+			if (!L.isValue(d) || !L.isValue(d['discounts']) || !L.isValue(d['discounts']['list'])){
+				return null;
+			}
+			this.discountList.update(d['discounts']['list']);
+		},
+		discountListLoad: function(callback){
+			var __self = this;
+			this.ajax({
+				'do': 'discountlist'
+			}, function(d){
+				__self._updateDiscountList(d);
+				NS.life(callback);
+			});
+		},
+		discountSave: function(discountid, sd, callback){
+			var list = this.discountList, discount = null;
+			var __self = this;
+			this.ajax({
+				'do': 'discountsave',
+				'discountid': discountid,
+				'savedata': sd
+			}, function(d){
+				__self._updateDiscountList(d);
+				if (L.isValue(d) && L.isValue(d['discountid'])){
+					discount = list.get(d['discountid']);
+				}
+				NS.life(callback, discount);
+			});
+		},
+		discountRemove: function(discountid, callback){
+			var __self = this;
+			this.ajax({
+				'do': 'discountremove',
+				'discountid': discountid
+			}, function(d){
+				__self.discountList.remove(discountid);
 				NS.life(callback);
 			});			
 		}		

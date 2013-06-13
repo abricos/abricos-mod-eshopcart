@@ -1,0 +1,62 @@
+.aw-eshop .discountlist .mangroup {
+	text-align: right;
+	padding: 5px 0;
+	border-bottom: 1px solid #DCDEE4;
+}
+.aw-eshop .discountlist .editform {
+	border: none;
+}
+.aw-eshop .discountlist .elrow .rborder {
+	border: 1px solid #D1D3DC;
+	border-radius: 5px;
+}
+
+.aw-eshop .discountlist .elrow {
+	position: relative;
+	border-bottom: 1px solid #DCDEE4;
+	cursor: pointer;
+	font-size: 13px;
+}
+.aw-eshop .discountlist .elrow:hover {
+	background-color: #FFF0C6;
+}
+
+.aw-eshop .discountlist .elrow table.tline {
+	width: 100%;
+}
+
+.aw-eshop .discountlist .elrow .tline td.chk {
+	padding: 8px 0 7px 5px;
+	width: 14px;
+}
+.aw-eshop .discountlist .elrow .tline td.tl {
+	padding: 5px 0 7px 10px;
+}
+.aw-eshop .discountlist .elrow .tline td.tl .tln {
+	height: 18px;
+	position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.aw-eshop .discountlist .elrow .shadow {
+    background: url("/modules/eshopcart/images/shadow.png") repeat-y scroll 0 0 transparent;
+    width: 16px;
+	height: 1.3em;
+    position: absolute;
+    right: 0; top: 3px;
+}
+.aw-eshop .discountlist .elrow:hover .shadow {
+    background: url("/modules/eshopcart/images/shadow-row.png") repeat-y scroll 0 0 transparent;
+}
+
+/* * * Menu * * */
+.aw-eshop .discountlist .elrow .elrmenu {
+	position: absolute;
+    display: none;
+    right: 1px;
+    top: 3px;
+}
+.aw-eshop .discountlist .elrow:hover .elrmenu {
+	display: block;
+}

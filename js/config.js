@@ -7,7 +7,7 @@ var Component = new Brick.Component();
 Component.requires = {
 	yahoo: ['tabview'],
 	mod:[
-		{name: '{C#MODNAME}', files: ['paymentlist.js', 'deliverylist.js']}
+		{name: '{C#MODNAME}', files: ['discountlist.js', 'paymentlist.js', 'deliverylist.js']}
 	]
 };
 Component.entryPoint = function(NS){
@@ -22,11 +22,13 @@ Component.entryPoint = function(NS){
 	};
 	YAHOO.extend(ConfigWidget, Brick.mod.widget.Widget, {
 		init: function(cfg){
+			this.discountWidget = null;
 			this.paymentWidget = null;
 			this.deliveryWidget = null;
 		},
 		destroy: function(){
 			if (L.isValue(this.paymentWidget)){
+				this.discountWidget.destroy();
 				this.paymentWidget.destroy();
 				this.deliveryWidget.destroy();
 			}
@@ -43,6 +45,7 @@ Component.entryPoint = function(NS){
 			this.elShow('view');
 			
 			new YAHOO.widget.TabView(this.gel('view'));
+			this.discountWidget = new NS.DiscountListWidget(this.gel('discount'));
 			this.paymentWidget = new NS.PaymentListWidget(this.gel('payment'));
 			this.deliveryWidget = new NS.DeliveryListWidget(this.gel('delivery'));
 		}

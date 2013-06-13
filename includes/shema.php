@@ -131,5 +131,10 @@ if ($updateManager->isUpdate('0.1.0.1')){
 			ADD `dateline` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
 			ADD `deldate` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
 	");
+	
+	$db->query_write("
+		ALTER TABLE ".$pfx."eshp_discount
+			ADD `deldate` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
+	");
 }
 ?>

@@ -81,7 +81,6 @@ class EShopCartQuery {
 		}
 	}
 	
-	
 	public static function PaymentRemove(Ab_Database $db, $paymentid){
 		$sql = "
 			UPDATE ".$db->prefix."eshp_payment
@@ -91,6 +90,7 @@ class EShopCartQuery {
 		";
 		$db->query_write($sql);
 	}
+	
 	
 	public static function DeliveryList(Ab_Database $db){
 		$sql = "
@@ -102,6 +102,7 @@ class EShopCartQuery {
 				price as pc,
 				fromzero as zr
 			FROM ".$db->prefix."eshp_delivery
+			WHERE deldate=0
 		";
 		return $db->query_read($sql);
 	}
@@ -122,34 +123,122 @@ class EShopCartQuery {
 	
 	public static function DeliveryUpdate(Ab_Database $db, $deliveryid, $d){
 		$sql = "
-		UPDATE ".$db->prefix."eshp_delivery
-		SET
-		title='".bkstr($d->tl)."',
-		descript='".bkstr($d->dsc)."',
-		def=".bkint($d->def)."
-		WHERE deliveryid=".bkint($deliveryid)."
-		LIMIT 1
+			UPDATE ".$db->prefix."eshp_delivery
+			SET
+				title='".bkstr($d->tl)."',
+				descript='".bkstr($d->dsc)."',
+				def=".bkint($d->def)."
+			WHERE deliveryid=".bkint($deliveryid)."
+			LIMIT 1
 		";
 		$db->query_write($sql);
 	}
 	
 	public static function DeliveryDefaultSet(Ab_Database $db, $deliveryid){
 		$sql = "
-		UPDATE ".$db->prefix."eshp_delivery
-		SET def=0
+			UPDATE ".$db->prefix."eshp_delivery
+			SET def=0
 		";
 		$db->query_write($sql);
 	
 		$sql = "
-		UPDATE ".$db->prefix."eshp_delivery
-		SET def=1
-		WHERE deliveryid=".bkint($deliveryid)."
-		LIMIT 1
+			UPDATE ".$db->prefix."eshp_delivery
+			SET def=1
+			WHERE deliveryid=".bkint($deliveryid)."
+			LIMIT 1
 		";
 		$db->query_write($sql);
 	}
 	
 	public static function DeliveryListSetOrder(Ab_Database $db, $orders){
+		if (count($orders) == 0){ return; }
+	
+		for ($i=0; $i<count($orders); $i++){
+			$di = $orders[$i];
+			$sql = "
+				UPDATE ".$db->prefix."eshp_delivery
+				SET ord=".bkint($di->o)."
+				WHERE deliveryid=".bkint($di->id)."
+				LIMIT 1
+			";
+			$db->query_write($sql);
+		}
+	}
+	
+	public static function DeliveryRemove(Ab_Database $db, $deliveryid){
+		$sql = "
+			UPDATE ".$db->prefix."eshp_delivery
+			SET deldate=".TIMENOW."
+			WHERE deliveryid=".bkint($deliveryid)."
+			LIMIT 1
+		";
+		$db->query_write($sql);
+	}
+
+	/* * * * * * * * * * Discount * * * * * * * *  */
+	
+	public static function DiscountList(Ab_Database $db){
+		$sql = "
+			SELECT
+				discountid as id,
+				dtype as tp,
+				title as tl,
+				descript as dsc,
+				price as pc,
+				ispercent as ipc,
+				fromsum as bpc,
+				endsum as epc,
+				disabled as dis
+			FROM ".$db->prefix."eshp_discount
+			WHERE deldate=0
+		";
+		return $db->query_read($sql);
+	}
+	
+	public static function DiscountAppend(Ab_Database $db, $d){
+		$sql = "
+			INSERT INTO ".$db->prefix."eshp_discount
+			(title, descript, def, dateline) VALUES (
+				'".bkstr($d->tl)."',
+				'".bkstr($d->dsc)."',
+				".bkint($d->def).",
+				".TIMENOW."
+			)
+		";
+		$db->query_write($sql);
+		return $db->insert_id();
+	}
+	
+	public static function DiscountUpdate(Ab_Database $db, $discountid, $d){
+		$sql = "
+		UPDATE ".$db->prefix."eshp_discount
+		SET
+		title='".bkstr($d->tl)."',
+		descript='".bkstr($d->dsc)."',
+		def=".bkint($d->def)."
+		WHERE discountid=".bkint($discountid)."
+		LIMIT 1
+		";
+		$db->query_write($sql);
+	}
+	
+	public static function DiscountDefaultSet(Ab_Database $db, $discountid){
+		$sql = "
+		UPDATE ".$db->prefix."eshp_discount
+		SET def=0
+		";
+		$db->query_write($sql);
+	
+		$sql = "
+		UPDATE ".$db->prefix."eshp_discount
+		SET def=1
+		WHERE discountid=".bkint($discountid)."
+		LIMIT 1
+		";
+		$db->query_write($sql);
+	}
+	
+	public static function DiscountListSetOrder(Ab_Database $db, $orders){
 		if (count($orders) == 0){
 			return;
 		}
@@ -157,25 +246,24 @@ class EShopCartQuery {
 		for ($i=0; $i<count($orders); $i++){
 			$di = $orders[$i];
 			$sql = "
-			UPDATE ".$db->prefix."eshp_delivery
+			UPDATE ".$db->prefix."eshp_discount
 			SET ord=".bkint($di->o)."
-			WHERE deliveryid=".bkint($di->id)."
+			WHERE discountid=".bkint($di->id)."
 			LIMIT 1
 			";
 			$db->query_write($sql);
 		}
 	}
 	
-	
-	public static function DeliveryRemove(Ab_Database $db, $deliveryid){
+	public static function DiscountRemove(Ab_Database $db, $discountid){
 		$sql = "
-		UPDATE ".$db->prefix."eshp_delivery
+		UPDATE ".$db->prefix."eshp_discount
 		SET deldate=".TIMENOW."
-		WHERE deliveryid=".bkint($deliveryid)."
+		WHERE discountid=".bkint($discountid)."
 		LIMIT 1
 		";
 		$db->query_write($sql);
-	}	
+	}
 		
 }
 
