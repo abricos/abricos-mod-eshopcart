@@ -58,12 +58,12 @@ Component.entryPoint = function(NS){
 			var elList = this.gel('list'), ws = this.wsList, 
 				__self = this;
 			
-			NS.manager.discountList.foreach(function(pay){
+			NS.manager.discountList.foreach(function(discount){
 				var div = document.createElement('div');
-				div['pay'] = pay;
+				div['discount'] = discount;
 
 				elList.appendChild(div);
-				var w = new NS.DiscountRowWidget(div, pay, {
+				var w = new NS.DiscountRowWidget(div, discount, {
 					'onEditClick': function(w){__self.onDiscountEditClick(w);},
 					'onRemoveClick': function(w){__self.onDiscountRemoveClick(w);},
 					'onSelectClick': function(w){__self.onDiscountSelectClick(w);},
@@ -75,11 +75,11 @@ Component.entryPoint = function(NS){
 						var chs = elList.childNodes, ordb = NS.manager.discountList.count();
 						var orders = [];
 						for (var i=0;i<chs.length;i++){
-							var pay = chs[i]['pay'];
-							if (pay){
-								pay.order = ordb;
+							var discount = chs[i]['discount'];
+							if (discount){
+								discount.order = ordb;
 								orders[orders.length] = {
-									'id': pay.id,
+									'id': discount.id,
 									'o': ordb
 								};
 								ordb--;
@@ -117,7 +117,7 @@ Component.entryPoint = function(NS){
 		},
 		onDiscountRemoveClick: function(w){
 			var __self = this;
-			new DiscountRemovePanel(w.pay, function(){
+			new DiscountRemovePanel(w.discount, function(){
 				__self.renderList();
 			});
 		},
@@ -129,11 +129,11 @@ Component.entryPoint = function(NS){
 			
 			this.allEditorClose();
 			var __self = this;
-			var pay = new NS.Discount();
+			var discount = new NS.Discount();
 
-			this.newEditorWidget = new NS.DiscountEditorWidget(this.gel('neweditor'), pay, {
+			this.newEditorWidget = new NS.DiscountEditorWidget(this.gel('neweditor'), discount, {
 				'onCancelClick': function(wEditor){ __self.newEditorClose(); },
-				'onSave': function(wEditor, pay){
+				'onSave': function(wEditor, discount){
 					__self.newEditorClose(); 
 					__self.renderList();
 				}
@@ -154,7 +154,7 @@ Component.entryPoint = function(NS){
 	});
 	NS.DiscountListWidget = DiscountListWidget;
 	
-	var DiscountRowWidget = function(container, pay, cfg){
+	var DiscountRowWidget = function(container, discount, cfg){
 		cfg = L.merge({
 			'onEditClick': null,
 			'onRemoveClick': null,
@@ -163,15 +163,15 @@ Component.entryPoint = function(NS){
 		}, cfg || {});
 		DiscountRowWidget.superclass.constructor.call(this, container, {
 			'buildTemplate': buildTemplate, 'tnames': 'row' 
-		}, pay, cfg);
+		}, discount, cfg);
 	};
 	YAHOO.extend(DiscountRowWidget, BW, {
-		init: function(pay, cfg){
-			this.pay = pay;
+		init: function(discount, cfg){
+			this.discount = discount;
 			this.cfg = cfg;
 			this.editorWidget = null;
 		},
-		onLoad: function(pay){
+		onLoad: function(discount){
 			var __self = this;
 			
 			E.on(this.gel('id'), 'dblclick', function(e){
@@ -179,11 +179,11 @@ Component.entryPoint = function(NS){
 			});
 		},
 		render: function(){
-			var pay = this.pay;
+			var discount = this.discount;
 			
 			this.elSetHTML({
-				'tl': pay.title,
-				'desc': pay.descript
+				'tl': discount.title,
+				'desc': discount.descript
 			});
 		},
 		onClick: function(el, tp){
@@ -214,7 +214,7 @@ Component.entryPoint = function(NS){
 			if (!L.isNull(this.editorWidget)){ return; }
 			var __self = this;
 			this.editorWidget = 
-				new NS.DiscountEditorWidget(this.gel('easyeditor'), this.pay, {
+				new NS.DiscountEditorWidget(this.gel('easyeditor'), this.discount, {
 					'onCancelClick': function(wEditor){ __self.editorClose(); },
 					'onSave': function(wEditor){ 
 						__self.editorClose(); 
@@ -247,8 +247,8 @@ Component.entryPoint = function(NS){
 	});
 	NS.DiscountRowWidget = DiscountRowWidget;	
 
-	var DiscountRemovePanel = function(pay, callback){
-		this.pay = pay;
+	var DiscountRemovePanel = function(discount, callback){
+		this.discount = discount;
 		this.callback = callback;
 		DiscountRemovePanel.superclass.constructor.call(this, {fixedcenter: true});
 	};
@@ -269,7 +269,7 @@ Component.entryPoint = function(NS){
 				__self = this;
 			Dom.setStyle(gel('btns'), 'display', 'none');
 			Dom.setStyle(gel('bloading'), 'display', '');
-			NS.manager.discountRemove(this.pay.id, function(){
+			NS.manager.discountRemove(this.discount.id, function(){
 				__self.close();
 				NS.life(__self.callback);
 			});

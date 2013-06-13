@@ -106,24 +106,34 @@ Component.entryPoint = function(NS){
 	
 	var Discount = function(d){
 		d = L.merge({
+			'tp': 0,
 			'tl': '',
 			'dsc': '',
-			'ord': 0
+			'pc': 0,
+			'ptp': 0,
+			'fsm': 0,
+			'esm': 0,
+			'dis': 0
 		}, d || {});
 		Discount.superclass.constructor.call(this, d);
 	};
 	YAHOO.extend(Discount, SysNS.Item, {
 		update: function(d){
+			this.type = d['tp'];
 			this.title = d['tl'];
 			this.descript = d['dsc'];
-			this.order = d['ord']|0;
+			this.price = d['pc'];
+			this.priceType = d['ptp'];
+			this.fromSum = d['fsm'];
+			this.endSum = d['esm'];
+			this.isDisabled = d['dis']>0;
 		}
 	});
 	NS.Discount = Discount;
 	
 	var DiscountList = function(d){
 		DiscountList.superclass.constructor.call(this, d, Discount, {
-			'order': '!order'
+			'order': 'fromSum'
 		});
 	};
 	YAHOO.extend(DiscountList, SysNS.ItemList, {});
@@ -137,7 +147,7 @@ Component.entryPoint = function(NS){
 		init: function(callback){
 			NS.manager = this;
 			
-			this.discountList = new PaymentList();
+			this.discountList = new DiscountList();
 			this.paymentList = new PaymentList();
 			this.deliveryList = new DeliveryList();
 			

@@ -181,13 +181,13 @@ class EShopCartQuery {
 		$sql = "
 			SELECT
 				discountid as id,
-				dtype as dtp,
+				dtype as tp,
 				title as tl,
 				descript as dsc,
 				price as pc,
 				ispercent as ptp,
-				fromsum as bpc,
-				endsum as epc,
+				fromsum as fsm,
+				endsum as esm,
 				disabled as dis
 			FROM ".$db->prefix."eshp_discount
 			WHERE deldate=0
@@ -198,10 +198,15 @@ class EShopCartQuery {
 	public static function DiscountAppend(Ab_Database $db, $d){
 		$sql = "
 			INSERT INTO ".$db->prefix."eshp_discount
-			(title, descript, def, dateline) VALUES (
+			(dtype, title, descript, price, ispercent, fromsum, endsum, disabled, dateline) VALUES (
+				".bkint($d->tp).",
 				'".bkstr($d->tl)."',
 				'".bkstr($d->dsc)."',
-				".bkint($d->def).",
+				".doubleval($d->pc).",
+				".bkint($d->ptp).",
+				".doubleval($d->fsm).",
+				".doubleval($d->esm).",
+				".bkint($d->dis).",
 				".TIMENOW."
 			)
 		";
@@ -211,56 +216,28 @@ class EShopCartQuery {
 	
 	public static function DiscountUpdate(Ab_Database $db, $discountid, $d){
 		$sql = "
-		UPDATE ".$db->prefix."eshp_discount
-		SET
-		title='".bkstr($d->tl)."',
-		descript='".bkstr($d->dsc)."',
-		def=".bkint($d->def)."
-		WHERE discountid=".bkint($discountid)."
-		LIMIT 1
-		";
-		$db->query_write($sql);
-	}
-	
-	public static function DiscountDefaultSet(Ab_Database $db, $discountid){
-		$sql = "
-		UPDATE ".$db->prefix."eshp_discount
-		SET def=0
-		";
-		$db->query_write($sql);
-	
-		$sql = "
-		UPDATE ".$db->prefix."eshp_discount
-		SET def=1
-		WHERE discountid=".bkint($discountid)."
-		LIMIT 1
-		";
-		$db->query_write($sql);
-	}
-	
-	public static function DiscountListSetOrder(Ab_Database $db, $orders){
-		if (count($orders) == 0){
-			return;
-		}
-	
-		for ($i=0; $i<count($orders); $i++){
-			$di = $orders[$i];
-			$sql = "
 			UPDATE ".$db->prefix."eshp_discount
-			SET ord=".bkint($di->o)."
-			WHERE discountid=".bkint($di->id)."
+			SET
+				dtype=".bkint($d->tp).",
+				title='".bkstr($d->tl)."',
+				descript='".bkstr($d->dsc)."',
+				price=".doubleval($d->pc).",
+				ispercent=".bkint($d->ptp).",
+				fromsum=".doubleval($d->fsm).",
+				endsum=".doubleval($d->esm).",
+				disabled=".bkint($d->dis)."
+			WHERE discountid=".bkint($discountid)."
 			LIMIT 1
-			";
-			$db->query_write($sql);
-		}
+		";
+		$db->query_write($sql);
 	}
 	
 	public static function DiscountRemove(Ab_Database $db, $discountid){
 		$sql = "
-		UPDATE ".$db->prefix."eshp_discount
-		SET deldate=".TIMENOW."
-		WHERE discountid=".bkint($discountid)."
-		LIMIT 1
+			UPDATE ".$db->prefix."eshp_discount
+			SET deldate=".TIMENOW."
+			WHERE discountid=".bkint($discountid)."
+			LIMIT 1
 		";
 		$db->query_write($sql);
 	}

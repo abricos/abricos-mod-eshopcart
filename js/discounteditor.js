@@ -17,18 +17,18 @@ Component.entryPoint = function(NS){
 		buildTemplate = this.buildTemplate,
 		BW = Brick.mod.widget.Widget;
 
-	var DiscountEditorWidget = function(container, pay, cfg){
+	var DiscountEditorWidget = function(container, discount, cfg){
 		cfg = L.merge({
 			'onCancelClick': null,
 			'onSave': null
 		}, cfg || {});
 		DiscountEditorWidget.superclass.constructor.call(this, container, {
 			'buildTemplate': buildTemplate, 'tnames': 'widget' 
-		}, pay, cfg);
+		}, discount, cfg);
 	};
 	YAHOO.extend(DiscountEditorWidget, BW, {
-		init: function(pay, cfg){
-			this.pay = pay;
+		init: function(discount, cfg){
+			this.discount = discount;
 			this.cfg = cfg;
 		},
 		destroy: function(){
@@ -37,19 +37,26 @@ Component.entryPoint = function(NS){
 			} 
 			DiscountEditorWidget.superclass.destroy.call(this);
 		},
-		onLoad: function(pay){
+		onLoad: function(discount){
 			if (YAHOO.util.DragDropMgr){
 				YAHOO.util.DragDropMgr.lock();
 			} 
-			this.pay = pay;
+			this.discount = discount;
 
 			this.elHide('loading');
 			this.elShow('view');
 			
 			this.elSetValue({
-				'tl': pay.title,
-				'dsc': pay.descript
+				'tp': discount.type,
+				'tl': discount.title,
+				'dsc': discount.descript,
+				'pc': discount.price,
+				'ptp': discount.priceType,
+				'fsm': discount.fromSum,
+				'esm': discount.endSum,
 			});
+			
+			this.gel('dis').checked = discount.isDisabled;
 			
 			var elTitle = this.gel('tl');
 			setTimeout(function(){try{elTitle.focus();}catch(e){}}, 100);
@@ -74,22 +81,28 @@ Component.entryPoint = function(NS){
 		},
 		save: function(){
 			var cfg = this.cfg;
-			var pay = this.pay;
+			var discount = this.discount;
 			var sd = {
-				'id': pay.id,
+				'id': discount.id,
+				'tp': this.gel('tp').value,
 				'tl': this.gel('tl').value,
-				'dsc': this.gel('dsc').value
+				'dsc': this.gel('dsc').value,
+				'pc': this.gel('pc').value,
+				'ptp': this.gel('ptp').value,
+				'fsm': this.gel('fsm').value,
+				'esm': this.gel('esm').value,
+				'dis': this.gel('dis').checked ? 1 : 0
 			};
 			
 			this.elHide('btnsc');
 			this.elShow('btnpc');
 
 			var __self = this;
-			NS.manager.discountSave(pay.id, sd, function(pay){
+			NS.manager.discountSave(discount.id, sd, function(discount){
 				__self.elShow('btnsc,btnscc');
 				__self.elHide('btnpc,btnpcc');
-				NS.life(cfg['onSave'], __self, pay);
-			}, pay);
+				NS.life(cfg['onSave'], __self, discount);
+			}, discount);
 		}
 	});
 	NS.DiscountEditorWidget = DiscountEditorWidget;
