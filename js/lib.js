@@ -104,17 +104,21 @@ Component.entryPoint = function(NS){
 	NS.DeliveryList = DeliveryList;
 	
 	
-	var AdminConfig = function(d){
+	var ConfigAdmin = function(d){
 		d = L.merge({
-			
-		}, cfg||{});
+			'emls': ''
+		}, d||{});
 		this.init(d);
 	};
-	AdminConfig.prototype = {
-		init: function(d){
-			
+	ConfigAdmin.prototype = {
+		init: function(d){ 
+			this.update(d);
+		},
+		update: function(d){
+			this.emails = d['emls'];
 		}
 	};
+	NS.ConfigAdmin = ConfigAdmin;
 	
 	var Discount = function(d){
 		d = L.merge({
@@ -162,12 +166,14 @@ Component.entryPoint = function(NS){
 			this.discountList = new DiscountList();
 			this.paymentList = new PaymentList();
 			this.deliveryList = new DeliveryList();
+			this.configAdmin = null;
 			
 			var __self = this;
 			R.load(function(){
 				__self.ajax({
 					'do': 'initdata'
 				}, function(d){
+					__self._updateConfigAdmin(d);
 					__self._updateDiscountList(d);
 					__self._updatePaymentList(d);
 					__self._updateDeliveryList(d);
@@ -185,6 +191,28 @@ Component.entryPoint = function(NS){
 				}
 			});
 		},
+		
+		configAdminSave: function(sd, callback){
+			var __self = this;
+			this.ajax({
+				'do': 'configadminsave',
+				'savedata': sd
+			}, function(d){
+				__self._updateConfigAdmin(d);
+				NS.life(callback);
+			});
+		},
+		
+		_updateConfigAdmin: function(d){
+			if (!L.isValue(d) || !L.isValue(d['configadmin'])){ return null; }
+			
+			if (!L.isValue(this.configAdmin)){
+				this.configAdmin = new NS.ConfigAdmin(d['configadmin']);
+			}else{
+				this.configAdmin.update(d['configadmin']);
+			}
+		},
+		
 		_updatePaymentList: function(d){
 			if (!L.isValue(d) || !L.isValue(d['payments']) || !L.isValue(d['payments']['list'])){
 				return null;

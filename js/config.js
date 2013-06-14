@@ -77,6 +77,35 @@ Component.entryPoint = function(NS){
 		_onLoadManager: function(){
 			this.elHide('loading');
 			this.elShow('view');
+			
+			var cfga = NS.manager.configAdmin;
+
+			if (L.isValue(cfga)){
+				this.elSetValue({
+					'emls': cfga.emails
+				});
+			}
+		},
+		onClick: function(el, tp){
+			switch(el.id){
+			case tp['bsave']: this.save(); return true;
+			case tp['bcancel']: this.onCancelClick(); return true;
+			}
+			return false;
+		},
+		save: function(){
+			var sd = {
+				'emls': this.gel('emls').value
+			};
+			
+			this.elHide('btnsc');
+			this.elShow('btnpc');
+
+			var __self = this;
+			NS.manager.configAdminSave(sd, function(){
+				__self.elShow('btnsc,btnscc');
+				__self.elHide('btnpc,btnpcc');
+			});
 		}
 	});
 	
