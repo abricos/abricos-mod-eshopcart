@@ -66,6 +66,9 @@ class EShopCartManager extends Ab_ModuleManager {
 			case "discountlist": return $this->DiscountListToAJAX();
 			case "discountsave": return $this->DiscountSaveToAJAX($d->savedata);
 			case "discountremove": return $this->DiscountRemove($d->discountid);
+			
+			case "emailadmin": return $this->EMailAdminToAJAX();
+			case "emailadminsave": return $this->EMailAdminSave($d->email);
 		}
 
 		return null;
@@ -84,6 +87,11 @@ class EShopCartManager extends Ab_ModuleManager {
 		
 		$obj = $this->DiscountListToAJAX();
 		$ret->discounts = $obj->discounts;
+		
+		$obj = $this->EMailAdminToAJAX();
+		if (!empty($obj)){
+			$ret->emailadmin = $obj->emailadmin;
+		}
 		
 		return $ret;
 	}
@@ -317,7 +325,27 @@ class EShopCartManager extends Ab_ModuleManager {
 	
 		return true;
 	}
+
+	private function EMailAdmin(){
+		return Brick::$builder->phrase->Get('eshop', 'adm_emails');
+	}
+	
+	public function EMailAdminToAJAX(){
+		if (!$this->IsAdminRole()){ return null; }
 		
+		$ret = new stdClass();
+		$ret->emailadmin = $this->EMailAdmin();
+		
+		return $ret;
+	}
+	
+	public function EMailAdminSave($emails){
+		if (!$this->IsAdminRole()){ return null; }
+		
+		Brick::$builder->phrase->Set('eshop', 'adm_emails', $emails);
+		Brick::$builder->phrase->Save();
+	}
+
 	public function ArrayToObject($o){
 		if (is_array($o)){
 			$ret = new stdClass();

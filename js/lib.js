@@ -104,6 +104,18 @@ Component.entryPoint = function(NS){
 	NS.DeliveryList = DeliveryList;
 	
 	
+	var AdminConfig = function(d){
+		d = L.merge({
+			
+		}, cfg||{});
+		this.init(d);
+	};
+	AdminConfig.prototype = {
+		init: function(d){
+			
+		}
+	};
+	
 	var Discount = function(d){
 		d = L.merge({
 			'tp': 0,

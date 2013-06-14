@@ -1,5 +1,5 @@
 <!--{widget}-->
-<div id="{i#id}" class="aw-eshop">
+<div id="{i#id}" class="aw-eshop aw-catalog">
 	<div id="{i#loading}" class="loading">
 		<img src="/images/loading.gif" /> Идет загрузка данных <br /> Пожалуйста, подождите...
 	</div>
@@ -8,11 +8,46 @@
 			<li class="selected"><a href="#{i#discount}"><em>Скидки</em></a></li>
 			<li><a href="#{i#delivery}"><em>Доставка</em></a></li>
 			<li><a href="#{i#payment}"><em>Способы оплаты</em></a></li>
+			<li><a href="#{i#payment}"><em>Прочие настройки</em></a></li>
 		</ul>            
 		<div class="yui-content">
 			<div id="{i#discount}"></div>
 			<div id="{i#payment}"></div>
 			<div id="{i#delivery}"></div>
+			<div id="{i#over}"></div>
+		</div>
+	</div>
+</div>
+
+<!--{email}-->
+<div id="{i#id}" class="easyeditor">
+	<div id="{i#loading}" class="loading">
+		<img src="/images/loading.gif" /> Идет загрузка данных <br /> Пожалуйста, подождите...
+	</div>
+	<div id="{i#view}" class="editform" style="display: none">
+	
+		<div class="r">
+			<dl class="esm">
+				<dt>E-mail администратора</dt>
+				<dd>
+					<input id="{i#esm}" type="text" class="inp" />
+					<div class="dsc">
+						На этот E-mail будут отправляться уведомления о поступлении нового заказа. 
+						Если несколько адресов, то необходимо указать их через запятую.
+					</div>
+				</dd>
+			</dl>
+		</div>
+	
+		<div class="btns right r">
+			<span id="{i#btnsc}">
+				<a id="{i#bsave}" href="#" class="habtn">Сохранить</a>
+				<a id="{i#bcancel}" href="#" class="habtn">Отмена</a>
+			</span>
+			<span id="{i#btnpc}" style="display: none">
+				<img src="/images/loading.gif" /> Сохранение...
+			</span>
+			<div class="clear"></div>
 		</div>
 	</div>
 </div>
