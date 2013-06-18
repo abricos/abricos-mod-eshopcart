@@ -10,12 +10,27 @@
 		<div class="r">
 			<input id="{i#tl}" class="title inp" onfocus="this.select();" />
 
-			<dl class="default">
+			<dl class="default" style="display: none;">
 				<dt>По умолчанию</dt>
 				<dd>
 					<input id="{i#def}" type="checkbox" />
 				</dd>
 			</dl>
+
+			<dl class="pc">
+				<dt>Цена доставки</dt>
+				<dd>
+					<input id="{i#pc}" type="text" class="inp" onfocus="this.select();"/>
+				</dd>
+			</dl>
+
+			<dl class="pc">
+				<dt>Бесплатно, если сумма &gt;=</dt>
+				<dd>
+					<input id="{i#zr}" type="text" class="inp" onfocus="this.select();"/>
+				</dd>
+			</dl>
+			
 			<dl class="descript">
 				<dt>Описание</dt>
 				<dd>

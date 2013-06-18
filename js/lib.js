@@ -68,6 +68,8 @@ Component.entryPoint = function(NS){
 	var Delivery = function(d){
 		d = L.merge({
 			'tl': '',
+			'pc': 0,
+			'zr': 0,
 			'dsc': '',
 			'def': 0,
 			'ord': 0
@@ -77,6 +79,8 @@ Component.entryPoint = function(NS){
 	YAHOO.extend(Delivery, SysNS.Item, {
 		update: function(d){
 			this.title = d['tl'];
+			this.price = d['pc']|0;
+			this.fromZero = d['zr']|0;
 			this.descript = d['dsc'];
 			this.isDefault = (d['def']|0)>0;
 			this.order = d['ord']|0;

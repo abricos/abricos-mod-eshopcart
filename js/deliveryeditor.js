@@ -17,18 +17,18 @@ Component.entryPoint = function(NS){
 		buildTemplate = this.buildTemplate,
 		BW = Brick.mod.widget.Widget;
 
-	var DeliveryEditorWidget = function(container, pay, cfg){
+	var DeliveryEditorWidget = function(container, delivery, cfg){
 		cfg = L.merge({
 			'onCancelClick': null,
 			'onSave': null
 		}, cfg || {});
 		DeliveryEditorWidget.superclass.constructor.call(this, container, {
 			'buildTemplate': buildTemplate, 'tnames': 'widget' 
-		}, pay, cfg);
+		}, delivery, cfg);
 	};
 	YAHOO.extend(DeliveryEditorWidget, BW, {
-		init: function(pay, cfg){
-			this.pay = pay;
+		init: function(delivery, cfg){
+			this.delivery = delivery;
 			this.cfg = cfg;
 		},
 		destroy: function(){
@@ -37,20 +37,22 @@ Component.entryPoint = function(NS){
 			} 
 			DeliveryEditorWidget.superclass.destroy.call(this);
 		},
-		onLoad: function(pay){
+		onLoad: function(delivery){
 			if (YAHOO.util.DragDropMgr){
 				YAHOO.util.DragDropMgr.lock();
 			} 
-			this.pay = pay;
+			this.delivery = delivery;
 
 			this.elHide('loading');
 			this.elShow('view');
 			
 			this.elSetValue({
-				'tl': pay.title,
-				'dsc': pay.descript
+				'tl': delivery.title,
+				'pc': delivery.price,
+				'zr': delivery.fromZero,
+				'dsc': delivery.descript
 			});
-			this.gel('def').checked = !!pay.isDefault;
+			this.gel('def').checked = !!delivery.isDefault;
 			
 			var elTitle = this.gel('tl');
 			setTimeout(function(){try{elTitle.focus();}catch(e){}}, 100);
@@ -75,10 +77,12 @@ Component.entryPoint = function(NS){
 		},
 		save: function(){
 			var cfg = this.cfg;
-			var pay = this.pay;
+			var delivery = this.delivery;
 			var sd = {
-				'id': pay.id,
+				'id': delivery.id,
 				'tl': this.gel('tl').value,
+				'pc': this.gel('pc').value,
+				'zr': this.gel('zr').value,
 				'dsc': this.gel('dsc').value,
 				'def': this.gel('def').checked ? 1 : 0
 			};
@@ -87,11 +91,11 @@ Component.entryPoint = function(NS){
 			this.elShow('btnpc');
 
 			var __self = this;
-			NS.manager.deliverySave(pay.id, sd, function(pay){
+			NS.manager.deliverySave(delivery.id, sd, function(delivery){
 				__self.elShow('btnsc,btnscc');
 				__self.elHide('btnpc,btnpcc');
-				NS.life(cfg['onSave'], __self, pay);
-			}, pay);
+				NS.life(cfg['onSave'], __self, delivery);
+			}, delivery);
 		}
 	});
 	NS.DeliveryEditorWidget = DeliveryEditorWidget;

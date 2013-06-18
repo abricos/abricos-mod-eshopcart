@@ -103,6 +103,8 @@ class EShopCartPaymentList extends AbricosList {}
 class EShopCartDelivery extends AbricosItem {
 	
 	public $title;
+	public $price;
+	public $fromZero;
 	public $order;
 	public $default;
 	
@@ -110,6 +112,8 @@ class EShopCartDelivery extends AbricosItem {
 		parent::__construct($d);
 		
 		$this->title = strval($d['tl']);
+		$this->price = doubleval($d['pc']);
+		$this->fromZero = doubleval($d['zr']);
 		$this->order = intval($d['ord']);
 		$this->default = intval($d['def']);
 	}
@@ -117,6 +121,8 @@ class EShopCartDelivery extends AbricosItem {
 	public function ToAJAX(){
 		$ret = parent::ToAJAX();
 		$ret->tl = $this->title;
+		$ret->pc = $this->price;
+		$ret->zr = $this->fromZero;
 		$ret->ord = $this->order;
 		$ret->def = $this->default;
 		return $ret;

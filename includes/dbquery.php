@@ -110,8 +110,10 @@ class EShopCartQuery {
 	public static function DeliveryAppend(Ab_Database $db, $d){
 		$sql = "
 			INSERT INTO ".$db->prefix."eshp_delivery
-			(title, descript, def, dateline) VALUES (
+			(title, price, fromzero, descript, def, dateline) VALUES (
 				'".bkstr($d->tl)."',
+				".bkint($d->pc).",
+				".bkint($d->zr).",
 				'".bkstr($d->dsc)."',
 				".bkint($d->def).",
 				".TIMENOW."
@@ -126,6 +128,8 @@ class EShopCartQuery {
 			UPDATE ".$db->prefix."eshp_delivery
 			SET
 				title='".bkstr($d->tl)."',
+				price=".bkint($d->pc).",
+				fromzero=".bkint($d->zr).",
 				descript='".bkstr($d->dsc)."',
 				def=".bkint($d->def)."
 			WHERE deliveryid=".bkint($deliveryid)."
