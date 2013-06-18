@@ -8,6 +8,50 @@
 
 require_once 'dbquery.php';
 
+/**
+ * Корзина пользователя
+ */
+class EShopCartProduct extends AbricosItem {
+
+	public $userid;
+	public $productid;
+	public $session;
+
+	/**
+	 * Кол-во позиций
+	 * @var integer
+	 */
+	public $quantity;
+	
+	/**
+	 * Цена
+	 * @var integer
+	 */
+	public $price;
+	
+	public function __construct($d){
+		parent::__construct($d);
+		
+		$this->userid = intval($d['uid']);
+		$this->session = strval($d['ss']);
+		$this->productid = intval($d['elid']);
+		
+		$this->price = doubleval($d['pc']);
+		$this->quantity = intval($d['qt']);
+	}
+	
+	public function ToAJAX(){
+		$ret = parent::ToAJAX();
+		$ret->uid = $this->userid;
+		$ret->ss = $this->session;
+		$ret->elid = $this->productid;
+		$ret->pc = $this->price;
+		$ret->qt = $this->quantity;
+	}
+}
+
+class EShopCartProductList extends AbricosList {}
+
 class EShopCartDiscount extends AbricosItem {
 	
 	/**

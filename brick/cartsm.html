@@ -1,0 +1,27 @@
+<!--[*]
+[script]brick_cartsm.php[/script]
+[mcss=eshopcart]eshopcart.css[/mcss]
+[*]-->
+<div class="aw-eshopcart-cartsm">
+	<div class="eccwrap">
+		<img id="aw-eshopcart-loadingimg" src="/images/loading.gif" style="display: none;" />
+		<a href="#" class="btn-show-cart" onclick="return showCart();">Корзина</a>: товаров - <span class="eshop-cart-count">{v#count}</span> на сумму <span class="eshop-cart-summ">{v#summ}</span> руб. 
+		(<a href="#" class="btn-show-order">Оформить заказ</a>)
+		<div class="clear"></div>
+	</div>
+</div>
+<script>
+	var showCart = function(){
+		
+		var s = function(el){el.style.display = ''; },
+			h = function(el){el.style.display = 'none'; } ;
+
+		var ell = document.getElementById('aw-eshopcart-loadingimg');
+		s(ell);
+		Brick.ff('eshopcart', 'cart', function(){
+			h(ell);
+			new Brick.mod.eshopcart.CartViewPanel();
+		});
+		return false;
+	};
+</script>
