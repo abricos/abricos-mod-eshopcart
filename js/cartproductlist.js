@@ -109,20 +109,16 @@ Component.entryPoint = function(NS){
 			this.editorWidget = null;
 		},
 		render: function(){
-			var cartProduct = this.cartProduct;
-
-			var tl = cartProduct.title;
-			if (cartProduct.price > 0){
-				tl += ", "+cartProduct.price;
-			}
-			if (cartProduct.fromZero > 0){
-				tl += ", "+cartProduct.fromZero;
+			var catprod = this.cartProduct;
+			
+			if (L.isValue(catprod.product)){
+				var prod = catprod.product;
+				this.elSetHTML({
+					'tl': prod.title,
+					'url': prod.url()
+				});
 			}
 			
-			this.elSetHTML({
-				'tl': tl,
-				'desc': cartProduct.descript
-			});
 		},
 		onClick: function(el, tp){
 			switch(el.id){

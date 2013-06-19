@@ -37,6 +37,10 @@ Component.entryPoint = function(NS){
 		CartProduct.superclass.constructor.call(this, d);
 	};
 	YAHOO.extend(CartProduct, SysNS.Item, {
+		init: function(d){
+			this.product = null;
+			CartProduct.superclass.init.call(this, d);
+		},
 		update: function(d){
 			this.productid = d['elid']|0;
 			this.quantity = d['qt']|0;
@@ -240,7 +244,11 @@ Component.entryPoint = function(NS){
 				return null;
 			}
 			this.cartProductList.update(d['cartproducts']['list']);
-			this.cartProductList.productList = this.eshopManager._elementListUpdate(d['cartproducts']);
+			var pList = this.cartProductList.productList = this.eshopManager._elementListUpdate(d['cartproducts']);
+			
+			this.cartProductList.foreach(function(item){
+				item.product = pList.get(item.productid);
+			});
 		},
 
 		cartProductAdd: function(productid, callback){

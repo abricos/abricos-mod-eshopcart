@@ -1,6 +1,15 @@
 <!--{widget}-->
 <div id="{i#id}" class="aw-eshop aw-eshopcart aw-catalog">
 	<div class="cartproductlist">
+
+		<table class="thead" id="{i#head}"><tbody><tr>
+			<td class="tl">&nbsp;<td>
+			<td class="pc">&nbsp;<td>
+			<td class="qt">&nbsp;<td>
+			<td class="sm">&nbsp;<td>
+			<td class="rm">&nbsp;<td>
+		</tr></tbody></table>
+		
 		<div id="{i#list}"></div>	
 	</div>
 </div>
@@ -10,24 +19,15 @@
 	<div id="{i#wrap}">
 		<table class="tline" id="{i#tline}"><tbody><tr>
 			<td class="tl">
-				<div class="tln">
-					<div id="{i#tl}" class="vl"></div>
-				</div>
+				<a href="{v#url}" id="{i#tl}"></a>
+			</td>
+			<td class="pc"><div id="{i#pc}"></div></td>
+			<td class="qt"><div id="{i#qt}"></div></td>
+			<td class="sm"><div id="{i#qt}"></div></td>
+			<td class="rm">
+				<a href="#" class="habtn">Удалить</a>
 			</td>
 		</tr></tbody></table>
-		<div class="clear"></div>
-		
-		<div id="{i#menu}" class="boxbutton elrmenu">
-			<div id="{i#bremove}" class="b" title="Удалить">
-				<div id="{i#bremovec}" class="bremove bc"></div>
-			</div>
-		</div>
-		
-		<div id="{i#easyeditor}"></div>
-		
-		<div id="{i#detail}" class="detail" style="display: none">
-			<div id="{i#desc}" class="descript"></div>
-		</div>
 	</div>
 </div>
 
