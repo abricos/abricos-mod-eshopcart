@@ -8,6 +8,48 @@
 
 class EShopCartQuery {
 	
+	/**
+	 * Перенос корзины гостя зарегестрированному пользователю 
+	 *
+	 * @param Ab_Database $db
+	 * @param integer $userid идентификатор пользователя, если авторизован
+	 * @param string $session сессия пользователя, если гость
+	 */
+	public static function CartUserSessionFixed(Ab_Database $db, User $user){
+		if ($user->id == 0){ return; }
+		$userid = $user->id;
+		$session = $user->session->key;
+		$sql = "
+			UPDATE ".$db->prefix."eshp_cart
+			SET userid=".bkint($userid).", session=''
+			WHERE userid=0 AND session='".bkstr($session)."'
+		";
+		$db->query_write($sql);
+	}
+	
+	public static function CartProductList(Ab_Database $db, User $user){
+		EShopCartQuery::CartUserSessionFixed($db, $user);
+		
+		$userid = $user->id;
+		$session = $user->session->key;
+		
+		$sql = "
+			SELECT
+				cartid as id,
+				productid as elid,
+				quantity as qt,
+				price as pc
+			FROM ".$db->prefix."eshp_cart
+			WHERE ".($userid > 0 ? "userid=".bkint($userid) : "session='".bkstr($session)."'")."
+		";
+		return $db->query_read($sql);
+	}
+	
+	public static function CartProductListSum(Ab_Database $db){
+		
+	}
+	
+	
 	public static function PaymentList(Ab_Database $db){
 		$sql = "
 			SELECT

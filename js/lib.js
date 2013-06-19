@@ -28,11 +28,10 @@ Component.entryPoint = function(NS){
 	NS.Item = SysNS.Item;
 	NS.ItemList = SysNS.ItemList;
 	
+	// элемент товара в корзине текущего пользователя 
 	var CartProduct = function(d){
 		d = L.merge({
-			'uid': 0,
 			'elid': 0,
-			'ss': '',
 			'qt': 0,
 			'pc': 0
 		}, d || {});
@@ -40,9 +39,7 @@ Component.entryPoint = function(NS){
 	};
 	YAHOO.extend(CartProduct, SysNS.Item, {
 		update: function(d){
-			this.userid = d['uid']|0;
 			this.productid = d['elid']|0;
-			this.session = d['ss'];
 			this.quantity = d['qt']|0;
 			this.price = d['pc']|0;
 		}
@@ -199,6 +196,7 @@ Component.entryPoint = function(NS){
 			this.discountList = new DiscountList();
 			this.paymentList = new PaymentList();
 			this.deliveryList = new DeliveryList();
+			this.cartProductList = new CartProductList();
 			this.configAdmin = null;
 			
 			var __self = this;
@@ -210,6 +208,7 @@ Component.entryPoint = function(NS){
 					__self._updateDiscountList(d);
 					__self._updatePaymentList(d);
 					__self._updateDeliveryList(d);
+					__self._updateCartProductList(d);
 					NS.life(callback, __self);
 				});
 			});
@@ -222,6 +221,23 @@ Component.entryPoint = function(NS){
 				'event': function(request){
 					NS.life(callback, request.data);
 				}
+			});
+		},
+		
+		_updateCartProductList: function(d){
+			if (!L.isValue(d) || !L.isValue(d['cartproducts']) || !L.isValue(d['cartproducts']['list'])){
+				return null;
+			}
+			this.cartProductList.update(d['cartproducts']['list']);
+		},
+		
+		cartProductListLoad: function(callback){
+			var __self = this;
+			this.ajax({
+				'do': 'cartproductlist'
+			}, function(d){
+				__self._updateCartProductList(d);
+				NS.life(callback, list);
 			});
 		},
 		

@@ -9,14 +9,12 @@
 require_once 'dbquery.php';
 
 /**
- * Корзина пользователя
+ * Товар в корзине текущего пользоватля
  */
 class EShopCartProduct extends AbricosItem {
 
-	public $userid;
 	public $productid;
-	public $session;
-
+	
 	/**
 	 * Кол-во позиций
 	 * @var integer
@@ -32,25 +30,43 @@ class EShopCartProduct extends AbricosItem {
 	public function __construct($d){
 		parent::__construct($d);
 		
-		$this->userid = intval($d['uid']);
-		$this->session = strval($d['ss']);
 		$this->productid = intval($d['elid']);
-		
 		$this->price = doubleval($d['pc']);
 		$this->quantity = intval($d['qt']);
 	}
 	
 	public function ToAJAX(){
 		$ret = parent::ToAJAX();
-		$ret->uid = $this->userid;
-		$ret->ss = $this->session;
 		$ret->elid = $this->productid;
 		$ret->pc = $this->price;
 		$ret->qt = $this->quantity;
+		
+		return $ret;
 	}
 }
 
-class EShopCartProductList extends AbricosList {}
+class EShopCartProductList extends AbricosList {
+
+	/**
+	 * @var EShopElementList
+	 */
+	public $productList;
+	
+	/**
+	 * @return EShopCartProduct
+	 */
+	public function GetByIndex($i){
+		return parent::GetByIndex($i);
+	}
+	
+	public function ToAJAX(){
+		$ret = parent::ToAJAX();
+		if (!empty($this->productList)){
+			$ret->elements = $this->productList->ToAJAX();
+		}
+		return $ret;
+	}
+}
 
 class EShopCartDiscount extends AbricosItem {
 	

@@ -53,6 +53,9 @@ class EShopCartManager extends Ab_ModuleManager {
 
 		switch($d->do){
 			case "initdata": return $this->InitDataToAJAX();
+
+			case "cartproductlist": return $this->CartProductListToAJAX();
+
 			case "paymentlist": return $this->PaymentListToAJAX();
 			case "paymentsave": return $this->PaymentSaveToAJAX($d->savedata);
 			case "paymentlistorder": return $this->PaymentListSetOrder($d->paymentorders);
@@ -66,7 +69,7 @@ class EShopCartManager extends Ab_ModuleManager {
 			case "discountlist": return $this->DiscountListToAJAX();
 			case "discountsave": return $this->DiscountSaveToAJAX($d->savedata);
 			case "discountremove": return $this->DiscountRemove($d->discountid);
-			
+
 			case "configadmin": return $this->ConfigAdminToAJAX();
 			case "configadminsave": return $this->ConfigAdminSave($d->savedata);
 		}
@@ -78,6 +81,9 @@ class EShopCartManager extends Ab_ModuleManager {
 		if (!$this->IsViewRole()){ return null; }
 		
 		$ret = new stdClass();
+
+		$obj = $this->CartProductListToAJAX();
+		$ret->cartproducts = $obj->cartproducts;
 		
 		$obj = $this->PaymentListToAJAX();
 		$ret->payments = $obj->payments;
@@ -93,6 +99,44 @@ class EShopCartManager extends Ab_ModuleManager {
 			$ret->configadmin = $obj->configadmin;
 		}
 		
+		return $ret;
+	}
+	
+	/**
+	 * Список товаров в корзине текущего пользователя
+	 * @return EShopCartProductList
+	 */
+	public function CartProductList(){
+		if (!$this->IsViewRole()){ return null; }
+		
+		$rows = EShopCartQuery::CartProductList($this->db, $this->user);
+		
+		$list = new EShopCartProductList();
+		
+		while (($d = $this->db->fetch_array($rows))){
+			$list->Add(new EShopCartProduct($d));
+		}
+		
+		if ($list->Count() > 0){
+			Abricos::GetModule('eshop')->GetManager();
+			$catMan = EShopManager::$instance->cManager;
+			$cfg = new CatalogElementListConfig();
+			for ($i=0;$i<$list->Count();$i++){
+				$item = $list->GetByIndex($i);
+				array_push($cfg->elids, $item->productid);
+			}
+			$list->productList = $catMan->ProductList($cfg);
+		}
+				
+		return $list;
+	}
+	
+	public function CartProductListToAJAX(){
+		$list = $this->CartProductList();
+		if (empty($list)){ return null; }
+		
+		$ret = new stdClass();
+		$ret->cartproducts = $list->ToAJAX();
 		return $ret;
 	}
 	
