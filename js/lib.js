@@ -28,6 +28,34 @@ Component.entryPoint = function(NS){
 	NS.Item = SysNS.Item;
 	NS.ItemList = SysNS.ItemList;
 	
+	var CartProduct = function(d){
+		d = L.merge({
+			'uid': 0,
+			'elid': 0,
+			'ss': '',
+			'qt': 0,
+			'pc': 0
+		}, d || {});
+		CartProduct.superclass.constructor.call(this, d);
+	};
+	YAHOO.extend(CartProduct, SysNS.Item, {
+		update: function(d){
+			this.userid = d['uid']|0;
+			this.productid = d['elid']|0;
+			this.session = d['ss'];
+			this.quantity = d['qt']|0;
+			this.price = d['pc']|0;
+		}
+	});
+	NS.CartProduct = CartProduct;
+	var CartProductList = function(d){
+		CartProductList.superclass.constructor.call(this, d, CartProduct, {
+			// 'order': '!order'
+		});
+	};
+	YAHOO.extend(CartProductList, SysNS.ItemList, {});
+	NS.CartProductList = CartProductList;
+	
 	var Payment = function(d){
 		d = L.merge({
 			'tl': '',

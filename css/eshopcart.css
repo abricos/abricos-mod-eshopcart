@@ -1,3 +1,4 @@
+/* * * * * Корзина * * * * */
 .aw-eshopcart-cartsm {
 	background: url(/modules/eshopcart/images/cart.png) no-repeat;
 	min-height: 24px;
@@ -12,4 +13,27 @@
 .aw-eshopcart-cartsm #aw-eshopcart-loadingimg {
 	position: absolute;
 	left: -26px;
+}
+
+/* * * * * Кнопка -Купить- * * * * */
+.aw-eshopcart-buybutton {
+	text-align: center;
+}
+.aw-eshopcart-buybutton .button {
+	display: inline-block;
+	color: #fff;
+	height: 25px;
+	text-align: center;
+	border-radius: 7px;
+	background-color: #FC9C9C;
+	border: 1px solid #FC8888;
+	min-width: 80px;
+}
+.aw-eshopcart-buybutton:hover .button {
+	background-color: #FB6060;
+	border: 1px solid #FA3838;
+}
+
+.aw-eshopcart-buybutton .button img.ldg {
+	margin-top: 4px;
 }
