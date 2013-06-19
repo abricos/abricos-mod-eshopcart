@@ -6,8 +6,8 @@
 var Component = new Brick.Component();
 Component.requires = {
 	mod:[
-		{name: 'sys', files: ['container.js']},
-		{name: '{C#MODNAME}', files: ['lib.js']}
+		// {name: 'sys', files: ['container.js']},
+		{name: '{C#MODNAME}', files: ['cartproductlist.js']}
 	]
 };
 Component.entryPoint = function(NS){
@@ -42,6 +42,8 @@ Component.entryPoint = function(NS){
 		_onLoadManager: function(){
 			this.elHide('loading');
 			this.elShow('view');
+			
+			this.listWidget = new NS.CartProductListWidget(this.gel('list'));
 		},
 		onClick: function(el, tp){
 			switch(el.id){

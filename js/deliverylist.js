@@ -180,7 +180,7 @@ Component.entryPoint = function(NS){
 		},
 		render: function(){
 			var delivery = this.delivery;
-Brick.console(delivery);
+
 			var tl = delivery.title;
 			if (delivery.price > 0){
 				tl += ", "+delivery.price;

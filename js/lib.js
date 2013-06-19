@@ -6,8 +6,7 @@
 var Component = new Brick.Component();
 Component.requires = { 
 	mod:[
-        {name: 'sys', files: ['item.js']},
-        {name: 'widget', files: ['notice.js']},
+        {name: 'eshop', files: ['lib.js']},
         {name: '{C#MODNAME}', files: ['roles.js']}
 	]		
 };
@@ -46,11 +45,14 @@ Component.entryPoint = function(NS){
 	});
 	NS.CartProduct = CartProduct;
 	var CartProductList = function(d){
+		
+		this.productList = null;
+		
 		CartProductList.superclass.constructor.call(this, d, CartProduct, {
 			// 'order': '!order'
 		});
 	};
-	YAHOO.extend(CartProductList, SysNS.ItemList, {});
+	YAHOO.extend(CartProductList, SysNS.ItemList, {	});
 	NS.CartProductList = CartProductList;
 	
 	var Payment = function(d){
@@ -198,18 +200,22 @@ Component.entryPoint = function(NS){
 			this.deliveryList = new DeliveryList();
 			this.cartProductList = new CartProductList();
 			this.configAdmin = null;
+			this.eshopManager = null;
 			
 			var __self = this;
 			R.load(function(){
-				__self.ajax({
-					'do': 'initdata'
-				}, function(d){
-					__self._updateConfigAdmin(d);
-					__self._updateDiscountList(d);
-					__self._updatePaymentList(d);
-					__self._updateDeliveryList(d);
-					__self._updateCartProductList(d);
-					NS.life(callback, __self);
+				Brick.mod.eshop.initManager(function(man){
+					__self.eshopManager = man;
+					__self.ajax({
+						'do': 'initdata'
+					}, function(d){
+						__self._updateConfigAdmin(d);
+						__self._updateDiscountList(d);
+						__self._updatePaymentList(d);
+						__self._updateDeliveryList(d);
+						__self._updateCartProductList(d);
+						NS.life(callback, __self);
+					});
 				});
 			});
 		},
@@ -229,6 +235,7 @@ Component.entryPoint = function(NS){
 				return null;
 			}
 			this.cartProductList.update(d['cartproducts']['list']);
+			this.cartProductList.productList = this.eshopManager._elementListUpdate(d['cartproducts']);
 		},
 		
 		cartProductListLoad: function(callback){
