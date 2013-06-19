@@ -188,11 +188,12 @@ Component.entryPoint = function(NS){
 	NS.DiscountList = DiscountList;
 	
 	
-	var Manager = function (callback){
-		this.init(callback);
+	var Manager = function (callback, productAddToCart){
+		this.init(callback, productAddToCart);
 	};
 	Manager.prototype = {
-		init: function(callback){
+		init: function(callback, productAddToCart){
+			productAddToCart = productAddToCart|0;
 			NS.manager = this;
 			
 			this.discountList = new DiscountList();
@@ -206,9 +207,13 @@ Component.entryPoint = function(NS){
 			R.load(function(){
 				Brick.mod.eshop.initManager(function(man){
 					__self.eshopManager = man;
-					__self.ajax({
-						'do': 'initdata'
-					}, function(d){
+					
+					var act = {'do': 'initdata'};
+					if (productAddToCart > 0){
+						act['productaddtocart'] = productAddToCart;
+					}
+					
+					__self.ajax(act, function(d){
 						__self._updateConfigAdmin(d);
 						__self._updateDiscountList(d);
 						__self._updatePaymentList(d);
@@ -237,7 +242,18 @@ Component.entryPoint = function(NS){
 			this.cartProductList.update(d['cartproducts']['list']);
 			this.cartProductList.productList = this.eshopManager._elementListUpdate(d['cartproducts']);
 		},
-		
+
+		cartProductAdd: function(productid, callback){
+			var __self = this;
+			this.ajax({
+				'do': 'productaddtocart',
+				'productid': productid
+			}, function(d){
+				__self._updateCartProductList(d);
+				NS.life(callback);
+			});
+		},
+
 		cartProductListLoad: function(callback){
 			var __self = this;
 			this.ajax({
@@ -414,11 +430,18 @@ Component.entryPoint = function(NS){
 	};
 	NS.manager = null;
 	
-	NS.initManager = function(callback){
+	NS.initManager = function(callback, productToCart){
+		productToCart = productToCart|0;
 		if (L.isNull(NS.manager)){
-			NS.manager = new Manager(callback);
+			NS.manager = new Manager(callback, productToCart);
 		}else{
-			NS.life(callback, NS.manager);
+			if (productToCart > 0){
+				NS.manager.cartProductAdd(productToCart, function(){
+					NS.life(callback, NS.manager);
+				});
+			}else{
+				NS.life(callback, NS.manager);
+			}
 		}
 	};
 	

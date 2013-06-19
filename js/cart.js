@@ -20,8 +20,9 @@ Component.entryPoint = function(NS){
 
 	var CartViewWidget = function(container, cfg){
 		cfg = L.merge({
+			'addToCart': 0
 		}, cfg || {});
-		
+
 		CartViewWidget.superclass.constructor.call(this, container, {
 			'buildTemplate': buildTemplate, 'tnames': 'widget' 
 		}, cfg);
@@ -31,13 +32,13 @@ Component.entryPoint = function(NS){
 			this.cfg = cfg;
 		},
 		destroy: function(){
-			CartViewWidget.superclass.destroy.call(this);			
+			CartViewWidget.superclass.destroy.call(this);
 		},
-		onLoad: function(){
+		onLoad: function(cfg){
 			var __self = this;
 			NS.initManager(function(){
 				__self._onLoadManager();
-			});
+			}, cfg['addToCart']);
 		},
 		_onLoadManager: function(){
 			this.elHide('loading');
@@ -53,15 +54,32 @@ Component.entryPoint = function(NS){
 	});
 	NS.CartViewWidget = CartViewWidget;
 	
-	var CartViewPanel = function(){
+	var CartViewPanel = function(cartConfig){
+		 this.cartConfig = L.merge({
+			'buttonElement': null // вызов корзины по нажатию на кнопку -купить-
+		}, cartConfig || {});
 		CartViewPanel.superclass.constructor.call(this, {fixedcenter: true});
 	};
 	YAHOO.extend(CartViewPanel, Brick.widget.Dialog, {
+		
 		initTemplate: function(){
 			return buildTemplate(this, 'panel').replace('panel');
 		},
 		onLoad: function(){
-			new NS.CartViewWidget(this._TM.getEl('panel.widget'));
+			var cfg = this.cartConfig;
+			if (L.isValue(cfg['buttonElement']) && cfg['buttonElement'].className){
+				
+				var arr = cfg['buttonElement'].className.split(' ');
+				for (var i=0;i<arr.length;i++){
+					var aa = arr[i].split('-');
+					if (aa[0] == 'product'){
+						cfg['addToCart'] = aa[1]|0;
+						break;
+					}
+				}
+			}
+				
+			new NS.CartViewWidget(this._TM.getEl('panel.widget'), cfg);
 		}
 	});
 	NS.CartViewPanel = CartViewPanel;

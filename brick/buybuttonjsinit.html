@@ -2,7 +2,7 @@
 
 <script>
 	var eshopCartBuyClick = function(el){
-		if (!(el && el.childNodes)){ return; }
+		if (!(el && el.childNodes)){ return false; }
 		var tl = el.getElementsByClassName('btl'),
 			ldg = el.getElementsByClassName('ldg');
 		
@@ -17,5 +17,6 @@
 			h(ldg); s(tl);
 			new Brick.mod.eshopcart.CartViewPanel({'buttonElement': el});
 		});
+		return false;
 	};
 </script>

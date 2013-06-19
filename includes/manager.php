@@ -50,12 +50,17 @@ class EShopCartManager extends Ab_ModuleManager {
 	}
 
 	public function AJAX($d){
+		
+		if (intval($d->productaddtocart) > 0){
+			$this->CartProductAdd($d->productaddtocart);
+		}
 
 		switch($d->do){
 			case "initdata": return $this->InitDataToAJAX();
 
 			case "cartproductlist": return $this->CartProductListToAJAX();
-
+			case "productaddtocart": return $this->CartProductAddToAJAX($d->productid);
+			
 			case "paymentlist": return $this->PaymentListToAJAX();
 			case "paymentsave": return $this->PaymentSaveToAJAX($d->savedata);
 			case "paymentlistorder": return $this->PaymentListSetOrder($d->paymentorders);
@@ -112,9 +117,26 @@ class EShopCartManager extends Ab_ModuleManager {
 		$rows = EShopCartQuery::CartProductList($this->db, $this->user);
 		
 		$list = new EShopCartProductList();
+		$checkDouble = array(); $isDouble = array();
 		
 		while (($d = $this->db->fetch_array($rows))){
-			$list->Add(new EShopCartProduct($d));
+			$item = new EShopCartProduct($d);
+			
+			$productid = $item->productid;
+			if (empty($checkDouble[$productid])){
+				$checkDouble[$productid] = $item;
+				$list->Add($item);
+			}else{
+				$bItem = $checkDouble[$productid];
+				$bItem->quantity += $item->quantity;
+				$isDouble[$productid] = $bItem;
+			}
+		}
+		
+		if (count($isDouble) > 0){
+			foreach($isDouble as $productid => $item){
+				EShopCartQuery::CartProductUpdateDouble($this->db, $this->user, $item);
+			}
 		}
 		
 		if ($list->Count() > 0){
@@ -138,6 +160,30 @@ class EShopCartManager extends Ab_ModuleManager {
 		$ret = new stdClass();
 		$ret->cartproducts = $list->ToAJAX();
 		return $ret;
+	}
+	
+	/**
+	 * Добавить продукт в корзину
+	 * @param integer $productid
+	 */
+	public function CartProductAdd($productid, $quantity = 1){
+		if (empty($productid) || !$this->IsWriteRole()){ return null; }
+		
+		Abricos::GetModule('eshop')->GetManager();
+		$catMan = EShopManager::$instance->cManager;
+		
+		$product = $catMan->Element($productid);
+		if (empty($product)){ return null; }
+		
+		$price = $product->detail->optionsBase['price'];
+		
+		EShopCartQuery::CartProductAppend($this->db, $this->user, $productid, $quantity, $price);
+	}
+	
+	public function CartProductAddToAJAX($productid){
+		$this->CartProductAdd($productid);
+		
+		return $this->CartProductListToAJAX();
 	}
 	
 	/**

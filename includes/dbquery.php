@@ -49,6 +49,39 @@ class EShopCartQuery {
 		
 	}
 	
+	public static function CartProductAppend(Ab_Database $db, User $user, $productid, $quantity, $price){
+		$userid = $user->id;
+		$session = $user->id > 0 ? "" : $user->session->key;
+	
+		$sql = "
+			INSERT INTO ".$db->prefix."eshp_cart
+			(userid, session, productid, quantity, price, dateline) VALUES (
+				".bkint($userid).",
+				'".bkstr($session)."',
+				".bkint($productid).",
+				".intval($quantity).",
+				".doubleval($price).",
+				".TIMENOW."
+			)
+		";
+		$db->query_write($sql);
+		return $db->insert_id();
+	}
+	
+	public static function CartProductUpdateDouble(Ab_Database $db, User $user, EShopCartProduct $cartProduct){
+		
+		$userid = $user->id;
+		$session = $user->id > 0 ? "" : $user->session->key;
+				
+		$sql = "
+			DELETE FROM ".$db->prefix."eshp_cart
+			WHERE productid=".bkint($cartProduct->productid)."
+				AND userid=".bkint($userid)." AND session='".bkstr($session)."'
+		";
+		$db->query_write($sql);
+		
+		EShopCartQuery::CartProductAppend($db, $user, $cartProduct->productid, $cartProduct->quantity, $cartProduct->price);
+	}
 	
 	public static function PaymentList(Ab_Database $db){
 		$sql = "
