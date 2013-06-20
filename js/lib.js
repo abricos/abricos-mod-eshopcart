@@ -6,6 +6,7 @@
 var Component = new Brick.Component();
 Component.requires = { 
 	mod:[
+        {name: 'sys', files: ['number.js']},
         {name: 'eshop', files: ['lib.js']},
         {name: '{C#MODNAME}', files: ['roles.js']}
 	]		
@@ -14,6 +15,16 @@ Component.entryPoint = function(NS){
 
 	var L = YAHOO.lang,
 		R = NS.roles;
+
+	NS.NumberFormat = {
+		decimalPlaces: 2,
+		thousandsSeparator: ' ',
+		suffix: ' '
+	};
+	NS.numberFormat = function(val, nf){
+		nf = nf || NS.NumberFormat;
+		return YAHOO.util.Number.format(val, nf);
+	};
 	
 	var SysNS = Brick.mod.sys;
 
@@ -45,6 +56,10 @@ Component.entryPoint = function(NS){
 			this.productid = d['elid']|0;
 			this.quantity = d['qt']|0;
 			this.price = d['pc']|0;
+		},
+		getSum: function(){
+			if (!L.isValue(this.product)){ return 0; }
+			return this.quantity*this.product.ext['price'];
 		}
 	});
 	NS.CartProduct = CartProduct;
@@ -56,7 +71,15 @@ Component.entryPoint = function(NS){
 			// 'order': '!order'
 		});
 	};
-	YAHOO.extend(CartProductList, SysNS.ItemList, {	});
+	YAHOO.extend(CartProductList, SysNS.ItemList, {
+		getSum: function(){
+			var sm = 0;
+			this.foreach(function(item){
+				sm += item.getSum();
+			});
+			return sm;
+		}
+	});
 	NS.CartProductList = CartProductList;
 	
 	var Payment = function(d){

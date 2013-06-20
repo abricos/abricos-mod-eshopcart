@@ -1,8 +1,7 @@
-.aw-eshop .cartproductlist .elrow .rborder {
-	border: 1px solid #D1D3DC;
-	border-radius: 5px;
+.aw-eshop .cartproductlist .tlist {
+	height: 200px;
+	overflow-y: auto;
 }
-
 .aw-eshop .cartproductlist .elrow {
 	position: relative;
 	border-bottom: 1px solid #DCDEE4;
@@ -13,13 +12,50 @@
 	background-color: #FFF0C6;
 }
 
-.aw-eshop .cartproductlist .elrow table.tline {
+.aw-eshop .cartproductlist table.thead {
+	border-bottom: 1px solid #DCDEE4;
+	font-size: 11px;
+}
+.aw-eshop .cartproductlist table.thead,
+.aw-eshop .cartproductlist table.tline,
+.aw-eshop .cartproductlist table.tsum {
 	width: 100%;
 }
 
-.aw-eshop .cartproductlist .elrow .tline td {
-	padding: 5px 0 5px 5px;
+.aw-eshop .cartproductlist td {
+	padding: 8px 0 8px 5px;
 }
-.aw-eshop .cartproductlist .elrow .tline td.tl {
-	width: 140px;
+.aw-eshop .cartproductlist td.tl {
+	width: 350px;
+}
+.aw-eshop .cartproductlist td.pc {
+	width: 100px;
+}
+.aw-eshop .cartproductlist td.qt {
+	width: 100px;
+}
+.aw-eshop .cartproductlist td.sm {
+	width: 100px;
+}
+.aw-eshop .cartproductlist td.rm {
+	width: 80px;
+}
+.aw-eshop .cartproductlist .thead td {
+	
+}
+
+.aw-eshop .cartproductlist .thead td,
+.aw-eshop .cartproductlist .tline td.qt { 
+	text-align: center;
+}
+
+.aw-eshop .cartproductlist .tline td.pc,
+.aw-eshop .cartproductlist .tline td.sm,
+.aw-eshop .cartproductlist .tline td.rm {
+	text-align: right;
+}
+
+.aw-eshop .cartproductlist table.tsum {
+	font-weight: bold;
+	font-size: 14px;
 }

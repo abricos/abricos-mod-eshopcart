@@ -1,16 +1,25 @@
 <!--{widget}-->
 <div id="{i#id}" class="aw-eshop aw-eshopcart aw-catalog">
 	<div class="cartproductlist">
-
 		<table class="thead" id="{i#head}"><tbody><tr>
-			<td class="tl">&nbsp;<td>
-			<td class="pc">&nbsp;<td>
-			<td class="qt">&nbsp;<td>
-			<td class="sm">&nbsp;<td>
-			<td class="rm">&nbsp;<td>
+			<td class="tl">&nbsp;</td>
+			<td class="pc">Цена</td>
+			<td class="qt">Количество</td>
+			<td class="sm">Сумма</td>
+			<td class="rm">&nbsp;</td>
 		</tr></tbody></table>
 		
-		<div id="{i#list}"></div>	
+		<div id="{i#list}" class="tlist"></div>
+		
+		<table class="tsum" id="{i#sum}"><tbody><tr>
+			<td class="tl">Итого</td>
+			<td class="pc">&nbsp;</td>
+			<td class="qt">&nbsp;</td>
+			<td class="sm">
+				<span id="{i#sm}"></span> руб.
+			</td>
+			<td class="rm">&nbsp;</td>
+		</tr></tbody></table>
 	</div>
 </div>
 
@@ -21,9 +30,9 @@
 			<td class="tl">
 				<a href="{v#url}" id="{i#tl}"></a>
 			</td>
-			<td class="pc"><div id="{i#pc}"></div></td>
-			<td class="qt"><div id="{i#qt}"></div></td>
-			<td class="sm"><div id="{i#qt}"></div></td>
+			<td class="pc" id="{i#pc}"></td>
+			<td class="qt" id="{i#qt}"></td>
+			<td class="sm" id="{i#sm}"></td>
 			<td class="rm">
 				<a href="#" class="habtn">Удалить</a>
 			</td>

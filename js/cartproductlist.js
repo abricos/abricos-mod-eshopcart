@@ -68,6 +68,10 @@ Component.entryPoint = function(NS){
 		
 				ws[ws.length] = w;
 			});
+			
+			this.elSetHTML({
+				'sm': NS.numberFormat(NS.manager.cartProductList.getSum())
+			});
 		},
 		foreach: function(f){
 			if (!L.isFunction(f)){ return; }
@@ -113,11 +117,18 @@ Component.entryPoint = function(NS){
 			
 			if (L.isValue(catprod.product)){
 				var prod = catprod.product;
+				
 				this.elSetHTML({
 					'tl': prod.title,
-					'url': prod.url()
+					'url': prod.url(),
+					'pc': NS.numberFormat(prod.ext['price'])
+					
 				});
 			}
+			this.elSetHTML({
+				'qt': catprod.quantity,
+				'sm': NS.numberFormat(catprod.getSum())
+			});
 			
 		},
 		onClick: function(el, tp){
