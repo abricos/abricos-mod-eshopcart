@@ -12,11 +12,9 @@
 </div>
 <script>
 	var showCart = function(){
-		
 		var s = function(el){el.style.display = ''; },
-			h = function(el){el.style.display = 'none'; } ;
-
-		var ell = document.getElementById('aw-eshopcart-loadingimg');
+			h = function(el){el.style.display = 'none'; },
+			ell = document.getElementById('aw-eshopcart-loadingimg');
 		s(ell);
 		Brick.ff('eshopcart', 'cart', function(){
 			h(ell);

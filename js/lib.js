@@ -13,7 +13,8 @@ Component.requires = {
 };
 Component.entryPoint = function(NS){
 
-	var L = YAHOO.lang,
+	var Dom = YAHOO.util.Dom,
+		L = YAHOO.lang,
 		R = NS.roles;
 
 	NS.NumberFormat = {
@@ -63,8 +64,8 @@ Component.entryPoint = function(NS){
 		}
 	});
 	NS.CartProduct = CartProduct;
+
 	var CartProductList = function(d){
-		
 		this.productList = null;
 		
 		CartProductList.superclass.constructor.call(this, d, CartProduct, {
@@ -78,6 +79,13 @@ Component.entryPoint = function(NS){
 				sm += item.getSum();
 			});
 			return sm;
+		},
+		getQuantity: function(){
+			var qt = 0;
+			this.foreach(function(item){
+				qt += item.quantity;
+			});
+			return qt;
 		}
 	});
 	NS.CartProductList = CartProductList;
@@ -266,12 +274,26 @@ Component.entryPoint = function(NS){
 			if (!L.isValue(d) || !L.isValue(d['cartproducts']) || !L.isValue(d['cartproducts']['list'])){
 				return null;
 			}
+			this.cartProductList.clear();
 			this.cartProductList.update(d['cartproducts']['list']);
 			var pList = this.cartProductList.productList = this.eshopManager._elementListUpdate(d['cartproducts']);
 			
+			var sm = 0, qt = 0;
 			this.cartProductList.foreach(function(item){
 				item.product = pList.get(item.productid);
+				sm += item.getSum();
+				qt += item.quantity;
 			});
+			
+			// обновить данные на страницах
+			var elsQt = Dom.getElementsByClassName('eshop-cart-count');
+			for (var i=0; i<elsQt.length;i++){
+				elsQt[i].innerHTML = qt;
+			}
+			var elsSm = Dom.getElementsByClassName('eshop-cart-summ');
+			for (var i=0; i<elsSm.length;i++){
+				elsSm[i].innerHTML = NS.numberFormat(sm);
+			}
 		},
 
 		cartProductAdd: function(productid, callback){
