@@ -17,7 +17,8 @@ Component.entryPoint = function(NS){
 		buildTemplate = this.buildTemplate,
 		BW = Brick.mod.widget.Widget;
 	
-	var UID = Brick.env.user.id;
+	var UID = Brick.env.user.id,
+		NUID = UID;
 
 	var OrderingWidget = function(container, cfg){
 		cfg = L.merge({
@@ -39,7 +40,7 @@ Component.entryPoint = function(NS){
 		onLoad: function(cfg){
 			var __self = this;
 			NS.initManager(function(){
-				if (Brick.env.user.id == 0){
+				if (UID == 0){
 					Brick.ff('user', 'guest', function(){
 						__self._onLoadManager();
 					});
@@ -94,8 +95,9 @@ Component.entryPoint = function(NS){
 		onLoad: function(cfg){
 			this.authWidget = new Brick.mod.user.EasyAuthRegWidget(this.gel('auth'), {
 				'onAuthCallback': function(){
+					Brick.console(arguments);
 					// Brick.Page.reload(NS.navigator.performer.discussproj(perf.id));
-					Brick.Page.reload();
+					// Brick.Page.reload();
 				}
 			});
 		},
