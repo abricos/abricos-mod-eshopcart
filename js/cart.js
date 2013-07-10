@@ -7,7 +7,7 @@ var Component = new Brick.Component();
 Component.requires = {
 	mod:[
 		// {name: 'sys', files: ['container.js']},
-		{name: '{C#MODNAME}', files: ['cartproductlist.js']}
+		{name: '{C#MODNAME}', files: ['ordering.js', 'cartproductlist.js']}
 	]
 };
 Component.entryPoint = function(NS){
@@ -61,7 +61,6 @@ Component.entryPoint = function(NS){
 		CartViewPanel.superclass.constructor.call(this, {fixedcenter: true});
 	};
 	YAHOO.extend(CartViewPanel, Brick.widget.Dialog, {
-		
 		initTemplate: function(){
 			return buildTemplate(this, 'panel').replace('panel');
 		},
@@ -78,8 +77,22 @@ Component.entryPoint = function(NS){
 					}
 				}
 			}
-				
+
 			new NS.CartViewWidget(this._TM.getEl('panel.widget'), cfg);
+		},
+		onClick: function(el){
+			
+			var tp = this._TId['panel'];
+			switch(el.id){
+			case tp['bclose']: this.close(); return true;
+			case tp['border']: this.showOrderPanel(); return true;
+			}
+			
+			return false;
+		},
+		showOrderPanel: function(){
+			new NS.OrderingPanel();
+			this.close();
 		}
 	});
 	NS.CartViewPanel = CartViewPanel;

@@ -1,25 +1,30 @@
 <!--{widget}-->
-<div id="{i#id}" class="cart">
+<div id="{i#id}" class="ordering">
 	<div id="{i#loading}">
 		<div id="{i#loading}" class="loading">
 			<img src="/images/loading.gif" />
 		</div>
 	</div>
 	<div id="{i#view}" style="display: none">
-		<h2>Корзина</h2>
-
-		<div id="{i#list}"></div>
+		<div id="{i#auth}"></div>
 	</div>
 </div>
 
 <!--{panel}-->
-<div class='hd'>Корзина</div>
+<div class='hd'>Оформление заказа</div>
 <div class='bd aw-eshop aw-eshopcart'>
 	<div id="{i#widget}" class="viewinpanel"></div>
-	
-	<div class="buttons right">
-		<input id="{i#border}" type="button" value="Оформить заказ" class="btn"/>
-		<input id="{i#bclose}" type="button" value="Продолжить покупки" class="btn"/>
-	</div>
 </div>
 
+
+
+<!--{auth}-->
+<div id="{i#id}" class="auth">
+
+	<div id="{i#auth}" class="contview"></div>
+	
+	<div class="buttons right">
+		<input id="{i#bnext}" type="button" value="Оформить без регистрации" class="btn"/>
+	</div>
+	
+</div>

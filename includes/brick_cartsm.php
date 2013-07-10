@@ -14,7 +14,7 @@ $info = $modMan->CartInfo();
 
 $brick->content = Brick::ReplaceVarByData($brick->content, array(
 	"count" => $info['qty'],
-	"summ" => $info['sum']
+	"summ" => number_format($info['sum'], 2, ',', ' ')
 ));
 
 ?>
