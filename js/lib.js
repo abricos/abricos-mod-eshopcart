@@ -278,9 +278,16 @@ Component.entryPoint = function(NS){
 			this.cartProductList.update(d['cartproducts']['list']);
 			var pList = this.cartProductList.productList = this.eshopManager._elementListUpdate(d['cartproducts']);
 			
-			var sm = 0, qt = 0;
 			this.cartProductList.foreach(function(item){
 				item.product = pList.get(item.productid);
+			});
+			
+			this.updateCartInfoElements();
+		},
+		
+		updateCartInfoElements: function(){
+			var sm = 0, qt = 0;
+			this.cartProductList.foreach(function(item){
 				sm += item.getSum();
 				qt += item.quantity;
 			});
@@ -294,6 +301,7 @@ Component.entryPoint = function(NS){
 			for (var i=0; i<elsSm.length;i++){
 				elsSm[i].innerHTML = NS.numberFormat(sm);
 			}
+			
 		},
 
 		cartProductAdd: function(productid, callback){

@@ -50,17 +50,28 @@ Component.entryPoint = function(NS){
 			});
 		},
 		_onLoadManager: function(){
+			
+			NS.manager.updateCartInfoElements();
+			
 			this.elHide('loading');
 			this.elShow('view');
 
 			if (UID == 0){
-				this.authWidget = new NS.OrderingAuthWidget(this.gel('auth'));
+				this.authWidget = new NS.OrderingAuthWidget(this.gel('auth'), {
+					'onLogin': function(){
+					},
+					'onNext': function(){
+					}
+				});
 			}
 		},
 		onClick: function(el, tp){
 			switch(el.id){
 			// case tp['badd']: this.showNewEditor(); return true;
 			}
+		},
+		showDeliveryPage: function(){
+			
 		}
 	});
 	NS.OrderingWidget = OrderingWidget;
@@ -79,7 +90,10 @@ Component.entryPoint = function(NS){
 	NS.OrderingPanel = OrderingPanel;
 
 	var OrderingAuthWidget = function(container, cfg){
-		cfg = L.merge({}, cfg || {});
+		cfg = L.merge({
+			'onLogin': null,
+			'onNext': null
+		}, cfg || {});
 
 		OrderingAuthWidget.superclass.constructor.call(this, container, {
 			'buildTemplate': buildTemplate, 'tnames': 'auth' 
@@ -94,16 +108,17 @@ Component.entryPoint = function(NS){
 		},
 		onLoad: function(cfg){
 			this.authWidget = new Brick.mod.user.EasyAuthRegWidget(this.gel('auth'), {
-				'onAuthCallback': function(){
-					Brick.console(arguments);
-					// Brick.Page.reload(NS.navigator.performer.discussproj(perf.id));
-					// Brick.Page.reload();
+				'onAuthCallback': function(userid){
+					NUID = userid;
+					NS.life(cfg['onLogin'], userid);
 				}
 			});
 		},
 		onClick: function(el, tp){
 			switch(el.id){
-			// case tp['badd']: this.showNewEditor(); return true;
+			case tp['bnext']: 
+				NS.life(this.cfg['onNext']);
+				return true;
 			}
 		}
 	});
