@@ -1,3 +1,9 @@
+<!--{panel}-->
+<div class='hd'>Оформление заказа</div>
+<div class='bd aw-eshop aw-eshopcart'>
+	<div id="{i#widget}" class="viewinpanel"></div>
+</div>
+
 <!--{widget}-->
 <div id="{i#id}" class="ordering aw-eshop aw-catalog">
 	<div id="{i#loading}">
@@ -15,6 +21,7 @@
 	
 		<div id="{i#auth}" style="display: none"></div>
 		<div id="{i#delivery}" style="display: none"></div>
+		<div id="{i#payment}" style="display: none"></div>
 	</div>
 </div>
 
@@ -101,11 +108,33 @@
 <!--{deliveryrow}-->
 <div class="delrow">
 	<input id="{i#id}-{v#id}" name="deliveryrow" type="radio" /> 
-	<label for="{i#id}-{v#id}">{v#tl}</label>
+	<label for="{i#id}-{v#id}">{v#tl} {v#pc}</label>
 </div> 
 
-<!--{panel}-->
-<div class='hd'>Оформление заказа</div>
-<div class='bd aw-eshop aw-eshopcart'>
-	<div id="{i#widget}" class="viewinpanel"></div>
+<!--{deliveryrowprice}-->
+<span> - {v#val} руб.</span>
+
+<!--{payment}-->
+<div id="{i#id}" class="payment">
+
+	<div class="contview">
+		<h4>Выберите способ оплаты</h4>
+		<div id="{i#table}"></div>
+	</div>
+	
+	<div class="buttons right">
+		<input id="{i#bprev}" type="button" value="Вернуться" class="btn"/>
+		<input id="{i#bnext}" type="button" value="Продолжить" class="btn"/>
+	</div>
 </div>
+
+<!--{paymenttable}-->
+<div class="paytbl">
+	{v#rows}
+</div>
+
+<!--{paymentrow}-->
+<div class="payrow">
+	<input id="{i#id}-{v#id}" name="paymentrow" type="radio" /> 
+	<label for="{i#id}-{v#id}">{v#tl}</label>
+</div> 

@@ -34,3 +34,7 @@
 .aw-eshopcart .ordering .editform textarea.inp {
     height: 50px;
 }
+
+.aw-eshopcart .ordering .payrow input {
+	margin-right: 5px;
+}

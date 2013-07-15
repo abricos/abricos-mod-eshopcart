@@ -53,7 +53,6 @@ Component.entryPoint = function(NS){
 			});
 		},
 		_onLoadManager: function(){
-			
 			NS.manager.updateCartInfoElements();
 			
 			this.elHide('loading');
@@ -64,6 +63,15 @@ Component.entryPoint = function(NS){
 			this.widgets['delivery'] = new NS.OrderingDeliveryWidget(this.gel('delivery'), {
 				'onNext': function(){
 					__self.showPaymentPage();
+				}
+			});
+			
+			this.widgets['payment'] = new NS.OrderingPaymentWidget(this.gel('payment'), {
+				'onNext': function(){
+					__self.showAcceptPage();
+				},
+				'onPrev': function(){
+					__self.showDeliveryPage();
 				}
 			});
 			
@@ -81,8 +89,6 @@ Component.entryPoint = function(NS){
 			}else{
 				this.showWidget('delivery');
 			}
-			
-			
 		},
 		onClick: function(el, tp){
 			switch(el.id){
@@ -97,6 +103,9 @@ Component.entryPoint = function(NS){
 		},
 		showDeliveryPage: function(){
 			this.showWidget('delivery');
+		},
+		showPaymentPage: function(){
+			this.showWidget('payment');
 		}
 	});
 	NS.OrderingWidget = OrderingWidget;
@@ -155,7 +164,7 @@ Component.entryPoint = function(NS){
 		}, cfg || {});
 
 		OrderingDeliveryWidget.superclass.constructor.call(this, container, {
-			'buildTemplate': buildTemplate, 'tnames': 'delivery,deliverytable,deliveryrow' 
+			'buildTemplate': buildTemplate, 'tnames': 'delivery,deliverytable,deliveryrow,deliveryrowprice' 
 		}, cfg);
 	};
 	YAHOO.extend(OrderingDeliveryWidget, BW, {
@@ -167,8 +176,12 @@ Component.entryPoint = function(NS){
 			NS.manager.deliveryList.foreach(function(item){
 				lst += TM.replace('deliveryrow', {
 					'id': item.id,
-					'tl': item.title
+					'tl': item.title,
+					'pc': item.price > 0 ? TM.replace('deliveryrowprice', {
+						'val': NS.numberFormat(item.price)
+					}) : ''
 				});
+				
 			});
 			this.elSetHTML('table', TM.replace('deliverytable', {
 				'rows': lst
@@ -201,5 +214,43 @@ Component.entryPoint = function(NS){
 	});
 	NS.OrderingDeliveryWidget = OrderingDeliveryWidget;
 
+	var OrderingPaymentWidget = function(container, cfg){
+		cfg = L.merge({
+			'onNext': null,
+			'onPrev': null
+		}, cfg || {});
+
+		OrderingPaymentWidget.superclass.constructor.call(this, container, {
+			'buildTemplate': buildTemplate, 'tnames': 'payment,paymenttable,paymentrow' 
+		}, cfg);
+	};
+	YAHOO.extend(OrderingPaymentWidget, BW, {
+		init: function(cfg){
+			this.cfg = cfg;
+		},
+		onLoad: function(cfg){
+			var TM = this._TM, lst = "";
+			NS.manager.paymentList.foreach(function(item){
+				lst += TM.replace('paymentrow', {
+					'id': item.id,
+					'tl': item.title
+				});
+			});
+			this.elSetHTML('table', TM.replace('paymenttable', {
+				'rows': lst
+			}));
+		},
+		onClick: function(el, tp){
+			switch(el.id){
+			case tp['bnext']: 
+				NS.life(this.cfg['onNext']);
+				return true;
+			case tp['bprev']: 
+				NS.life(this.cfg['onPrev']);
+				return true;
+			}
+		}
+	});
+	NS.OrderingPaymentWidget = OrderingPaymentWidget;	
 
 };
