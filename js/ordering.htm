@@ -1,5 +1,5 @@
 <!--{widget}-->
-<div id="{i#id}" class="ordering">
+<div id="{i#id}" class="ordering aw-eshop aw-catalog">
 	<div id="{i#loading}">
 		<div id="{i#loading}" class="loading">
 			<img src="/images/loading.gif" />
@@ -13,7 +13,8 @@
 		</div>
 	
 	
-		<div id="{i#auth}"></div>
+		<div id="{i#auth}" style="display: none"></div>
+		<div id="{i#delivery}" style="display: none"></div>
 	</div>
 </div>
 
@@ -37,10 +38,49 @@
 <div id="{i#id}" class="delivery">
 
 	<div class="contview">
-		<div id="{i#auth}"></div>
-		<div class="cmt">
-			Авторизация на сайте позволит получить бонусы и экономить 
-			время при последующих покупках
+		<h4>Выберите способ получения заказа</h4>
+		<div id="{i#table}"></div>
+		
+		<div class="editform">
+	
+			<div class="r">
+				
+				<dl class="fnm">
+					<dt>Имя <span class="red">*</span></dt>
+					<dd>
+						<input id="{i#lnm}" type="text" class="inp" />
+					</dd>
+				</dl>
+				
+				<dl class="lnm">
+					<dt>Фамилия <span class="red">*</span></dt>
+					<dd>
+						<input id="{i#lnm}" type="text" class="inp" />
+					</dd>
+				</dl>
+
+				<dl class="ph">
+					<dt>Телефон <span class="red">*</span></dt>
+					<dd>
+						<input id="{i#ph}" type="text" class="inp" />
+					</dd>
+				</dl>
+				
+				<dl class="address" id="{i#fieldadr}">
+					<dt>Адрес доставки <span class="red">*</span></dt>
+					<dd>
+						<textarea id="{i#adr}" class="inp"></textarea>
+					</dd>
+				</dl>
+				
+				<dl class="descript">
+					<dt>Дополнительная информация</dt>
+					<dd>
+						<textarea id="{i#dsc}" class="inp"></textarea>
+						<div class="dsc">Удобное время звонка, дополнительные номера телефонов, этаж и т.д.</div>
+					</dd>
+				</dl>
+			</div>		
 		</div>
 	</div>
 	
@@ -48,6 +88,21 @@
 		<input id="{i#bnext}" type="button" value="Продолжить" class="btn"/>
 	</div>
 </div>
+
+<!--{deliverytable}-->
+<div class="deltbl">
+	<div class="delrow">
+		<input value="0" id="{i#mydel}" name="deliveryrow" type="radio" checked="checked" />
+		<label for="{i#mydel}">Заберу самостоятельно</label>
+	</div> 
+	{v#rows}
+</div>
+
+<!--{deliveryrow}-->
+<div class="delrow">
+	<input id="{i#id}-{v#id}" name="deliveryrow" type="radio" /> 
+	<label for="{i#id}-{v#id}">{v#tl}</label>
+</div> 
 
 <!--{panel}-->
 <div class='hd'>Оформление заказа</div>

@@ -32,9 +32,12 @@ Component.entryPoint = function(NS){
 		init: function(cfg){
 			this.cfg = cfg;
 			
-			this.authWidget = null;
+			this.widgets = {};
 		},
 		destroy: function(){
+			for (var n in this.widgets){
+				this.widgets[n].destroy();
+			}
 			OrderingWidget.superclass.destroy.call(this);
 		},
 		onLoad: function(cfg){
@@ -56,22 +59,44 @@ Component.entryPoint = function(NS){
 			this.elHide('loading');
 			this.elShow('view');
 
+			var __self = this;
+			
+			this.widgets['delivery'] = new NS.OrderingDeliveryWidget(this.gel('delivery'), {
+				'onNext': function(){
+					__self.showPaymentPage();
+				}
+			});
+			
 			if (UID == 0){
-				this.authWidget = new NS.OrderingAuthWidget(this.gel('auth'), {
-					'onLogin': function(){
+				this.widgets['auth'] = new NS.OrderingAuthWidget(this.gel('auth'), {
+					'onLogin': function(userid){
+						NUID = userid;
+						__self.showDeliveryPage();
 					},
 					'onNext': function(){
+						__self.showDeliveryPage();
 					}
 				});
+				this.showWidget('auth');
+			}else{
+				this.showWidget('delivery');
 			}
+			
+			
 		},
 		onClick: function(el, tp){
 			switch(el.id){
 			// case tp['badd']: this.showNewEditor(); return true;
 			}
 		},
+		showWidget: function(n){
+			for (var ni in this.widgets){
+				this.elHide(ni);
+			}
+			this.elShow(n);
+		},
 		showDeliveryPage: function(){
-			
+			this.showWidget('delivery');
 		}
 	});
 	NS.OrderingWidget = OrderingWidget;
@@ -104,12 +129,12 @@ Component.entryPoint = function(NS){
 			this.cfg = cfg;
 		},
 		destroy: function(){
+			this.authWidget.destroy();
 			OrderingAuthWidget.superclass.destroy.call(this);
 		},
 		onLoad: function(cfg){
 			this.authWidget = new Brick.mod.user.EasyAuthRegWidget(this.gel('auth'), {
 				'onAuthCallback': function(userid){
-					NUID = userid;
 					NS.life(cfg['onLogin'], userid);
 				}
 			});
@@ -123,5 +148,58 @@ Component.entryPoint = function(NS){
 		}
 	});
 	NS.OrderingAuthWidget = OrderingAuthWidget;
+
+	var OrderingDeliveryWidget = function(container, cfg){
+		cfg = L.merge({
+			'onNext': null
+		}, cfg || {});
+
+		OrderingDeliveryWidget.superclass.constructor.call(this, container, {
+			'buildTemplate': buildTemplate, 'tnames': 'delivery,deliverytable,deliveryrow' 
+		}, cfg);
+	};
+	YAHOO.extend(OrderingDeliveryWidget, BW, {
+		init: function(cfg){
+			this.cfg = cfg;
+		},
+		onLoad: function(cfg){
+			var TM = this._TM, lst = "";
+			NS.manager.deliveryList.foreach(function(item){
+				lst += TM.replace('deliveryrow', {
+					'id': item.id,
+					'tl': item.title
+				});
+			});
+			this.elSetHTML('table', TM.replace('deliverytable', {
+				'rows': lst
+			}));
+			this.updateFields();
+		},
+		onClick: function(el, tp){
+			switch(el.id){
+			case tp['bnext']: 
+				NS.life(this.cfg['onNext']);
+				return true;
+			}
+			this.updateFields();
+		},
+		updateFields: function(){
+			var TId = this._TId, selid = 0, __self = this;
+			NS.manager.deliveryList.foreach(function(item){
+				var el = Dom.get(TId['deliveryrow']['id']+'-'+item.id);
+				if (L.isValue(el) && el.checked){
+					selid = item.id;
+					return true;
+				}
+			});
+			if (selid == 0){
+				__self.elHide('fieldadr');
+			}else{
+				__self.elShow('fieldadr');
+			}
+		}
+	});
+	NS.OrderingDeliveryWidget = OrderingDeliveryWidget;
+
 
 };
