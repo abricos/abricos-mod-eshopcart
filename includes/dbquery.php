@@ -68,6 +68,17 @@ class EShopCartQuery {
 		return $db->insert_id();
 	}
 	
+	public static function CartClear(Ab_Database $db, User $user){
+		$userid = $user->id;
+		$sessionid = $user->session->key;
+		
+		$sql = "
+			DELETE FROM ".$db->prefix."eshp_cart
+			WHERE ".($userid > 0 ? "userid=".bkint($userid) : "session='".bkstr($sessionid)."'")."
+		";
+		$db->query_write($sql);
+	}
+	
 	public static function CartProductUpdateDouble(Ab_Database $db, User $user, EShopCartProduct $cartProduct){
 		
 		$userid = $user->id;
@@ -82,6 +93,42 @@ class EShopCartQuery {
 		
 		EShopCartQuery::CartProductAppend($db, $user, $cartProduct->productid, $cartProduct->quantity, $cartProduct->price);
 	}
+	
+	public static function OrderApppend(Ab_Database $db, $userid, $paymentid, $deliveryid, $ci, $ip){
+		$sql = "
+			INSERT INTO ".$db->prefix."eshp_order
+			(userid, deliveryid, paymentid, firstname, lastname, phone, adress, extinfo, ip, dateline) VALUES (
+				".bkint($userid).",
+				".bkint($deliveryid).",
+				".bkint($paymentid).",
+				'".bkstr($ci->fnm)."',
+				'".bkstr($ci->lnm)."',
+				'".bkstr($ci->ph)."',
+				'".bkstr($ci->adr)."',
+				'".bkstr($ci->dsc)."',
+				'".bkstr($ip)."',
+				".TIMENOW."
+			)
+		";
+		$db->query_write($sql);
+		return $db->insert_id();
+	}
+	
+	public static function OrderItemAppend(Ab_Database $db, $orderid, $productid, $quantity, $price){
+		$sql = "
+			INSERT INTO ".$db->prefix."eshp_orderitem
+			(orderid, productid, quantity, price) VALUES (
+				".bkint($orderid).",
+				".bkint($productid).",
+				".bkint($quantity).",
+				".doubleval($price)."
+			)
+		";
+		$db->query_write($sql);
+		return $db->insert_id();
+	}
+	
+	
 	
 	public static function PaymentList(Ab_Database $db){
 		$sql = "

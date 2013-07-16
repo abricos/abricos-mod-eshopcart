@@ -23,6 +23,7 @@
 		<div id="{i#delivery}" style="display: none"></div>
 		<div id="{i#payment}" style="display: none"></div>
 		<div id="{i#accept}" style="display: none"></div>
+		<div id="{i#thanks}" style="display: none"></div>
 	</div>
 </div>
 
@@ -183,7 +184,24 @@
 	</div>
 	
 	<div class="buttons right">
-		<input id="{i#bprev}" type="button" value="Вернуться" class="btn"/>
-		<input id="{i#bnext}" type="button" value="Подтвердить заказ" class="btn"/>
+		<span id="{i#btns}">
+			<input id="{i#bprev}" type="button" value="Вернуться" class="btn"/>
+			<input id="{i#bnext}" type="button" value="Подтвердить заказ" class="btn"/>
+		</span>
+		<span id="{i#loading}" style="display: none">
+			<img src="/images/loading.gif" /> Сохранение...
+		</span>
+	</div>
+</div>
+
+<!--{thanks}-->
+<div id="{i#id}" class="close">
+
+	<div class="contview">
+		<h4>Спасибо! Ваш заказ принят!</h4>
+	</div>
+	
+	<div class="buttons right">
+		<input id="{i#bnext}" type="button" value="Закрыть" class="btn"/>
 	</div>
 </div>

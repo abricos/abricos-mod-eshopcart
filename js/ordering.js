@@ -22,6 +22,7 @@ Component.entryPoint = function(NS){
 
 	var OrderingWidget = function(container, cfg){
 		cfg = L.merge({
+			'onClose': null
 		}, cfg || {});
 
 		OrderingWidget.superclass.constructor.call(this, container, {
@@ -31,7 +32,7 @@ Component.entryPoint = function(NS){
 	YAHOO.extend(OrderingWidget, BW, {
 		init: function(cfg){
 			this.cfg = cfg;
-			
+			this.isOrdering = false;
 			this.widgets = {};
 		},
 		destroy: function(){
@@ -53,6 +54,7 @@ Component.entryPoint = function(NS){
 			});
 		},
 		_onLoadManager: function(){
+			var cfg = this.cfg;
 			NS.manager.updateCartInfoElements();
 			
 			this.elHide('loading');
@@ -78,10 +80,16 @@ Component.entryPoint = function(NS){
 			this.widgets['accept'] = new NS.OrderingAcceptWidget(this.gel('accept'), {
 				'owner': this,
 				'onNext': function(){
-					Brick.console('!!! OK !!!');
+					__self.showThanksPage();
 				},
 				'onPrev': function(){
 					__self.showPaymentPage();
+				}
+			});
+			
+			this.widgets['thanks'] = new NS.OrderingThanksWidget(this.gel('thanks'), {
+				'onNext': function(){
+					NS.life(cfg['onClose'], true);
 				}
 			});
 			
@@ -100,7 +108,7 @@ Component.entryPoint = function(NS){
 				this.showWidget('delivery');
 			}
 			
-			this.showAcceptPage();
+			// this.showAcceptPage();
 		},
 		onClick: function(el, tp){
 			switch(el.id){
@@ -123,6 +131,10 @@ Component.entryPoint = function(NS){
 			this.widgets['accept'].refresh();
 			this.showWidget('accept');
 		},
+		showThanksPage: function(){
+			this.isOrdering = true;
+			this.showWidget('thanks');
+		},
 		getPayment: function(){
 			return this.widgets['payment'].getValue();
 		},
@@ -143,7 +155,20 @@ Component.entryPoint = function(NS){
 			return buildTemplate(this, 'panel').replace('panel');
 		},
 		onLoad: function(){
-			this.widget = new NS.OrderingWidget(this._TM.getEl('panel.widget'));
+			var __self = this;
+			this.widget = new NS.OrderingWidget(this._TM.getEl('panel.widget'), {
+				'onClose': function(){
+					__self.close();
+				}
+			});
+		},
+		reloadPage: function(){
+			if (UID != NUID || this.widget.isOrdering){
+				Brick.Page.reload('/');
+			}
+		},
+		onClose: function(){
+			this.reloadPage();
 		}
 	});
 	NS.OrderingPanel = OrderingPanel;
@@ -292,12 +317,8 @@ Component.entryPoint = function(NS){
 		},
 		onClick: function(el, tp){
 			switch(el.id){
-			case tp['bnext']: 
-				NS.life(this.cfg['onNext']);
-				return true;
-			case tp['bprev']: 
-				NS.life(this.cfg['onPrev']);
-				return true;
+			case tp['bnext']: NS.life(this.cfg['onNext']); return true;
+			case tp['bprev']:  NS.life(this.cfg['onPrev']); return true;
 			}
 		},
 		getValue: function(){
@@ -334,9 +355,7 @@ Component.entryPoint = function(NS){
 		},
 		onClick: function(el, tp){
 			switch(el.id){
-			case tp['bnext']: 
-				NS.life(this.cfg['onNext']);
-				return true;
+			case tp['bnext']: this.save(); return true;
 			case tp['bprev']: 
 				NS.life(this.cfg['onPrev']);
 				return true;
@@ -357,7 +376,7 @@ Component.entryPoint = function(NS){
 			}
 			
 			this.elSetHTML({
-				'fnm': cinfo['fnm']+' '+cinfo['lnm'],
+				'fio': cinfo['fnm']+' '+cinfo['lnm'],
 				'ph': cinfo['ph'],
 				'dsc': cinfo['dsc'],
 				'delivery': L.isValue(deli) ? deli.title : 'Самостоятельный вывоз',
@@ -365,8 +384,51 @@ Component.entryPoint = function(NS){
 			});
 			
 			this.cpListWidget.setDelivery(deli);
+		},
+		save: function(){
+			
+			var cfg = this.cfg, 
+				owner = cfg.owner,
+				pay = owner.getPayment(),
+				deli = owner.getDelivery(),
+				cinfo = owner.getCustomerInfo();
+
+			var sd = {
+				'paymentid': L.isValue(pay) ? pay.id : 0,
+				'deliveryid': L.isValue(deli) ? deli.id : 0,
+				'customer': cinfo
+			};
+			this.elHide('btns');
+			this.elShow('loading');
+			
+			NS.manager.ordering(sd, function(){
+				NS.life(cfg['onNext']);
+			});
 		}
 	});
 	NS.OrderingAcceptWidget = OrderingAcceptWidget;	
 	
+	var OrderingThanksWidget = function(container, cfg){
+		cfg = L.merge({
+			'onNext': null
+		}, cfg || {});
+
+		OrderingThanksWidget.superclass.constructor.call(this, container, {
+			'buildTemplate': buildTemplate, 'tnames': 'thanks' 
+		}, cfg);
+	};
+	YAHOO.extend(OrderingThanksWidget, BW, {
+		init: function(cfg){
+			this.cfg = cfg;
+		},
+		onClick: function(el, tp){
+			switch(el.id){
+			case tp['bnext']: 
+				NS.life(this.cfg['onNext']);
+				return true;
+			}
+		}		
+	});
+	NS.OrderingThanksWidget = OrderingThanksWidget;	
+
 };

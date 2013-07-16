@@ -487,7 +487,17 @@ Component.entryPoint = function(NS){
 				__self.discountList.remove(discountid);
 				NS.life(callback);
 			});			
-		}		
+		},
+		ordering: function(sd, callback){
+			var __self = this;
+			this.ajax({
+				'do': 'ordering',
+				'savedata': sd
+			}, function(d){
+				__self._updateCartProductList(d);
+				NS.life(callback);
+			});
+		}
 	};
 	NS.manager = null;
 	

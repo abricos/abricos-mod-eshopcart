@@ -61,6 +61,8 @@ class EShopCartManager extends Ab_ModuleManager {
 			case "cartproductlist": return $this->CartProductListToAJAX();
 			case "productaddtocart": return $this->CartProductAddToAJAX($d->productid);
 			
+			case "ordering": return $this->OrderingToAJAX($d->savedata);
+			
 			case "paymentlist": return $this->PaymentListToAJAX();
 			case "paymentsave": return $this->PaymentSaveToAJAX($d->savedata);
 			case "paymentlistorder": return $this->PaymentListSetOrder($d->paymentorders);
@@ -184,6 +186,70 @@ class EShopCartManager extends Ab_ModuleManager {
 		$this->CartProductAdd($productid);
 		
 		return $this->CartProductListToAJAX();
+	}
+	
+	public function Ordering($sd){
+		if (!$this->IsViewRole()){ return null; }
+
+		$plist = $this->CartProductList();
+		if ($plist->Count() == 0){ return null; }
+		
+		$paymentid = intval($sd->paymentid);
+		$deliveryid = intval($sd->deliveryid);
+		
+		$utmf = Abricos::TextParser(true);
+		
+		$ci = $sd->customer;
+		$ci->fnm = $utmf->Parser($ci->fnm);
+		$ci->lnm = $utmf->Parser($ci->lnm);
+		$ci->ph = $utmf->Parser($ci->ph);
+		$ci->adr = $utmf->Parser($ci->adr);
+		$ci->dsc = $utmf->Parser($ci->dsc);
+		
+		$ip = $_SERVER['REMOTE_ADDR'];
+		
+		$orderid = EShopCartQuery::OrderApppend($this->db, $this->userid, $paymentid, $deliveryid, $ci, $ip);
+		
+		$totalQty = 0; $totalSum = 0;
+		
+		for ($i=0; $i<$plist->Count(); $i++){
+			$p = $plist->GetByIndex($i);
+			EShopCartQuery::OrderItemAppend($this->db, $orderid, $p->id, $p->quantity, $p->price);
+			
+			$totalQty += $p->quantity;
+			$totalSum += $p->quantity * $p->price;
+		}
+		
+		EShopCartQuery::CartClear($this->db, $this->user);
+		
+		// отправка уведомление о новом заказе админу/-ам
+
+		$brick = Brick::$builder->LoadBrickS('eshopcart', 'templates', null, null);
+		$v = &$brick->param->var;
+		
+		
+		$repd = array(
+			"orderid"	=> $orderid,
+			"qty"		=> $totalQty,
+			"sm"		=> number_format($totalSum, 2, ',', ' '),
+			"fnm"		=> $ci->fnm,
+			"lnm"		=> $ci->lnm,
+			"ph"		=> $ci->ph,
+			"adr"		=> $ci->adr,
+			"dsc"		=> $ci->dsc,
+			"sitename" => Brick::$builder->phrase->Get('sys', 'site_name')
+		);
+		
+		$semails = $this->EMailAdmin();
+		$aemails = explode(",", $semails);
+		foreach ($aemails as $email){
+			$repd['email'] = $email = trim($email);
+			
+			$subject = Brick::ReplaceVarByData($v['newordersubj'], $repd);
+			$body = Brick::ReplaceVarByData($v['neworderbody'], $repd);
+			
+			Abricos::Notify()->SendMail($email, $subject, $body);
+		}
 	}
 	
 	/**
