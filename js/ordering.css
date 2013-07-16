@@ -39,8 +39,14 @@
 	margin-right: 5px;
 }
 
+.aw-eshop .ordering .accept .cartproductlist {
+	margin-top: 15px;
+}
+.aw-eshop .ordering .accept .cartproductlist td {
+    padding: 3px 0 3px 5px;
+}
 .aw-eshop .ordering .accept .cartproductlist .tlist {
-	height: 135px;
+	height: 118px;
 	overflow-y: auto;
 }
 

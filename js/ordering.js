@@ -363,6 +363,8 @@ Component.entryPoint = function(NS){
 				'delivery': L.isValue(deli) ? deli.title : 'Самостоятельный вывоз',
 				'payment': L.isValue(pay) ? pay.title : ''
 			});
+			
+			this.cpListWidget.setDelivery(deli);
 		}
 	});
 	NS.OrderingAcceptWidget = OrderingAcceptWidget;	

@@ -29,6 +29,7 @@ Component.entryPoint = function(NS){
 		init: function(cfg){
 			this.cfg = cfg;
 			this.wsList = [];
+			this.delivery = null;
 		},
 		destroy: function(){
 			this.clearList();
@@ -68,9 +69,23 @@ Component.entryPoint = function(NS){
 		
 				ws[ws.length] = w;
 			});
+
+			var sum = NS.manager.cartProductList.getSum();
+				
+			var deli = this.delivery;
+			if (!L.isValue(deli) || deli.price == 0){
+				this.elHide('delivery');
+			}else{
+				this.elShow('delivery');
+				sum += deli.price;
+				
+				this.elSetHTML({
+					'deliprice': NS.numberFormat(deli.price)
+				});
+			}
 			
 			this.elSetHTML({
-				'sm': NS.numberFormat(NS.manager.cartProductList.getSum())
+				'sm': NS.numberFormat(sum)
 			});
 		},
 		foreach: function(f){
@@ -93,6 +108,10 @@ Component.entryPoint = function(NS){
 			switch(el.id){
 			// case tp['badd']: this.showNewEditor(); return true;
 			}
+		},
+		setDelivery: function(delivery){
+			this.delivery = delivery;
+			this.renderList();
 		}
 	});
 	NS.CartProductListWidget = CartProductListWidget;
