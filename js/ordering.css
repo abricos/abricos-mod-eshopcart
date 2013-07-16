@@ -1,7 +1,7 @@
 .aw-eshopcart .ordering {
 	padding: 0px 10px 10px 10px;
 	min-width: 800px;
-	min-height: 400px;
+	min-height: 430px;
 }
 .aw-eshopcart .ordering .red {
 	color: red;
@@ -15,7 +15,7 @@
 }
 
 .aw-eshopcart .ordering .contview {
-	min-height: 350px;
+	min-height: 370px;
 }
 
 .aw-eshopcart .ordering .delivery .editform {
@@ -37,4 +37,31 @@
 
 .aw-eshopcart .ordering .payrow input {
 	margin-right: 5px;
+}
+
+.aw-eshop .ordering .accept .cartproductlist .tlist {
+	height: 135px;
+	overflow-y: auto;
+}
+
+
+.aw-eshop .ordering .accept .iinfo {
+	width: 100%;
+}
+.aw-eshop .ordering .accept .iinfo td {
+	padding: 3px 5px 5px 0;
+}
+
+.aw-eshop .ordering .accept .iinfo td {
+	border-bottom: 1px solid #CCCCCC;
+}
+
+.aw-eshop .ordering .accept .iinfo .col1 {
+	width: 200px;
+	border-right: 1px solid #CCCCCC;
+}
+
+.aw-eshop .ordering .accept .iinfo .col2 {
+	padding-left: 5px;
+	font-style: italic;
 }

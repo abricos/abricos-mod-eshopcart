@@ -75,6 +75,16 @@ Component.entryPoint = function(NS){
 				}
 			});
 			
+			this.widgets['accept'] = new NS.OrderingAcceptWidget(this.gel('accept'), {
+				'owner': this,
+				'onNext': function(){
+					Brick.console('!!! OK !!!');
+				},
+				'onPrev': function(){
+					__self.showPaymentPage();
+				}
+			});
+			
 			if (UID == 0){
 				this.widgets['auth'] = new NS.OrderingAuthWidget(this.gel('auth'), {
 					'onLogin': function(userid){
@@ -89,6 +99,8 @@ Component.entryPoint = function(NS){
 			}else{
 				this.showWidget('delivery');
 			}
+			
+			this.showAcceptPage();
 		},
 		onClick: function(el, tp){
 			switch(el.id){
@@ -106,6 +118,19 @@ Component.entryPoint = function(NS){
 		},
 		showPaymentPage: function(){
 			this.showWidget('payment');
+		},
+		showAcceptPage: function(){
+			this.widgets['accept'].refresh();
+			this.showWidget('accept');
+		},
+		getPayment: function(){
+			return this.widgets['payment'].getValue();
+		},
+		getDelivery: function(){
+			return this.widgets['delivery'].getValue();
+		},
+		getCustomerInfo: function(){
+			return this.widgets['delivery'].getCustomerInfo();
 		}
 	});
 	NS.OrderingWidget = OrderingWidget;
@@ -210,6 +235,26 @@ Component.entryPoint = function(NS){
 			}else{
 				__self.elShow('fieldadr');
 			}
+		},
+		getValue: function(){
+			var TId = this._TId, selItem = null;
+			NS.manager.deliveryList.foreach(function(item){
+				var el = Dom.get(TId['deliveryrow']['id']+'-'+item.id);
+				if (el.checked){
+					selItem = item;
+					return true;
+				}
+			});
+			return selItem;
+		},
+		getCustomerInfo: function(){
+			return {
+				'fnm': this.gel('fnm').value,
+				'lnm': this.gel('lnm').value,
+				'ph': this.gel('ph').value,
+				'adr': this.gel('adr').value,
+				'dsc': this.gel('dsc').value
+			};
 		}
 	});
 	NS.OrderingDeliveryWidget = OrderingDeliveryWidget;
@@ -229,7 +274,7 @@ Component.entryPoint = function(NS){
 			this.cfg = cfg;
 		},
 		onLoad: function(cfg){
-			var TM = this._TM, lst = "";
+			var TM = this._TM, TId = this._TId, lst = "";
 			NS.manager.paymentList.foreach(function(item){
 				lst += TM.replace('paymentrow', {
 					'id': item.id,
@@ -239,6 +284,11 @@ Component.entryPoint = function(NS){
 			this.elSetHTML('table', TM.replace('paymenttable', {
 				'rows': lst
 			}));
+			NS.manager.paymentList.foreach(function(item){
+				var el = Dom.get(TId['paymentrow']['id']+'-'+item.id);
+				el.checked = true;
+				return true;
+			});
 		},
 		onClick: function(el, tp){
 			switch(el.id){
@@ -249,8 +299,72 @@ Component.entryPoint = function(NS){
 				NS.life(this.cfg['onPrev']);
 				return true;
 			}
-		}
+		},
+		getValue: function(){
+			var TId = this._TId, selItem = null;
+			NS.manager.paymentList.foreach(function(item){
+				var el = Dom.get(TId['paymentrow']['id']+'-'+item.id);
+				if (el.checked){
+					selItem = item;
+					return true;
+				}
+			});
+			return selItem;
+		}		
 	});
 	NS.OrderingPaymentWidget = OrderingPaymentWidget;	
 
+	var OrderingAcceptWidget = function(container, cfg){
+		cfg = L.merge({
+			'onNext': null,
+			'onPrev': null,
+			'owner': null
+		}, cfg || {});
+
+		OrderingAcceptWidget.superclass.constructor.call(this, container, {
+			'buildTemplate': buildTemplate, 'tnames': 'accept' 
+		}, cfg);
+	};
+	YAHOO.extend(OrderingAcceptWidget, BW, {
+		init: function(cfg){
+			this.cfg = cfg;
+		},
+		onLoad: function(cfg){
+			this.cpListWidget = new NS.CartProductListWidget(this.gel('cart'));
+		},
+		onClick: function(el, tp){
+			switch(el.id){
+			case tp['bnext']: 
+				NS.life(this.cfg['onNext']);
+				return true;
+			case tp['bprev']: 
+				NS.life(this.cfg['onPrev']);
+				return true;
+			}
+		},
+		refresh: function(){
+			var owner = this.cfg.owner,
+				pay = owner.getPayment(),
+				deli = owner.getDelivery(),
+				cinfo = owner.getCustomerInfo();
+			
+			if (L.isValue(deli)){
+				this.elHide('mydelivery');
+				this.elShow('delivery,contadr');
+			}else{
+				this.elShow('mydelivery');
+				this.elHide('delivery,contadr');
+			}
+			
+			this.elSetHTML({
+				'fnm': cinfo['fnm']+' '+cinfo['lnm'],
+				'ph': cinfo['ph'],
+				'dsc': cinfo['dsc'],
+				'delivery': L.isValue(deli) ? deli.title : 'Самостоятельный вывоз',
+				'payment': L.isValue(pay) ? pay.title : ''
+			});
+		}
+	});
+	NS.OrderingAcceptWidget = OrderingAcceptWidget;	
+	
 };

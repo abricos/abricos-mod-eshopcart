@@ -22,6 +22,7 @@
 		<div id="{i#auth}" style="display: none"></div>
 		<div id="{i#delivery}" style="display: none"></div>
 		<div id="{i#payment}" style="display: none"></div>
+		<div id="{i#accept}" style="display: none"></div>
 	</div>
 </div>
 
@@ -55,7 +56,7 @@
 				<dl class="fnm">
 					<dt>Имя <span class="red">*</span></dt>
 					<dd>
-						<input id="{i#lnm}" type="text" class="inp" />
+						<input id="{i#fnm}" type="text" class="inp" />
 					</dd>
 				</dl>
 				
@@ -138,3 +139,50 @@
 	<input id="{i#id}-{v#id}" name="paymentrow" type="radio" /> 
 	<label for="{i#id}-{v#id}">{v#tl}</label>
 </div> 
+
+<!--{accept}-->
+<div id="{i#id}" class="accept">
+
+	<div class="contview">
+		<h4>Подтверждение заказа</h4>
+		
+		<div id="{i#cart}"></div>
+		
+		<table class="iinfo"><tbody>
+			<tr>
+				<td class="col1">Способ оплаты </td>
+				<td class="col2"><span id="{i#payment}"></span></td>
+			</tr>
+			<tr>
+				<td class="col1">Способ доставки </td>
+				<td class="col2">
+					<span id="{i#delivery}"></span>
+					<span id="{i#mydelivery}">Самостоятельный вывоз</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="col1">Получатель </td>
+				<td class="col2"><div id="{i#fio}"></div></td>
+			</tr>
+			<tr>
+				<td class="col1">Телефон</td>
+				<td class="col2"><span id="{i#ph}"></span></td>
+			</tr>
+			<tr id="{i#contadr}">
+				<td class="col1">Адрес доставки</td>
+				<td class="col2">
+					<span id="{i#adr}"></span>
+				</td>
+			</tr>
+			<tr>
+				<td class="col1">Дополнительная информация</td>
+				<td class="col2"><span id="{i#dsc}"></span></td>
+			</tr>
+		</tbody></table>
+	</div>
+	
+	<div class="buttons right">
+		<input id="{i#bprev}" type="button" value="Вернуться" class="btn"/>
+		<input id="{i#bnext}" type="button" value="Подтвердить заказ" class="btn"/>
+	</div>
+</div>
