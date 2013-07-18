@@ -152,7 +152,7 @@ Component.entryPoint = function(NS){
 		},
 		onClick: function(el, tp){
 			switch(el.id){
-			case tp['bremove']: case tp['bremovec']:
+			case tp['bremove']: 
 				this.onRemoveClick();
 				return true;
 			}
@@ -196,7 +196,7 @@ Component.entryPoint = function(NS){
 				__self = this;
 			Dom.setStyle(gel('btns'), 'display', 'none');
 			Dom.setStyle(gel('bloading'), 'display', '');
-			NS.manager.cartProductRemove(this.cartProduct.id, function(){
+			NS.manager.cartProductRemove(this.cartProduct.product.id, function(){
 				__self.close();
 				NS.life(__self.callback);
 			});

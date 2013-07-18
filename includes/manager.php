@@ -60,7 +60,8 @@ class EShopCartManager extends Ab_ModuleManager {
 
 			case "cartproductlist": return $this->CartProductListToAJAX();
 			case "productaddtocart": return $this->CartProductAddToAJAX($d->productid);
-			
+			case "productremovefromcart": return $this->CartProductRemoveToAJAX($d->productid);
+				
 			case "ordering": return $this->OrderingToAJAX($d->savedata);
 			
 			case "paymentlist": return $this->PaymentListToAJAX();
@@ -184,6 +185,18 @@ class EShopCartManager extends Ab_ModuleManager {
 	
 	public function CartProductAddToAJAX($productid){
 		$this->CartProductAdd($productid);
+		
+		return $this->CartProductListToAJAX();
+	}
+	
+	public function CartProductRemove($productid){
+		if (!$this->IsWriteRole()){ return null; }
+		
+		EShopCartQuery::CartProductRemove($this->db, $this->user, $productid);
+	}
+	
+	public function CartProductRemoveToAJAX($productid){
+		$this->CartProductRemove($productid);
 		
 		return $this->CartProductListToAJAX();
 	}

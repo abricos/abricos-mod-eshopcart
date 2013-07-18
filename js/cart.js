@@ -13,14 +13,14 @@ Component.requires = {
 Component.entryPoint = function(NS){
 	
 	var Dom = YAHOO.util.Dom,
-		E = YAHOO.util.Event,
 		L = YAHOO.lang,
 		buildTemplate = this.buildTemplate,
 		BW = Brick.mod.widget.Widget;
 
 	var CartViewWidget = function(container, cfg){
 		cfg = L.merge({
-			'addToCart': 0
+			'addToCart': 0,
+			'onLoadManager': null
 		}, cfg || {});
 
 		CartViewWidget.superclass.constructor.call(this, container, {
@@ -45,6 +45,8 @@ Component.entryPoint = function(NS){
 			this.elShow('view');
 			
 			this.listWidget = new NS.CartProductListWidget(this.gel('list'));
+			
+			NS.life(this.cfg['onLoadManager']);
 		},
 		onClick: function(el, tp){
 			switch(el.id){
@@ -65,7 +67,7 @@ Component.entryPoint = function(NS){
 			return buildTemplate(this, 'panel').replace('panel');
 		},
 		onLoad: function(){
-			var cfg = this.cartConfig;
+			var cfg = this.cartConfig, TM = this._TM;
 			if (L.isValue(cfg['buttonElement']) && cfg['buttonElement'].className){
 				
 				var arr = cfg['buttonElement'].className.split(' ');
@@ -77,11 +79,13 @@ Component.entryPoint = function(NS){
 					}
 				}
 			}
+			cfg['onLoadManager'] = function(){
+				Dom.setStyle(TM.getEl('panel.btns'), 'display', '');
+			};
 
-			new NS.CartViewWidget(this._TM.getEl('panel.widget'), cfg);
+			new NS.CartViewWidget(TM.getEl('panel.widget'), cfg);
 		},
 		onClick: function(el){
-			
 			var tp = this._TId['panel'];
 			switch(el.id){
 			case tp['bclose']: this.close(); return true;

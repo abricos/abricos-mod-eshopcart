@@ -68,6 +68,18 @@ class EShopCartQuery {
 		return $db->insert_id();
 	}
 	
+	public static function CartProductRemove(Ab_Database $db, User $user, $productid){
+		$userid = $user->id;
+		$session = $userid > 0 ? "" : $user->session->key;
+		
+		$sql = "
+			DELETE FROM ".$db->prefix."eshp_cart
+			WHERE productid=".bkint($productid)."
+				AND userid=".bkint($userid)." AND session='".bkstr($session)."'
+		";
+		$db->query_write($sql);
+	}
+	
 	public static function CartClear(Ab_Database $db, User $user){
 		$userid = $user->id;
 		$sessionid = $user->session->key;

@@ -314,6 +314,17 @@ Component.entryPoint = function(NS){
 				NS.life(callback);
 			});
 		},
+		
+		cartProductRemove: function(productid, callback){
+			var __self = this;
+			this.ajax({
+				'do': 'productremovefromcart',
+				'productid': productid
+			}, function(d){
+				__self._updateCartProductList(d);
+				NS.life(callback);
+			});
+		},
 
 		cartProductListLoad: function(callback){
 			var __self = this;

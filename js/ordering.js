@@ -378,6 +378,7 @@ Component.entryPoint = function(NS){
 			this.elSetHTML({
 				'fio': cinfo['fnm']+' '+cinfo['lnm'],
 				'ph': cinfo['ph'],
+				'adr': cinfo['adr'],
 				'dsc': cinfo['dsc'],
 				'delivery': L.isValue(deli) ? deli.title : 'Самостоятельный вывоз',
 				'payment': L.isValue(pay) ? pay.title : ''
