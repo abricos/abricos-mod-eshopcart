@@ -202,7 +202,7 @@ class EShopCartManager extends Ab_ModuleManager {
 	}
 	
 	public function Ordering($sd){
-		if (!$this->IsViewRole()){ return null; }
+		if (!$this->IsWriteRole()){ return null; }
 
 		$plist = $this->CartProductList();
 		if ($plist->Count() == 0){ return null; }
@@ -263,6 +263,12 @@ class EShopCartManager extends Ab_ModuleManager {
 			
 			Abricos::Notify()->SendMail($email, $subject, $body);
 		}
+	}
+	
+	public function OrderingToAJAX($sd){
+		$this->Ordering($sd);
+		
+		return $this->CartProductListToAJAX();
 	}
 	
 	/**
