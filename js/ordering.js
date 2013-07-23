@@ -22,7 +22,8 @@ Component.entryPoint = function(NS){
 
 	var OrderingWidget = function(container, cfg){
 		cfg = L.merge({
-			'onClose': null
+			'onClose': null,
+			'orderid': 0
 		}, cfg || {});
 
 		OrderingWidget.superclass.constructor.call(this, container, {
@@ -43,13 +44,24 @@ Component.entryPoint = function(NS){
 		},
 		onLoad: function(cfg){
 			var __self = this;
-			NS.initManager(function(){
+			var onLoadManager = function(){
 				if (UID == 0){
 					Brick.ff('user', 'guest', function(){
 						__self._onLoadManager();
 					});
 				}else{
 					__self._onLoadManager();
+				}
+			};
+			
+			NS.initManager(function(){
+				if (cfg['orderid']>0){
+					NS.manager.orderLoad(cfg['orderid'], function(order){
+						cfg['order'] = order;
+						onLoadManager();
+					});
+				}else{
+					onLoadManager();
 				}
 			});
 		},

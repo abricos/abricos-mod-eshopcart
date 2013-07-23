@@ -131,6 +131,11 @@ Component.entryPoint = function(NS){
 			this.cfg = cfg;
 			this.editorWidget = null;
 		},
+		buildTData: function(cartProduct, cfg){
+			return {
+				'url': L.isValue(cartProduct.product) ? cartProduct.product.url() : "" 
+			};
+		},
 		render: function(){
 			var catprod = this.cartProduct;
 			

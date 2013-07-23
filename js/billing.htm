@@ -1,0 +1,55 @@
+<!--{widget}-->
+<div id="{i#id}" class="aw-eshop aw-catalog">
+	<div id="{i#loading}" class="loading">
+		<img src="/images/loading.gif" /> Идет загрузка данных <br /> Пожалуйста, подождите...
+	</div>
+	<div id="{i#view}" style="display: none" class="yui-navset">
+		<ul class="yui-nav">
+			<li class="selected"><a href="#{i#new}"><em>Новые</em></a></li>
+			<li><a href="#{i#exec}"><em>Принятые на исполнение</em></a></li>
+			<li><a href="#{i#archive}"><em>Архив</em></a></li>
+			<li><a href="#{i#recycle}"><em>Корзина</em></a></li>
+		</ul>            
+		<div class="yui-content">
+			<div id="{i#new}"></div>
+			<div id="{i#exec}"></div>
+			<div id="{i#archive}"></div>
+			<div id="{i#recycle}"></div>
+		</div>
+	</div>
+</div>
+
+
+<!--{list}-->
+<div id="{i#id}" class="orderlist">
+	<div id='{i#pagtop}' class="pagtop"></div>
+	
+	<div id="{i#table}" class="orderlisttable"></div>
+	
+	<div id='{i#pagbottom}' class="pagbottom"></div>
+</div>
+
+<!--{table}-->
+<table>
+	<thead><tr>
+		<th>№</th>
+		<th>Дата</th>
+		<th>Сумма</th>
+		<th>Клиент</th>
+		<th>Адрес доставки</th>
+		<th>IP</th>
+		<th></th>
+	</tr></thead>
+	<tbody>{v#rows}</tbody>
+</table>
+
+<!--{row}-->
+<tr>
+	<td>{v#id}</td>
+	<td>{v#dt}</td>
+	<td>{v#sm}</td>
+	<td>{v#unm}</td>
+	<td>{v#adr}</td>
+	<td>{v#ip}</td>
+	<td></td>
+</tr>

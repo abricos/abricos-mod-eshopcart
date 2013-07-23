@@ -45,10 +45,6 @@ class EShopCartQuery {
 		return $db->query_read($sql);
 	}
 	
-	public static function CartProductListSum(Ab_Database $db){
-		
-	}
-	
 	public static function CartProductAppend(Ab_Database $db, User $user, $productid, $quantity, $price){
 		$userid = $user->id;
 		$session = $user->id > 0 ? "" : $user->session->key;
@@ -126,6 +122,32 @@ class EShopCartQuery {
 		return $db->insert_id();
 	}
 	
+	public static function Order(Ab_Database $db, $orderid, $userid = -1){
+		$sql = "
+			SELECT
+				o.orderid as id,
+				o.userid as uid,
+				o.deliveryid as delid,
+				o.paymentid as payid,
+				o.ip as ip,
+				o.firstname as fnm,
+				o.lastname as lnm,
+				o.phone as ph,
+				o.adress as adress,
+				o.extinfo as dsc,
+				o.status as st,
+				sum(i.quantity) as qty,
+				sum(i.quantity*i.price) as sm,
+				o.dateline as dl
+			FROM ".$db->prefix."eshp_order o
+			LEFT JOIN ".$db->prefix."eshp_orderitem i ON o.orderid=i.orderid
+			WHERE o.orderid=".bkint($orderid)."
+			GROUP BY i.orderid
+			LIMIT 1
+		";
+		return $db->query_first($sql);
+	}
+	
 	public static function OrderItemAppend(Ab_Database $db, $orderid, $productid, $quantity, $price){
 		$sql = "
 			INSERT INTO ".$db->prefix."eshp_orderitem
@@ -140,8 +162,23 @@ class EShopCartQuery {
 		return $db->insert_id();
 	}
 	
-	
-	
+	/**
+	 * Получить список товаров конкретного заказа
+	 */
+	public static function OrderItemList(Ab_Database $db, $orderid, $userid = -1){
+		$sql = "
+			SELECT
+				oi.orderitemid as id,
+				oi.productid as elid,
+				oi.quantity as qty,
+				oi.price as pc
+			FROM ".$db->prefix."eshp_orderitem oi
+			WHERE oi.orderid=".bkint($orderid)." ".($userid>0?" AND oi.userid=".intval($userid):"")."
+			GROUP BY oi.productid
+		";
+		return $db->query_read($sql);
+	}
+		
 	public static function PaymentList(Ab_Database $db){
 		$sql = "
 			SELECT

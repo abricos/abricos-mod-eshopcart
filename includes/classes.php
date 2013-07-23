@@ -8,6 +8,67 @@
 
 require_once 'dbquery.php';
 
+class EShopCartOrder extends AbricosItem {
+	
+	public $userid;
+	public $deliveryid;
+	public $paymentid;
+	public $ip;
+	public $firstName;
+	public $lastName;
+	public $phone;
+	public $address;
+	public $descript;
+	public $status;
+	public $quantity;
+	public $sum;
+	
+	/**
+	 * @var EShopCartProductList
+	 */
+	public $cartProductList = null;
+	
+	public function __construct($d){
+		parent::__construct($d);
+		
+		$this->userid = $d['uid'];
+		$this->deliveryid = $d['delid'];
+		$this->paymentid = $d['payid'];
+		$this->ip = $d['ip'];
+		$this->firstName = $d['fnm'];
+		$this->lastName = $d['lnm'];
+		$this->phone = $d['ph'];
+		$this->address = $d['adr'];
+		$this->descript = $d['dsc'];
+		$this->quantity = $d['qt'];
+		$this->sum = $d['sm'];
+	}
+	
+	public function ToAJAX(){
+		$ret = parent::ToAJAX();
+		
+		$ret->uid = $this->userid;
+		$ret->payid = $this->paymentid;
+		$ret->delid = $this->deliveryid;
+		$ret->id = $this->ip;
+		$ret->fnm = $this->firstName;
+		$ret->lnm = $this->lastName;
+		$ret->ph = $this->phone;
+		$ret->adr = $this->address;
+		$ret->dsc = $this->descript;
+		$ret->st = $this->status;
+		$ret->qt = $this->quantity;
+		$ret->sm = $this->sum;
+		
+		if (!empty($this->cartProductList)){
+			$ret->catproducts = $this->cartProductList->ToAJAX();
+		}
+		
+		return $ret;
+	}
+}
+
+
 /**
  * Товар в корзине текущего пользоватля
  */

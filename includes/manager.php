@@ -64,6 +64,8 @@ class EShopCartManager extends Ab_ModuleManager {
 				
 			case "ordering": return $this->OrderingToAJAX($d->savedata);
 			
+			case "order": return $this->OrderToAJAX($d->orderid);
+			
 			case "paymentlist": return $this->PaymentListToAJAX();
 			case "paymentsave": return $this->PaymentSaveToAJAX($d->savedata);
 			case "paymentlistorder": return $this->PaymentListSetOrder($d->paymentorders);
@@ -110,6 +112,19 @@ class EShopCartManager extends Ab_ModuleManager {
 		return $ret;
 	}
 	
+	private function CartProductListFillElements(EShopCartProductList $list){
+		if ($list->Count() == 0){ return; }
+		
+		Abricos::GetModule('eshop')->GetManager();
+		$catMan = EShopManager::$instance->cManager;
+		$cfg = new CatalogElementListConfig();
+		for ($i=0;$i<$list->Count();$i++){
+			$item = $list->GetByIndex($i);
+			array_push($cfg->elids, $item->productid);
+		}
+		$list->productList = $catMan->ProductList($cfg);
+	}
+	
 	/**
 	 * Список товаров в корзине текущего пользователя
 	 * @return EShopCartProductList
@@ -142,16 +157,7 @@ class EShopCartManager extends Ab_ModuleManager {
 			}
 		}
 		
-		if ($list->Count() > 0){
-			Abricos::GetModule('eshop')->GetManager();
-			$catMan = EShopManager::$instance->cManager;
-			$cfg = new CatalogElementListConfig();
-			for ($i=0;$i<$list->Count();$i++){
-				$item = $list->GetByIndex($i);
-				array_push($cfg->elids, $item->productid);
-			}
-			$list->productList = $catMan->ProductList($cfg);
-		}
+		$this->CartProductListFillElements($list);
 				
 		return $list;
 	}
@@ -269,6 +275,45 @@ class EShopCartManager extends Ab_ModuleManager {
 		$this->Ordering($sd);
 		
 		return $this->CartProductListToAJAX();
+	}
+	
+	public function OrderItemList($orderid){
+		if (!$this->IsAdminRole()){ return null; }
+	
+		$rows = EShopCartQuery::OrderItemList($this->db, $orderid);
+	
+		$list = new EShopCartProductList();
+	
+		while (($d = $this->db->fetch_array($rows))){
+			$list->Add(new EShopCartProduct($d));
+		}
+	
+		$this->CartProductListFillElements($list);
+	
+		return $list;
+	}
+	
+	/**
+	 * Заказ
+	 * @param integer $orderid
+	 */
+	public function Order($orderid){
+		if (!$this->IsAdminRole()){ return null; }
+		
+		$row = EShopQuery::Order($this->db, $orderid);
+		if (empty($row)){ return null; }
+		
+		$item = new EShopCartOrder($row);
+		$item->cartProductList = $this->OrderItemList($orderid);
+		
+		return $item;
+	}
+	
+	public function OrderToAJAX($orderid){
+		$item = $this->Order($orderid);
+		if (empty($item)){ return null; }
+		
+		return $item->ToAJAX();
 	}
 	
 	/**

@@ -170,6 +170,11 @@ Component.entryPoint = function(NS){
 	});
 	NS.DeliveryList = DeliveryList;
 	
+	var Order = function(d){
+		d = L.merge({
+			
+		}, d || {});
+	};
 	
 	var ConfigAdmin = function(d){
 		d = L.merge({
@@ -504,6 +509,17 @@ Component.entryPoint = function(NS){
 			this.ajax({
 				'do': 'ordering',
 				'savedata': sd
+			}, function(d){
+				__self._updateCartProductList(d);
+				NS.life(callback);
+			});
+		},
+		
+		orderLoad: function(orderid, callback){
+			var __self = this;
+			this.ajax({
+				'do': 'order',
+				'orderid': orderid
 			}, function(d){
 				__self._updateCartProductList(d);
 				NS.life(callback);
