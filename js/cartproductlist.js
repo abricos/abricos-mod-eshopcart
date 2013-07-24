@@ -19,6 +19,8 @@ Component.entryPoint = function(NS){
 
 	var CartProductListWidget = function(container, cfg){
 		cfg = L.merge({
+			'cartProductList': null,
+			'readOnly': false
 		}, cfg || {});
 		
 		CartProductListWidget.superclass.constructor.call(this, container, {
@@ -35,7 +37,12 @@ Component.entryPoint = function(NS){
 			this.clearList();
 			CartProductListWidget.superclass.destroy.call(this);			
 		},
-		onLoad: function(){
+		onLoad: function(cfg){
+			
+			if (cfg['readOnly']){
+				Dom.addClass(this.gel('wrap'), 'rocplst');
+			}
+			
 			var __self = this;
 			NS.initManager(function(){
 				__self._onLoadManager();
@@ -55,9 +62,12 @@ Component.entryPoint = function(NS){
 			this.clearList();
 			
 			var elList = this.gel('list'), ws = this.wsList, 
-				__self = this;
+				__self = this, cfg = this.cfg;
 			
-			NS.manager.cartProductList.foreach(function(cartProduct){
+			var cartProductList = L.isValue(cfg['cartProductList'])
+				? cfg['cartProductList'] : NS.manager.cartProductList;
+			
+			cartProductList.foreach(function(cartProduct){
 				var div = document.createElement('div');
 				div['cartProduct'] = cartProduct;
 
@@ -70,7 +80,7 @@ Component.entryPoint = function(NS){
 				ws[ws.length] = w;
 			});
 
-			var sum = NS.manager.cartProductList.getSum();
+			var sum = cartProductList.getSum();
 				
 			var deli = this.delivery;
 			if (!L.isValue(deli) || deli.price == 0){

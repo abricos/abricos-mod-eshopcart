@@ -1,12 +1,12 @@
 <!--{widget}-->
 <div id="{i#id}" class="aw-eshop aw-eshopcart aw-catalog">
-	<div class="cartproductlist">
+	<div class="cartproductlist" id="{i#wrap}">
 		<table class="thead" id="{i#head}"><tbody><tr>
 			<td class="tl">&nbsp;</td>
 			<td class="pc">Цена</td>
 			<td class="qt">Количество</td>
 			<td class="sm">Сумма</td>
-			<td class="rm">&nbsp;</td>
+			<td class="rm roitem">&nbsp;</td>
 		</tr></tbody></table>
 		
 		<div id="{i#list}" class="tlist"></div>
@@ -43,7 +43,7 @@
 			<td class="pc" id="{i#pc}"></td>
 			<td class="qt" id="{i#qt}"></td>
 			<td class="sm" id="{i#sm}"></td>
-			<td class="rm">
+			<td class="rm roitem">
 				<a id="{i#bremove}" href="#" class="habtn">Удалить</a>
 			</td>
 		</tr></tbody></table>

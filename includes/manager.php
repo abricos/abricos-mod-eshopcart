@@ -300,7 +300,7 @@ class EShopCartManager extends Ab_ModuleManager {
 	public function Order($orderid){
 		if (!$this->IsAdminRole()){ return null; }
 		
-		$row = EShopQuery::Order($this->db, $orderid);
+		$row = EShopCartQuery::Order($this->db, $orderid);
 		if (empty($row)){ return null; }
 		
 		$item = new EShopCartOrder($row);
@@ -313,7 +313,10 @@ class EShopCartManager extends Ab_ModuleManager {
 		$item = $this->Order($orderid);
 		if (empty($item)){ return null; }
 		
-		return $item->ToAJAX();
+		$ret - new stdClass();
+		$ret->order = $item->ToAJAX();
+		
+		return $ret;
 	}
 	
 	/**

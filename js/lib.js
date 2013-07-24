@@ -172,9 +172,51 @@ Component.entryPoint = function(NS){
 	
 	var Order = function(d){
 		d = L.merge({
-			
+			'uid': 0,
+			'payid': 0,
+			'delid': 0,
+			'ip': '',
+			'fnm': '',
+			'lnm': '',
+			'ph': '',
+			'adr': '',
+			'dsc': '',
+			'st': 0,
+			'qt': 0,
+			'sm': 0,
+			'cartproducts': null
 		}, d || {});
+		Order.superclass.constructor.call(this, d);		
 	};
+	YAHOO.extend(Order, SysNS.Item, {
+		update: function(d){
+			this.userid = d['uid']|0;
+			this.paymentid = d['payid']|0;
+			this.deliveryid = d['delid']|0;
+			this.ip = d['ip'];
+			this.firstName = d['fnm'];
+			this.lastName = d['lnm'];
+			this.phone = d['ph'];
+			this.address = d['adr'];
+			this.descript = d['dsc'];
+			this.status = d['st']|0;
+			this.quantity = d['qt']|0;
+			this.sum = d['sm']|0;
+			
+			this.cartProductList = null;
+			if (L.isValue(d['cartproducts'])){
+				this.cartProductList = new NS.CartProductList();
+				NS.manager._updateCartProductList(d, this.cartProductList);
+			}
+		},
+		getDelivery: function(){
+			return NS.manager.deliveryList.get(this.deliveryid);
+		},
+		getPayment: function(){
+			return NS.manager.paymentList.get(this.paymentid);
+		}
+	});
+	NS.Order = Order;	
 	
 	var ConfigAdmin = function(d){
 		d = L.merge({
@@ -275,19 +317,26 @@ Component.entryPoint = function(NS){
 			});
 		},
 		
-		_updateCartProductList: function(d){
+		_updateCartProductList: function(d, cartProductList){
 			if (!L.isValue(d) || !L.isValue(d['cartproducts']) || !L.isValue(d['cartproducts']['list'])){
 				return null;
 			}
-			this.cartProductList.clear();
-			this.cartProductList.update(d['cartproducts']['list']);
-			var pList = this.cartProductList.productList = this.eshopManager._elementListUpdate(d['cartproducts']);
+			var isCurrentUser = true;
+			if (!cartProductList){
+				cartProductList = this.cartProductList;
+				isCurrentUser = true;
+			}
+			cartProductList.clear();
+			cartProductList.update(d['cartproducts']['list']);
+			var pList = cartProductList.productList = this.eshopManager._elementListUpdate(d['cartproducts']);
 			
-			this.cartProductList.foreach(function(item){
+			cartProductList.foreach(function(item){
 				item.product = pList.get(item.productid);
 			});
 			
-			this.updateCartInfoElements();
+			if (isCurrentUser){
+				this.updateCartInfoElements();
+			}
 		},
 		
 		updateCartInfoElements: function(){
@@ -306,7 +355,6 @@ Component.entryPoint = function(NS){
 			for (var i=0; i<elsSm.length;i++){
 				elsSm[i].innerHTML = NS.numberFormat(sm);
 			}
-			
 		},
 
 		cartProductAdd: function(productid, callback){
@@ -516,13 +564,17 @@ Component.entryPoint = function(NS){
 		},
 		
 		orderLoad: function(orderid, callback){
-			var __self = this;
 			this.ajax({
 				'do': 'order',
 				'orderid': orderid
 			}, function(d){
-				__self._updateCartProductList(d);
-				NS.life(callback);
+Brick.console(d);				
+				var order = null;
+				if (L.isValue(d) && L.isValue(d['order'])){
+					order = new NS.Order(d['order']);
+				}
+				
+				NS.life(callback, order);
 			});
 		}
 	};

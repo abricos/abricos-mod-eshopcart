@@ -31,37 +31,37 @@ class EShopCartOrder extends AbricosItem {
 	public function __construct($d){
 		parent::__construct($d);
 		
-		$this->userid = $d['uid'];
-		$this->deliveryid = $d['delid'];
-		$this->paymentid = $d['payid'];
-		$this->ip = $d['ip'];
-		$this->firstName = $d['fnm'];
-		$this->lastName = $d['lnm'];
-		$this->phone = $d['ph'];
-		$this->address = $d['adr'];
-		$this->descript = $d['dsc'];
-		$this->quantity = $d['qt'];
-		$this->sum = $d['sm'];
+		$this->userid		= $d['uid'];
+		$this->deliveryid	= $d['delid'];
+		$this->paymentid	= $d['payid'];
+		$this->ip			= $d['ip'];
+		$this->firstName	= $d['fnm'];
+		$this->lastName		= $d['lnm'];
+		$this->phone		= $d['ph'];
+		$this->address		= $d['adr'];
+		$this->descript		= $d['dsc'];
+		$this->quantity		= $d['qt'];
+		$this->sum			= $d['sm'];
 	}
 	
 	public function ToAJAX(){
 		$ret = parent::ToAJAX();
 		
-		$ret->uid = $this->userid;
+		$ret->uid	= $this->userid;
 		$ret->payid = $this->paymentid;
 		$ret->delid = $this->deliveryid;
-		$ret->id = $this->ip;
-		$ret->fnm = $this->firstName;
-		$ret->lnm = $this->lastName;
-		$ret->ph = $this->phone;
-		$ret->adr = $this->address;
-		$ret->dsc = $this->descript;
-		$ret->st = $this->status;
-		$ret->qt = $this->quantity;
-		$ret->sm = $this->sum;
+		$ret->ip	= $this->ip;
+		$ret->fnm	= $this->firstName;
+		$ret->lnm	= $this->lastName;
+		$ret->ph	= $this->phone;
+		$ret->adr	= $this->address;
+		$ret->dsc	= $this->descript;
+		$ret->st	= $this->status;
+		$ret->qt	= $this->quantity;
+		$ret->sm	= $this->sum;
 		
 		if (!empty($this->cartProductList)){
-			$ret->catproducts = $this->cartProductList->ToAJAX();
+			$ret->cartproducts = $this->cartProductList->ToAJAX();
 		}
 		
 		return $ret;

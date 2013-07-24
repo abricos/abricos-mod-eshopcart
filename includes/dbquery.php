@@ -170,7 +170,7 @@ class EShopCartQuery {
 			SELECT
 				oi.orderitemid as id,
 				oi.productid as elid,
-				oi.quantity as qty,
+				oi.quantity as qt,
 				oi.price as pc
 			FROM ".$db->prefix."eshp_orderitem oi
 			WHERE oi.orderid=".bkint($orderid)." ".($userid>0?" AND oi.userid=".intval($userid):"")."
