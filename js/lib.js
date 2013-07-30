@@ -568,7 +568,7 @@ Component.entryPoint = function(NS){
 				'do': 'order',
 				'orderid': orderid
 			}, function(d){
-Brick.console(d);				
+	
 				var order = null;
 				if (L.isValue(d) && L.isValue(d['order'])){
 					order = new NS.Order(d['order']);

@@ -233,7 +233,7 @@ class EShopCartManager extends Ab_ModuleManager {
 		
 		for ($i=0; $i<$plist->Count(); $i++){
 			$p = $plist->GetByIndex($i);
-			EShopCartQuery::OrderItemAppend($this->db, $orderid, $p->id, $p->quantity, $p->price);
+			EShopCartQuery::OrderItemAppend($this->db, $orderid, $p->productid, $p->quantity, $p->price);
 			
 			$totalQty += $p->quantity;
 			$totalSum += $p->quantity * $p->price;
