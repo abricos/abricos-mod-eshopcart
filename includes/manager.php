@@ -83,6 +83,19 @@ class EShopCartManager extends Ab_ModuleManager {
 			case "configadmin": return $this->ConfigAdminToAJAX();
 			case "configadminsave": return $this->ConfigAdminSave($d->savedata);
 		}
+		
+		// TODO: на удаление/переделку
+		switch($d->do){
+				
+			case "orderbuild":
+				return $this->old_OrderBuild($d);
+			case "order-remove":
+				return $this->old_OrderRemove($d->orderid);
+			case "order-accept":
+				return $this->old_OrderAccept($d->orderid);
+			case "order-close":
+				return $this->old_OrderClose($d->orderid);
+		}
 
 		return null;
 	}
@@ -621,6 +634,359 @@ class EShopCartManager extends Ab_ModuleManager {
 		return $ret;
 	}
 	
+	
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 * TODO: Старая версия методов - на удаление
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	
+	/**
+	 * Статус заказа - Новый
+	 * @var integer
+	 */
+	const ORDER_STATUS_NEW = 0;
+	
+	/**
+	 * Статус заказа - Принятый на исполнение
+	 * @var integer
+	 */
+	const ORDER_STATUS_EXEC = 1;
+	
+	/**
+	 * Статус заказа - Закрытый
+	 * @var integer
+	 */
+	const ORDER_STATUS_ARHIVE = 2;
+	
+	
+	public function DSProcess($name, $rows){
+		$p = $rows->p;
+		$db = $this->db;
+	
+		switch ($name){
+			case 'cart':
+				foreach ($rows->r as $r){
+					if ($r->f == 'd'){
+						$this->old_CartRemove($r->d->id);
+					}
+					if ($r->f == 'u'){
+						$this->old_CartAppend($r->d);
+					}
+				}
+				return;
+		}
+	}
+	
+	public function DSGetData($name, $rows){
+		$p = $rows->p;
+	
+		switch ($name){
+			case 'cart': return $this->old_Cart($p->orderid);
+				
+			case 'order': return $this->old_Order($p->orderid);
+			case 'orderitem': return $this->old_OrderItemList($p->orderid);
+				
+			case 'orders-new':  return $this->old_Orders('new', $p->page, $p->limit);
+			case 'orders-exec':  return $this->old_Orders('exec', $p->page, $p->limit);
+			case 'orders-arhive':  return $this->old_Orders('arhive', $p->page, $p->limit);
+			case 'orders-recycle':  return $this->old_Orders('recycle', $p->page, $p->limit);
+			case 'orderscnt-new':  return $this->old_OrdersCount('new');
+			case 'orderscnt-exec':  return $this->old_OrdersCount('exec');
+			case 'orderscnt-arhive':  return $this->old_OrdersCount('arhive');
+			case 'orderscnt-recycle':  return $this->old_OrdersCount('recycle');
+		}
+	
+		return null;
+	}
+	
+	
+	/**
+	 * Получить данные для работы кирпичей по сборке списка продуктов
+	 */
+	
+	private $_productListData = null;
+	public function old_GetProductListData(){
+		if (!is_null($this->_productListData)){
+			return $this->_productListData;
+		}
+	
+		$smMenu = Abricos::GetModule('sitemap')->GetManager()->GetMenu();
+		$catItemMenu = $smMenu->menuLine[count($smMenu->menuLine)-1];
+	
+		// если на конце uri есть запись /pageN/, где N - число, значит запрос страницы
+		$listPage = 1;
+	
+		$adress = Abricos::$adress;
+	
+		$tag = $adress->dir[$adress->level-1];
+		if (substr($tag, 0, 4) == 'page'){
+			$listPage = intval(substr($tag, 4, strlen($tag)-4));
+		}
+	
+		$this->_productListData = array(
+				"listPage" => $listPage,
+				"catids" => $this->module->GetFullSubCatalogId($catItemMenu)
+		);
+		return $this->_productListData;
+	}
+	
+	
+	/**
+	 * Сформировать заказ клиента
+	 *
+	 */
+	public function old_OrderBuild($data){
+		$userid = $this->userid;
+		$db = $this->db;
+		if ($this->user->id == 0 && $data->auth->type == 'reg'){
+			// пользователь решил заодно и зарегистрироваться
+			$login = $data->auth->login;
+			$email = $data->auth->email;
+			$pass = $data->auth->pass;
+			$err = $this->user->GetManager()->Register($login, $pass, $email, true);
+			if ($err == 0){
+				$user = UserQuery::UserByName($db, $login);
+				$userid = $user['userid'];
+			}
+		}
+	
+		$od = new stdClass();
+		$od->deliveryid = $data->deli->deliveryid;
+		$od->paymentid = $data->pay->paymentid;
+	
+		$deli = $data->deli;
+		$od->userid = $userid;
+		$od->firstname = $deli->firstname;
+		$od->lastname = $deli->lastname;
+		$od->phone = $deli->phone;
+		$od->adress = $deli->adress;
+		$od->extinfo = $deli->extinfo;
+		$od->ip = $_SERVER['REMOTE_ADDR'];
+	
+		$orderid = EShopQuery::OrderAppend($db, $od);
+	
+		EShopQuery::CartUserSessionFixed($db, $userid, $this->userSession);
+	
+		$rows = $this->CartByUserId($userid);
+		while (($row = $db->fetch_array($rows))){
+			EShopQuery::OrderItemAppend($db, $orderid, $row['id'], $row['qty'], $row['pc']);
+		}
+		EShopQuery::CartClear($db, $userid, $this->userSession);
+	
+		$order = $this->db->fetch_array(EShopQuery::old_Order($this->db, $orderid));
+	
+		// отправить уведомление на емайл админам
+		$config = $this->Config(false);
+		$emails = $config['adm_emails'];
+		$arr = explode(',', $emails);
+		$subject = $config['adm_notify_subj'];
+		$body = Brick::ReplaceVarByData($config['adm_notify'], array(
+				'orderid'=>$orderid,
+				'summ' => $order['sm'],
+				'qty' => $order['qty'],
+	
+				'fnm' => $order['fnm'],
+				'lnm' => $order['lnm'],
+				'phone' => $order['ph'],
+				'adress' => $order['adress'],
+				'extinfo' => $order['extinfo']
+		));
+		$body = nl2br($body);
+	
+		foreach ($arr as $email){
+			$email = trim($email);
+			if (empty($email)){
+				continue;
+			}
+				
+			Abricos::Notify()->SendMail($email, $subject, $body);
+		}
+	}
+	
+	/**
+	 * Принять заказ на исполнение
+	 */
+	public function old_OrderAccept($orderid){
+		if (!$this->user->IsAdminMode()){
+			return null;
+		}
+	
+		$order = $this->old_Order($orderid);
+		if (empty($order)){
+			return;
+		}
+		EShopQuery::old_OrderAccept($this->db, $orderid);
+	}
+	
+	/**
+	 * Исполнить заказ (закрыть)
+	 */
+	public function old_OrderClose($orderid){
+		if (!$this->user->IsAdminMode()){
+			return null;
+		}
+	
+		$order = $this->old_Order($orderid);
+		if (empty($order)){
+			return;
+		}
+		EShopQuery::old_OrderClose($this->db, $orderid);
+	}
+	
+	/**
+	 * Удалить заказ в корзину
+	 *
+	 * @param integer $orderid идентификатор заказа
+	 */
+	public function old_OrderRemove($orderid){
+		if (!$this->user->IsAdminMode()){
+			return null;
+		}
+	
+		$order = $this->old_Order($orderid);
+		if (empty($order)){
+			return;
+		}
+		EShopQuery::old_OrderRemove($this->db, $orderid);
+		return $orderid;
+	}
+	
+	/**
+	 * Получить информацию для полей заказа товара
+	 *
+	 */
+	public function old_OrderLastInfo(){
+		return array(
+				"fam"=>"Ivanov",
+				"im"=>"Ivan",
+				"otch"=>"Ivanovich"
+		);
+	}
+	
+	public function old_CartUpdate($product){
+		$pcart = $this->old_CartItem($product->id);
+		if (empty($pcart)){ // Hacker???
+			return;
+		}
+		$newQty = bkint($product->qty);
+		EShopQuery::old_CartRemove($this->db, $product->id);
+		if ($newQty < 1){
+			return;
+		}
+		return $this->old_CartAppend($product->id, $newQty);
+	}
+	
+	/**
+	 * Положить товар в корзину текущего пользователя
+	 * @return вернуть информацию по корзине
+	 */
+	public function old_CartAppend($productid, $quantity){
+		$quantity = bkint($quantity);
+		if ($quantity < 1){
+			return;
+		}
+		$db = $this->db;
+	
+		$product = $this->module->GetCatalogManager()->Element($productid, true);
+		if (empty($product)){
+			// попытка добавить несуществующий продукт???
+			return null;
+		}
+	
+		$cartid = EShopQuery::old_CartAppend($this->db, $this->userid, $this->userSession, $productid, $quantity, $product['fld_price']);
+	
+		return $this->old_CartInfo();
+	}
+	
+	public function old_CartItem($productid){
+		return $this->db->fetch_array(EShopQuery::old_Cart($this->db, $this->userid, $this->userSession, $productid));
+	}
+	
+	public function old_CartRemove($productid){
+		$pcart = $this->old_CartItem($productid);
+		if (empty($pcart)){ // Hacker???
+			return;
+		}
+		EShopQuery::old_CartRemove($this->db, $productid);
+	}
+	
+	/**
+	 * Получить информацию по корзине текущего пользователя
+	 */
+	public function old_CartInfo(){
+		$info = EShopQuery::old_CartInfo($this->db, $this->userid, $this->userSession);
+	
+		return array(
+				'qty' => intval($info['qty']),
+				'sum' => doubleval($info['sm'])
+		);
+	}
+	
+	public function old_Cart($orderid){
+		$orderid = intval($orderid);
+		if ($orderid > 0){
+			return $this->old_OrderItemList($orderid);
+		}
+		return EShopQuery::old_Cart($this->db, $this->userid, $this->userSession);
+	}
+	
+	public function CartByUserId($userid){
+		return EShopQuery::old_Cart($this->db, $userid, $this->userSession);
+	}
+	
+	public function old_OrderTypeToStatus($type){
+		switch($type){
+			case 'new': return EShopCartManager::ORDER_STATUS_NEW;
+			case 'exec': return EShopCartManager::ORDER_STATUS_EXEC;
+			case 'arhive': return EShopCartManager::ORDER_STATUS_ARHIVE;
+			case 'recycle': return -1;
+		}
+		return 999;
+	}
+	
+	/**
+	 * Получить список заказов
+	 *
+	 */
+	public function old_Orders($type, $page, $limit){
+		if (!$this->user->IsAdminMode()){
+			return null;
+		}
+		$status = $this->old_OrderTypeToStatus($type);
+		return EShopQuery::old_Orders($this->db, $status, $page, $limit);
+	}
+	
+	public function old_OrdersCount($type){
+		if (!$this->user->IsAdminMode()){
+			return null;
+		}
+		$status = $this->old_OrderTypeToStatus($type);
+		return EShopQuery::old_OrdersCount($this->db, $status);
+	}
+	
+	/**
+	 * Получить информацию о заказе
+	 */
+	public function old_Order($orderid){
+		if ($this->user->IsAdminMode()){
+			return EShopQuery::old_Order($this->db, $orderid);
+		}else if ($this->userid > 0){
+			return EShopQuery::old_Order($this->db, $orderid, $this->userid);
+		}
+		return null;
+	}
+	
+	/**
+	 * Получить список продукции конкретного заказа
+	 */
+	public function old_OrderItemList($orderid){
+		if ($this->user->IsAdminMode()){
+			return EShopQuery::old_OrderItemList($this->db, $orderid);
+		}else if ($this->userid > 0){
+			return EShopQuery::old_OrderItemList($this->db, $orderid, $this->userid);
+		}
+		return null;
+	}
+		
 }
 
 ?>
