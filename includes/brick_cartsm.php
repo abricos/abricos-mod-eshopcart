@@ -7,14 +7,13 @@
  */
 
 $brick = Brick::$builder->brick;
-$mod = Abricos::GetModule('eshop');
-$modMan = $mod->GetManager();
+$man = EShopCartModule::$instance->GetManager();
 
-$info = $modMan->CartInfo();
+$cpList = $man->CartProductList();
 
 $brick->content = Brick::ReplaceVarByData($brick->content, array(
-	"count" => $info['qty'],
-	"summ" => number_format($info['sum'], 2, ',', ' ')
+	"count" => $cpList->quantity,
+	"summ" => number_format($cpList->sum, 2, ',', ' ')
 ));
 
 ?>

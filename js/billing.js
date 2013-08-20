@@ -11,7 +11,7 @@ Component.requires = {
 	]
 };
 Component.entryPoint = function(NS){
-	
+return;	
 	var L = YAHOO.lang,
 		buildTemplate = this.buildTemplate,
 		BW = Brick.mod.widget.Widget;

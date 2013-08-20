@@ -125,6 +125,8 @@ class EShopCartManager extends Ab_ModuleManager {
 		$list->productList = $catMan->ProductList($cfg);
 	}
 	
+	private $_cacheCartProductList = null;
+	
 	/**
 	 * Список товаров в корзине текущего пользователя
 	 * @return EShopCartProductList
@@ -132,10 +134,14 @@ class EShopCartManager extends Ab_ModuleManager {
 	public function CartProductList(){
 		if (!$this->IsViewRole()){ return null; }
 		
+		if (!empty($this->_cacheCartProductList)){ return $this->_cacheCartProductList; }
+		
 		$rows = EShopCartQuery::CartProductList($this->db, $this->user);
 		
 		$list = new EShopCartProductList();
 		$checkDouble = array(); $isDouble = array();
+		
+		$tQuantity = 0; $tSum = 0;
 		
 		while (($d = $this->db->fetch_array($rows))){
 			$item = new EShopCartProduct($d);
@@ -149,7 +155,11 @@ class EShopCartManager extends Ab_ModuleManager {
 				$bItem->quantity += $item->quantity;
 				$isDouble[$productid] = $bItem;
 			}
+			$tQuantity += $item->quantity;
+			$tSum += $item->quantity * $item->price;
 		}
+		$list->quantity = $tQuantity;
+		$list->sum = $tSum;
 		
 		if (count($isDouble) > 0){
 			foreach($isDouble as $productid => $item){
@@ -158,7 +168,7 @@ class EShopCartManager extends Ab_ModuleManager {
 		}
 		
 		$this->CartProductListFillElements($list);
-				
+		$this->_cacheCartProductList = $list;
 		return $list;
 	}
 	

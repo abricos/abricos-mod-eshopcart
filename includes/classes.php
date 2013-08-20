@@ -107,6 +107,18 @@ class EShopCartProduct extends AbricosItem {
 }
 
 class EShopCartProductList extends AbricosList {
+	
+	/**
+	 * Всего товаров в корзине
+	 * @var integer
+	 */
+	public $quantity = 0;
+	
+	/**
+	 * Сумма корзины
+	 * @var integer
+	 */
+	public $sum = 0;
 
 	/**
 	 * @var EShopElementList
