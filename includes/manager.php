@@ -27,6 +27,8 @@ class EShopCartManager extends Ab_ModuleManager {
 	 */
 	public $config = null;
 	
+	private $_isRoleDisabled = false;
+	
 	public function __construct($module){
 		parent::__construct($module);
 
@@ -35,7 +37,15 @@ class EShopCartManager extends Ab_ModuleManager {
 		$this->config = new EShopCartConfig(Abricos::$config['module']['eshopcart']);
 	}
 	
+	/**
+	 * Отключение ролей. Используется в процессе инсталляции.
+	 */
+	public function RoleDisable(){
+		$this->_isRoleDisabled = true;
+	}
+	
 	public function IsAdminRole(){
+		if ($this->_isRoleDisabled){ return true; }
 		return $this->IsRoleEnable(EShopCartAction::ADMIN);
 	}
 	
