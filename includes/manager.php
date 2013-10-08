@@ -139,7 +139,7 @@ class EShopCartManager extends Ab_ModuleManager {
 		if ($list->Count() == 0){ return; }
 		
 		Abricos::GetModule('eshop')->GetManager();
-		$catMan = EShopManager::$instance->cManager;
+		$catMan = EShopManager::$instance->GetCatalogManager();
 		$cfg = new CatalogElementListConfig();
 		for ($i=0;$i<$list->Count();$i++){
 			$item = $list->GetByIndex($i);
@@ -212,7 +212,7 @@ class EShopCartManager extends Ab_ModuleManager {
 		if (empty($productid) || !$this->IsWriteRole()){ return null; }
 		
 		Abricos::GetModule('eshop')->GetManager();
-		$catMan = EShopManager::$instance->cManager;
+		$catMan = EShopManager::$instance->GetCatalogManager();
 		
 		$product = $catMan->Element($productid);
 		if (empty($product)){ return null; }
