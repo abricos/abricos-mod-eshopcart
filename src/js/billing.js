@@ -10,8 +10,7 @@ Component.requires = {
 	yahoo: ['datasource','tabview','resize'],
 	mod:[
 	     {name: 'sys', files: ['data.js', 'form.js', 'container.js', 'wait.js', 'widgets.js']},
-	     {name: 'eshopcart', files: ['orderview.js']}
-	     // ,{name: 'eshopcart', files: ['order.js']}
+	     {name: 'eshopcart', files: ['orderview.js', 'lib.js']}
 	]
 };
 Component.entryPoint = function(NS){
@@ -20,7 +19,7 @@ Component.entryPoint = function(NS){
 		L = YAHOO.lang;
 	
 	var API = NS.API;
-	
+
 	NS['billing'] = NS['billing'] || {}; 
 	
 	var DATA = NS.data = NS.data || new Brick.util.data.byid.DataSet('eshopcart');

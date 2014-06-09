@@ -1,87 +1,112 @@
-<!--{widget}--><h1>{#mod.eshopcart.billing.widget.1}</h1>
-<div id="{i#id}" class="yui-navset">
-	<ul class="yui-nav">
-		<li class="selected"><a href="#{i#new}"><em>{#mod.eshopcart.billing.widget.2}</em></a></li>
-		<li><a href="#{i#exec}"><em>{#mod.eshopcart.billing.widget.3}</em></a></li>
-    	<li><a href="#{i#arhive}"><em>{#mod.eshopcart.billing.widget.4}</em></a></li>
-    	<li><a href="#{i#recycle}"><em>{#mod.eshopcart.billing.widget.5}</em></a></li>
-	</ul>            
-  <div class="yui-content">
-	  <div id="{i#new}"></div>
-	  <div id="{i#exec}"></div>
-	  <div id="{i#arhive}"></div>
-	  <div id="{i#recycle}"></div>
-  </div>
+<!--{widget}-->
+<div class="aw-eshopcart">
+    <h3>{#mod.eshopcart.billing.widget.1}</h3>
+
+    <div id="{i#id}" class="yui-navset">
+        <ul class="yui-nav">
+            <li class="selected"><a href="#{i#new}"><em>{#mod.eshopcart.billing.widget.2}</em></a></li>
+            <li><a href="#{i#exec}"><em>{#mod.eshopcart.billing.widget.3}</em></a></li>
+            <li><a href="#{i#arhive}"><em>{#mod.eshopcart.billing.widget.4}</em></a></li>
+            <li><a href="#{i#recycle}"><em>{#mod.eshopcart.billing.widget.5}</em></a></li>
+        </ul>
+        <div class="yui-content">
+            <div id="{i#new}"></div>
+            <div id="{i#exec}"></div>
+            <div id="{i#arhive}"></div>
+            <div id="{i#recycle}"></div>
+        </div>
+    </div>
 </div>
-<!--{list}--><div id='{i#pagtop}'></div>
+
+<!--{list}-->
+<div id='{i#pagtop}'></div>
 <div id='{i#table}'></div>
 <div id='{i#pagbot}'></div>
-<!--{table}--><table class="bk-table-def">
-	<thead>
-		<tr>
-			<th>{#mod.eshopcart.billing.table.1}</th>
-			<th>{#mod.eshopcart.billing.table.2}</th>
-			<th>{#mod.eshopcart.billing.table.3}</th>
-			<th>{#mod.eshopcart.billing.table.4}</th>
-			<th>{#mod.eshopcart.billing.table.5}</th>
-			<th>{#mod.eshopcart.billing.table.6}</th>
-			{v#btns}
-		</tr>
-	</thead>
-	<tbody>{v#rows}</tbody>
+<!--{table}-->
+<table class="bk-table-def">
+    <thead>
+    <tr>
+        <th>{#mod.eshopcart.billing.table.1}</th>
+        <th>{#mod.eshopcart.billing.table.2}</th>
+        <th>{#mod.eshopcart.billing.table.3}</th>
+        <th>{#mod.eshopcart.billing.table.4}</th>
+        <th>{#mod.eshopcart.billing.table.5}</th>
+        <th>{#mod.eshopcart.billing.table.6}</th>
+        {v#btns}
+    </tr>
+    </thead>
+    <tbody>{v#rows}</tbody>
 </table>
-<!--{row}--><tr valign="top">
-	<td style="text-align: center">{v#id}</td>
-	<td>{v#dl}</td>
-	<td style="text-align: right">{v#sm}</td>
-	<td>{v#fnm} {v#lnm}</td>
-	<td>{v#adr}</td>
-	<td>{v#ip}</td>
-	{v#btns}
+<!--{row}-->
+<tr valign="top">
+    <td style="text-align: center">{v#id}</td>
+    <td>{v#dl}</td>
+    <td style="text-align: right">{v#sm}</td>
+    <td>{v#fnm} {v#lnm}</td>
+    <td>{v#adr}</td>
+    <td>{v#ip}</td>
+    {v#btns}
 </tr>
-<!--{usertpname}--><td><a href="#" id="{i#user}-{v#uid}">{v#unm}</a></td>
-<!--{usertpip}--><td><a href="#" id="{i#user}-{v#uid}">{v#unm}</a></td>
-<!--{rowwait}--><tr valign="top">
-	<td colspan="10">{#mod.eshopcart.billing.rowwait.1}</td>
+<!--{usertpname}-->
+<td><a href="#" id="{i#user}-{v#uid}">{v#unm}</a></td>
+<!--{usertpip}-->
+<td><a href="#" id="{i#user}-{v#uid}">{v#unm}</a></td>
+<!--{rowwait}-->
+<tr valign="top">
+    <td colspan="10">{#mod.eshopcart.billing.rowwait.1}</td>
 </tr>
-<!--{btnhnew}--><th></th><th></th><th></th>
-<!--{btnnew}--><td><a href="#" id="{i#view}-{v#id}">{#mod.eshopcart.billing.btnnew.1}</a></td>
+<!--{btnhnew}-->
+<th></th>
+<th></th>
+<th></th>
+<!--{btnnew}-->
+<td><a href="#" id="{i#view}-{v#id}">{#mod.eshopcart.billing.btnnew.1}</a></td>
 <td><a href="#" id="{i#accept}-{v#id}">{#mod.eshopcart.billing.btnnew.2}</a></td>
 <td><a href="#" id="{i#remove}-{v#id}">{#mod.eshopcart.billing.btnnew.3}</a></td>
-<!--{btnhexec}--><th></th><th></th>
-<!--{btnexec}--><td><a href="#" id="{i#view}-{v#id}">{#mod.eshopcart.billing.btnexec.1}</a></td>
+<!--{btnhexec}-->
+<th></th>
+<th></th>
+<!--{btnexec}-->
+<td><a href="#" id="{i#view}-{v#id}">{#mod.eshopcart.billing.btnexec.1}</a></td>
 <td><a href="#" id="{i#close}-{v#id}">{#mod.eshopcart.billing.btnexec.2}</a></td>
-<!--{btnharhive}--><th></th>
-<!--{btnarhive}--><td><a href="#" id="{i#view}-{v#id}">{#mod.eshopcart.billing.btnarhive.1}</a></td>
-<!--{btnhrecycle}--><th></th>
-<!--{btnrecycle}--><td><a href="#" id="{i#view}-{v#id}">{#mod.eshopcart.billing.btnrecycle.1}</a></td>
+<!--{btnharhive}-->
+<th></th>
+<!--{btnarhive}-->
+<td><a href="#" id="{i#view}-{v#id}">{#mod.eshopcart.billing.btnarhive.1}</a></td>
+<!--{btnhrecycle}-->
+<th></th>
+<!--{btnrecycle}-->
+<td><a href="#" id="{i#view}-{v#id}">{#mod.eshopcart.billing.btnrecycle.1}</a></td>
 
 <!--{orderacceptpanel}-->
 <div class='hd'>{#mod.eshopcart.billing.orderacceptpanel.1}</div>
 <div class='bd aw-eshop aw-eshopcart aw-catalog'>
-	<div id="{i#print}">{#mod.eshopcart.billing.orderacceptpanel.2}</div>
-	<div class="right">
-		<input type="button" class="btn" value="{#mod.eshopcart.billing.orderacceptpanel.3}" id="{i#baccept}" >
-		<input type="button" class="btn" value="{#mod.eshopcart.billing.orderacceptpanel.4}" id="{i#bcancel}" >
-	</div>
+    <div id="{i#print}">{#mod.eshopcart.billing.orderacceptpanel.2}</div>
+    <div class="right">
+        <input type="button" class="btn" value="{#mod.eshopcart.billing.orderacceptpanel.3}" id="{i#baccept}">
+        <input type="button" class="btn" value="{#mod.eshopcart.billing.orderacceptpanel.4}" id="{i#bcancel}">
+    </div>
 </div>
-<!--{orderremovepanel}--><div class='hd'>{#mod.eshopcart.billing.orderremovepanel.4}</div>
+<!--{orderremovepanel}-->
+<div class='hd'>{#mod.eshopcart.billing.orderremovepanel.4}</div>
 <div class='bd aw-eshop'>
-	<div id="{i#print}">{#mod.eshopcart.billing.orderremovepanel.1}</div>
-	<div class="right">
-		<input type="button" class="btn" value="{#mod.eshopcart.billing.orderremovepanel.2}" id="{i#bremove}" >
-		<input type="button" class="btn" value="{#mod.eshopcart.billing.orderremovepanel.3}" id="{i#bcancel}" >
-	</div>
+    <div id="{i#print}">{#mod.eshopcart.billing.orderremovepanel.1}</div>
+    <div class="right">
+        <input type="button" class="btn" value="{#mod.eshopcart.billing.orderremovepanel.2}" id="{i#bremove}">
+        <input type="button" class="btn" value="{#mod.eshopcart.billing.orderremovepanel.3}" id="{i#bcancel}">
+    </div>
 </div>
-<!--{orderclosepanel}--><div class='hd'>Закрытие заказа</div>
+<!--{orderclosepanel}-->
+<div class='hd'>Закрытие заказа</div>
 <div class='bd aw-eshop aw-eshopcart aw-catalog'>
-	<div id="{i#print}">{#mod.eshopcart.billing.orderclosepanel.1}</div>
-	<div class="right">
-		<input type="button" class="btn" value="{#mod.eshopcart.billing.orderclosepanel.2}" id="{i#boclose}" >
-		<input type="button" class="btn" value="{#mod.eshopcart.billing.orderclosepanel.3}" id="{i#bcancel}" >
-	</div>
+    <div id="{i#print}">{#mod.eshopcart.billing.orderclosepanel.1}</div>
+    <div class="right">
+        <input type="button" class="btn" value="{#mod.eshopcart.billing.orderclosepanel.2}" id="{i#boclose}">
+        <input type="button" class="btn" value="{#mod.eshopcart.billing.orderclosepanel.3}" id="{i#bcancel}">
+    </div>
 </div>
-<!--{orderviewpanel}--><div class='hd'>{#mod.eshopcart.billing.orderviewpanel.1}</div>
+<!--{orderviewpanel}-->
+<div class='hd'>{#mod.eshopcart.billing.orderviewpanel.1}</div>
 <div class='bd aw-eshop aw-eshopcart aw-catalog'>
-	<div id="{i#print}">{#mod.eshopcart.billing.orderviewpanel.2}</div>
+    <div id="{i#print}">{#mod.eshopcart.billing.orderviewpanel.2}</div>
 </div>
