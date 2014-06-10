@@ -6,13 +6,13 @@
 var Component = new Brick.Component();
 Component.requires = {
 	mod:[
-		{name: '{C#MODNAME}', files: ['lib.js']}
+		{name: '{C#MODNAME}', files: ['lib.js']},
+        {name: 'user', files: ['old-guest.js']}
 	]
 };
 Component.entryPoint = function(NS){
 	
 	var Dom = YAHOO.util.Dom,
-		E = YAHOO.util.Event,
 		L = YAHOO.lang,
 		buildTemplate = this.buildTemplate,
 		BW = Brick.mod.widget.Widget;
