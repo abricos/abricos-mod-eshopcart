@@ -20,7 +20,7 @@ class EShopCartQuery {
             return;
         }
         $userid = $user->id;
-        $session = $user->session->key;
+        $session = UserModule::$instance->GetManager()->GetSessionManager()->key;
         $sql = "
 			UPDATE ".$db->prefix."eshp_cart
 			SET userid=".bkint($userid).", session=''
@@ -33,7 +33,7 @@ class EShopCartQuery {
         EShopCartQuery::CartUserSessionFixed($db, $user);
 
         $userid = $user->id;
-        $session = $user->session->key;
+        $session = UserModule::$instance->GetManager()->GetSessionManager()->key;
 
         $sql = "
 			SELECT
@@ -49,7 +49,7 @@ class EShopCartQuery {
 
     public static function CartProductAppend(Ab_Database $db, UserItem $user, $productid, $quantity, $price) {
         $userid = $user->id;
-        $session = $user->id > 0 ? "" : $user->session->key;
+        $session = $user->id > 0 ? "" : UserModule::$instance->GetManager()->GetSessionManager()->key;
 
         $sql = "
 			INSERT INTO ".$db->prefix."eshp_cart
@@ -68,7 +68,7 @@ class EShopCartQuery {
 
     public static function CartProductRemove(Ab_Database $db, UserItem $user, $productid) {
         $userid = $user->id;
-        $session = $userid > 0 ? "" : $user->session->key;
+        $session = $userid > 0 ? "" : UserModule::$instance->GetManager()->GetSessionManager()->key;
 
         $sql = "
 			DELETE FROM ".$db->prefix."eshp_cart
@@ -80,7 +80,7 @@ class EShopCartQuery {
 
     public static function CartClear(Ab_Database $db, UserItem $user) {
         $userid = $user->id;
-        $sessionid = $user->session->key;
+        $sessionid = UserModule::$instance->GetManager()->GetSessionManager()->key;
 
         $sql = "
 			DELETE FROM ".$db->prefix."eshp_cart
@@ -92,7 +92,7 @@ class EShopCartQuery {
     public static function CartProductUpdateDouble(Ab_Database $db, UserItem $user, EShopCartProduct $cartProduct) {
 
         $userid = $user->id;
-        $session = $user->id > 0 ? "" : $user->session->key;
+        $session = $user->id > 0 ? "" : UserModule::$instance->GetManager()->GetSessionManager()->key;
 
         $sql = "
 			DELETE FROM ".$db->prefix."eshp_cart
