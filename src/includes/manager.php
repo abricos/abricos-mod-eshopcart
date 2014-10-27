@@ -816,7 +816,7 @@ class EShopCartManager extends Ab_ModuleManager {
 	 * Принять заказ на исполнение
 	 */
 	public function old_OrderAccept($orderid){
-		if (!$this->user->IsAdminMode()){
+		if (!$this->IsAdminRole()){
 			return null;
 		}
 	
@@ -831,7 +831,7 @@ class EShopCartManager extends Ab_ModuleManager {
 	 * Исполнить заказ (закрыть)
 	 */
 	public function old_OrderClose($orderid){
-		if (!$this->user->IsAdminMode()){
+		if (!$this->IsAdminRole()){
 			return null;
 		}
 	
@@ -848,7 +848,7 @@ class EShopCartManager extends Ab_ModuleManager {
 	 * @param integer $orderid идентификатор заказа
 	 */
 	public function old_OrderRemove($orderid){
-		if (!$this->user->IsAdminMode()){
+		if (!$this->IsAdminRole()){
 			return null;
 		}
 	
@@ -958,7 +958,7 @@ class EShopCartManager extends Ab_ModuleManager {
 	 *
 	 */
 	public function old_Orders($type, $page, $limit){
-		if (!$this->user->IsAdminMode()){
+		if (!$this->IsAdminRole()){
 			return null;
 		}
 		$status = $this->old_OrderTypeToStatus($type);
@@ -966,7 +966,7 @@ class EShopCartManager extends Ab_ModuleManager {
 	}
 	
 	public function old_OrdersCount($type){
-		if (!$this->user->IsAdminMode()){
+		if (!$this->IsAdminRole()){
 			return null;
 		}
 		$status = $this->old_OrderTypeToStatus($type);
@@ -977,7 +977,7 @@ class EShopCartManager extends Ab_ModuleManager {
 	 * Получить информацию о заказе
 	 */
 	public function old_Order($orderid){
-		if ($this->user->IsAdminMode()){
+		if ($this->IsAdminRole()){
 			return EShopQuery::old_Order($this->db, $orderid);
 		}else if ($this->userid > 0){
 			return EShopQuery::old_Order($this->db, $orderid, $this->userid);
@@ -989,7 +989,7 @@ class EShopCartManager extends Ab_ModuleManager {
 	 * Получить список продукции конкретного заказа
 	 */
 	public function old_OrderItemList($orderid){
-		if ($this->user->IsAdminMode()){
+		if ($this->IsAdminRole()){
 			return EShopQuery::old_OrderItemList($this->db, $orderid);
 		}else if ($this->userid > 0){
 			return EShopQuery::old_OrderItemList($this->db, $orderid, $this->userid);
