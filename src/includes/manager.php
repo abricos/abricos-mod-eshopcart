@@ -289,7 +289,7 @@ class EShopCartManager extends Ab_ModuleManager {
 			"ph"		=> $ci->ph,
 			"adr"		=> $ci->adr,
 			"dsc"		=> $ci->dsc,
-			"sitename" => Brick::$builder->phrase->Get('sys', 'site_name')
+			"sitename" => SystemModule::$instance->GetPhrases()->Get('site_name')
 		);
 		
 		$semails = $this->EMailAdmin();
@@ -593,14 +593,15 @@ class EShopCartManager extends Ab_ModuleManager {
 	}
 
 	private function EMailAdmin(){
-		return Brick::$builder->phrase->Get('eshop', 'adm_emails');
+		return $this->module->GetPhrases()->Get('adm_emails');
 	}
 	
 	public function ConfigAdminSave($sd){
 		if (!$this->IsAdminRole()){ return null; }
 
-		Brick::$builder->phrase->Set('eshop', 'adm_emails', $sd->emls);
-		Brick::$builder->phrase->Save();
+        $phrases = $this->module->GetPhrases();
+        $phrases->Set('adm_emails', $sd->emls);
+        $phrases->Save();
 		
 		return true;
 	}
