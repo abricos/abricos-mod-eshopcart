@@ -7,13 +7,18 @@ var Component = new Brick.Component();
 Component.requires = { 
 	mod:[
         {name: 'sys', files: ['number.js']},
-        {name: 'eshop', files: ['lib.js']},
-        {name: '{C#MODNAME}', files: ['roles.js']}
+        {name: 'eshop', files: ['lib.js']}
 	]		
 };
 Component.entryPoint = function(NS){
 
-	var Dom = YAHOO.util.Dom,
+    NS.roles = new Brick.AppRoles('{C#MODNAME}', {
+        isAdmin: 50,
+        isWrite: 30,
+        isView: 10
+    });
+
+    var Dom = YAHOO.util.Dom,
 		L = YAHOO.lang,
 		R = NS.roles;
 
