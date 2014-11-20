@@ -32,7 +32,7 @@ class EShopCartManager extends Ab_ModuleManager {
 
         EShopCartManager::$instance = $this;
 
-        $this->config = new EShopCartConfig(Abricos::$config['module']['eshopcart']);
+        $this->config = new EShopCartConfig(isset(Abricos::$config['module']['eshopcart']) ? Abricos::$config['module']['eshopcart'] : array());
     }
 
     public function IsAdminRole() {
