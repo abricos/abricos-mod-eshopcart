@@ -12,8 +12,8 @@ $man = EShopCartModule::$instance->GetManager();
 $cpList = $man->CartProductList();
 
 $brick->content = Brick::ReplaceVarByData($brick->content, array(
-	"count" => $cpList->quantity,
-	"summ" => number_format($cpList->sum, 2, ',', ' ')
+    "count" => $cpList->quantity,
+    "summ" => number_format($cpList->sum, 2, ',', ' ')
 ));
 
 ?>

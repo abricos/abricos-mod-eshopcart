@@ -8,15 +8,15 @@
  */
 
 $charset = "CHARACTER SET 'utf8' COLLATE 'utf8_general_ci'";
-$updateManager = Ab_UpdateManager::$current; 
+$updateManager = Ab_UpdateManager::$current;
 $db = Abricos::$db;
 $pfx = $db->prefix;
 
-if ($updateManager->isInstall()){
-	Abricos::GetModule('eshopcart')->permission->Install();
-	
-	// корзина покупателя
-	$db->query_write("
+if ($updateManager->isInstall()) {
+    Abricos::GetModule('eshopcart')->permission->Install();
+
+    // корзина покупателя
+    $db->query_write("
 		CREATE TABLE IF NOT EXISTS ".$pfx."eshp_cart (
 			`cartid` int(10) unsigned NOT NULL auto_increment COMMENT 'Идентификатор записи',
 			`userid` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Локальный идентификатор пользователя',
@@ -28,11 +28,10 @@ if ($updateManager->isInstall()){
 			PRIMARY KEY  (`cartid`),
 			KEY `userid` (`userid`),
 			KEY `session` (`session`)
-		)".$charset
-	);
+		)".$charset);
 
-	// заказы
-	$db->query_write("
+    // заказы
+    $db->query_write("
 		CREATE TABLE IF NOT EXISTS ".$pfx."eshp_order (
 			`orderid` int(10) unsigned NOT NULL auto_increment COMMENT 'Идентификатор записи',
 			`userid` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Идентификатор пользователя, товар заказал авторизованный пользователь',
@@ -50,11 +49,10 @@ if ($updateManager->isInstall()){
 			`dateline` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
 			`deldate` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления',
 			PRIMARY KEY  (`orderid`)
-		)".$charset
-	);
-	
-	// товары в заказе
-	$db->query_write("
+		)".$charset);
+
+    // товары в заказе
+    $db->query_write("
 		CREATE TABLE IF NOT EXISTS ".$pfx."eshp_orderitem (
 			`orderitemid` int(10) unsigned NOT NULL auto_increment COMMENT 'Идентификатор записи',
 			`orderid` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Идентификатор заказа',
@@ -63,11 +61,10 @@ if ($updateManager->isInstall()){
 			`price` double(10,2) unsigned NOT NULL DEFAULT 0 COMMENT 'Цена за единицу',
 			PRIMARY KEY  (`orderitemid`),
 			KEY `userid` (`orderid`)
-		)".$charset
-	);
-	
-	// способы доставки
-	$db->query_write("
+		)".$charset);
+
+    // способы доставки
+    $db->query_write("
 		CREATE TABLE IF NOT EXISTS ".$pfx."eshp_delivery (
 			`deliveryid` int(10) unsigned NOT NULL auto_increment COMMENT 'Идентификатор записи',
 			`parentdeliveryid` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Идентификатор родителя',
@@ -77,11 +74,10 @@ if ($updateManager->isInstall()){
 			`price` double(10,2) unsigned NOT NULL DEFAULT 0 COMMENT 'Цена доставки',
 			`fromzero` double(10,2) unsigned NOT NULL DEFAULT 0 COMMENT 'Если заказ выше или равен этой сумме, то доставка бесплатна',
 			PRIMARY KEY  (`deliveryid`)
-		)".$charset
-	);
-	
-	// способ оплаты
-	$db->query_write("
+		)".$charset);
+
+    // способ оплаты
+    $db->query_write("
 		CREATE TABLE IF NOT EXISTS ".$pfx."eshp_payment (
 			`paymentid` int(10) unsigned NOT NULL auto_increment COMMENT 'Идентификатор записи',
 			`title` varchar(250) NOT NULL DEFAULT '' COMMENT '',
@@ -92,11 +88,10 @@ if ($updateManager->isInstall()){
 			`js` TEXT NOT NULL COMMENT '',
 			`php` TEXT NOT NULL COMMENT '',
 			PRIMARY KEY  (`paymentid`)
-		)".$charset
-	);
-	
-	// система скидок
-	$db->query_write("
+		)".$charset);
+
+    // система скидок
+    $db->query_write("
 		CREATE TABLE IF NOT EXISTS ".$pfx."eshp_discount (
 			`discountid` int(10) unsigned NOT NULL auto_increment COMMENT 'Идентификатор записи',
 			`dtype` int(1) unsigned NOT NULL DEFAULT 0 COMMENT 'Тип скидки: 0-разовая, 1-накопительная',
@@ -111,28 +106,27 @@ if ($updateManager->isInstall()){
 			`endsum` double(10,2) unsigned NOT NULL DEFAULT 0 COMMENT '',
 			`dateline` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
 			PRIMARY KEY  (`discountid`)
-		)".$charset
-	);
-	
+		)".$charset);
+
 }
 
-if ($updateManager->isUpdate('0.1.0.1')){
-	
-	$db->query_write("
+if ($updateManager->isUpdate('0.1.0.1')) {
+
+    $db->query_write("
 		ALTER TABLE ".$pfx."eshp_payment
 			ADD `dateline` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
 			ADD `deldate` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
 	");
 
-	$db->query_write("
+    $db->query_write("
 		ALTER TABLE ".$pfx."eshp_delivery
 			ADD `def` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT 'По умолчанию',
 			ADD `descript` TEXT NOT NULL COMMENT '',
 			ADD `dateline` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
 			ADD `deldate` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
 	");
-	
-	$db->query_write("
+
+    $db->query_write("
 		ALTER TABLE ".$pfx."eshp_discount
 			ADD `deldate` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
 	");

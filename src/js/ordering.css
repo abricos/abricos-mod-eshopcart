@@ -1,73 +1,81 @@
 .aw-eshopcart .ordering {
-	padding: 0px 10px 10px 10px;
-	min-width: 800px;
-	min-height: 430px;
+    padding: 0px 10px 10px 10px;
+    min-width: 800px;
+    min-height: 430px;
 }
+
 .aw-eshopcart .ordering .red {
-	color: red;
+    color: red;
 }
+
 .aw-eshopcart .ordering .cartinfo {
-	padding-bottom: 8px;
-	margin-bottom: 10px;
-	border-bottom: 1px solid #CCCCCC;
-	text-align: right;
-	font-size: 14px;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #CCCCCC;
+    text-align: right;
+    font-size: 14px;
 }
 
 .aw-eshopcart .ordering .contview {
-	min-height: 370px;
+    min-height: 370px;
 }
 
 .aw-eshopcart .ordering .delivery .editform {
-	margin-top: 10px;
+    margin-top: 10px;
 }
+
 .aw-eshopcart .ordering .delrow {
-	margin-bottom: 3px;
+    margin-bottom: 3px;
 }
+
 .aw-eshopcart .ordering .delrow input {
-	margin-right: 5px;
+    margin-right: 5px;
 }
+
 .aw-eshopcart .ordering .editform {
-   border-top: 1px solid #CCCCCC;
-   padding-top: 10px;
+    border-top: 1px solid #CCCCCC;
+    padding-top: 10px;
 }
+
 .aw-eshopcart .ordering .editform textarea.inp {
     height: 50px;
 }
 
 .aw-eshopcart .ordering .payrow input {
-	margin-right: 5px;
+    margin-right: 5px;
 }
 
 .aw-eshop .ordering .accept .cartproductlist {
-	margin-top: 15px;
+    margin-top: 15px;
 }
+
 .aw-eshop .ordering .accept .cartproductlist td {
     padding: 3px 0 3px 5px;
 }
-.aw-eshop .ordering .accept .cartproductlist .tlist {
-	height: 118px;
-	overflow-y: auto;
-}
 
+.aw-eshop .ordering .accept .cartproductlist .tlist {
+    height: 118px;
+    overflow-y: auto;
+}
 
 .aw-eshop .ordering .accept .iinfo {
-	width: 100%;
-}
-.aw-eshop .ordering .accept .iinfo td {
-	padding: 3px 5px 5px 0;
+    width: 100%;
 }
 
 .aw-eshop .ordering .accept .iinfo td {
-	border-bottom: 1px solid #CCCCCC;
+    padding: 3px 5px 5px 0;
+}
+
+.aw-eshop .ordering .accept .iinfo td {
+    border-bottom: 1px solid #CCCCCC;
 }
 
 .aw-eshop .ordering .accept .iinfo .col1 {
-	width: 200px;
-	border-right: 1px solid #CCCCCC;
+    width: 200px;
+    border-right: 1px solid #CCCCCC;
 }
 
 .aw-eshop .ordering .accept .iinfo .col2 {
-	padding-left: 5px;
-	font-style: italic;
+    padding-left: 5px;
+    font-style: italic;
 }

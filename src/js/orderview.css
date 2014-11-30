@@ -1,37 +1,38 @@
 .aw-eshopcart .orderview .contview {
-	min-height: 370px;
+    min-height: 370px;
 }
-
 
 .aw-eshopcart .orderview .cartproductlist {
-	margin-top: 15px;
+    margin-top: 15px;
 }
+
 .aw-eshopcart .orderview .cartproductlist td {
     padding: 3px 0 3px 5px;
 }
-.aw-eshopcart .orderview .cartproductlist .tlist {
-	height: 118px;
-	overflow-y: auto;
-}
 
+.aw-eshopcart .orderview .cartproductlist .tlist {
+    height: 118px;
+    overflow-y: auto;
+}
 
 .aw-eshopcart .orderview .iinfo {
-	width: 100%;
-}
-.aw-eshopcart .orderview .iinfo td {
-	padding: 3px 5px 5px 0;
+    width: 100%;
 }
 
 .aw-eshopcart .orderview .iinfo td {
-	border-bottom: 1px solid #CCCCCC;
+    padding: 3px 5px 5px 0;
+}
+
+.aw-eshopcart .orderview .iinfo td {
+    border-bottom: 1px solid #CCCCCC;
 }
 
 .aw-eshopcart .orderview .iinfo .col1 {
-	width: 200px;
-	border-right: 1px solid #CCCCCC;
+    width: 200px;
+    border-right: 1px solid #CCCCCC;
 }
 
 .aw-eshopcart .orderview .iinfo .col2 {
-	padding-left: 5px;
-	font-style: italic;
+    padding-left: 5px;
+    font-style: italic;
 }
