@@ -55,7 +55,7 @@ class EShopCartManager extends Ab_ModuleManager {
 
     public function AJAX($d) {
 
-        if (intval($d->productaddtocart) > 0) {
+        if (isset($d->productaddtocart) && intval($d->productaddtocart) > 0) {
             $this->CartProductAdd($d->productaddtocart);
         }
 
@@ -245,8 +245,9 @@ class EShopCartManager extends Ab_ModuleManager {
         if (empty($product)) {
             return null;
         }
+        $optionBase = $product->detail->optionsBase;
 
-        $price = $product->detail->optionsBase['price'];
+        $price = isset($optionBase['price']) ? $optionBase['price'] : "";
 
         EShopCartQuery::CartProductAppend($this->db, $this->user, $productid, $quantity, $price);
     }

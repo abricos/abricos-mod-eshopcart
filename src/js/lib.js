@@ -4,11 +4,11 @@
 */
 
 var Component = new Brick.Component();
-Component.requires = { 
+Component.requires = {
 	mod:[
         {name: 'sys', files: ['number.js']},
-        {name: 'eshop', files: ['lib.js']}
-	]		
+        {name: 'eshop', files: ['lib-manager.js']}
+	]
 };
 Component.entryPoint = function(NS){
 
@@ -31,20 +31,20 @@ Component.entryPoint = function(NS){
 		nf = nf || NS.NumberFormat;
 		return YAHOO.util.Number.format(val, nf);
 	};
-	
+
 	var SysNS = Brick.mod.sys;
 
 	var buildTemplate = this.buildTemplate;
 	buildTemplate({},'');
-	
+
 	NS.lif = function(f){return L.isFunction(f) ? f : function(){}; };
 	NS.life = function(f, p1, p2, p3, p4, p5, p6, p7){
 		f = NS.lif(f); f(p1, p2, p3, p4, p5, p6, p7);
 	};
 	NS.Item = SysNS.Item;
 	NS.ItemList = SysNS.ItemList;
-	
-	// элемент товара в корзине текущего пользователя 
+
+	// элемент товара в корзине текущего пользователя
 	var CartProduct = function(d){
 		d = L.merge({
 			'elid': 0,
@@ -72,7 +72,7 @@ Component.entryPoint = function(NS){
 
 	var CartProductList = function(d){
 		this.productList = null;
-		
+
 		CartProductList.superclass.constructor.call(this, d, CartProduct, {
 			// 'order': '!order'
 		});
@@ -94,7 +94,7 @@ Component.entryPoint = function(NS){
 		}
 	});
 	NS.CartProductList = CartProductList;
-	
+
 	var Payment = function(d){
 		d = L.merge({
 			'tl': '',
@@ -113,7 +113,7 @@ Component.entryPoint = function(NS){
 		}
 	});
 	NS.Payment = Payment;
-	
+
 	var PaymentList = function(d){
 		PaymentList.superclass.constructor.call(this, d, Payment, {
 			'order': '!order'
@@ -132,7 +132,7 @@ Component.entryPoint = function(NS){
 		}
 	});
 	NS.PaymentList = PaymentList;
-	
+
 	var Delivery = function(d){
 		d = L.merge({
 			'tl': '',
@@ -155,7 +155,7 @@ Component.entryPoint = function(NS){
 		}
 	});
 	NS.Delivery = Delivery;
-	
+
 	var DeliveryList = function(d){
 		DeliveryList.superclass.constructor.call(this, d, Delivery, {
 			'order': '!order'
@@ -174,7 +174,7 @@ Component.entryPoint = function(NS){
 		}
 	});
 	NS.DeliveryList = DeliveryList;
-	
+
 	var Order = function(d){
 		d = L.merge({
 			'uid': 0,
@@ -191,7 +191,7 @@ Component.entryPoint = function(NS){
 			'sm': 0,
 			'cartproducts': null
 		}, d || {});
-		Order.superclass.constructor.call(this, d);		
+		Order.superclass.constructor.call(this, d);
 	};
 	YAHOO.extend(Order, SysNS.Item, {
 		update: function(d){
@@ -207,7 +207,7 @@ Component.entryPoint = function(NS){
 			this.status = d['st']|0;
 			this.quantity = d['qt']|0;
 			this.sum = d['sm']|0;
-			
+
 			this.cartProductList = null;
 			if (L.isValue(d['cartproducts'])){
 				this.cartProductList = new NS.CartProductList();
@@ -221,8 +221,8 @@ Component.entryPoint = function(NS){
 			return NS.manager.paymentList.get(this.paymentid);
 		}
 	});
-	NS.Order = Order;	
-	
+	NS.Order = Order;
+
 	var ConfigAdmin = function(d){
 		d = L.merge({
 			'emls': ''
@@ -230,7 +230,7 @@ Component.entryPoint = function(NS){
 		this.init(d);
 	};
 	ConfigAdmin.prototype = {
-		init: function(d){ 
+		init: function(d){
 			this.update(d);
 		},
 		update: function(d){
@@ -238,7 +238,7 @@ Component.entryPoint = function(NS){
 		}
 	};
 	NS.ConfigAdmin = ConfigAdmin;
-	
+
 	var Discount = function(d){
 		d = L.merge({
 			'tp': 0,
@@ -265,7 +265,7 @@ Component.entryPoint = function(NS){
 		}
 	});
 	NS.Discount = Discount;
-	
+
 	var DiscountList = function(d){
 		DiscountList.superclass.constructor.call(this, d, Discount, {
 			'order': 'fromSum'
@@ -273,8 +273,8 @@ Component.entryPoint = function(NS){
 	};
 	YAHOO.extend(DiscountList, SysNS.ItemList, {});
 	NS.DiscountList = DiscountList;
-	
-	
+
+
 	var Manager = function (callback, productAddToCart){
 		this.init(callback, productAddToCart);
 	};
@@ -282,24 +282,24 @@ Component.entryPoint = function(NS){
 		init: function(callback, productAddToCart){
 			productAddToCart = productAddToCart|0;
 			NS.manager = this;
-			
+
 			this.discountList = new DiscountList();
 			this.paymentList = new PaymentList();
 			this.deliveryList = new DeliveryList();
 			this.cartProductList = new CartProductList();
 			this.configAdmin = null;
 			this.eshopManager = null;
-			
+
 			var __self = this;
 			R.load(function(){
 				Brick.mod.eshop.initManager(function(man){
 					__self.eshopManager = man;
-					
+
 					var act = {'do': 'initdata'};
 					if (productAddToCart > 0){
 						act['productaddtocart'] = productAddToCart;
 					}
-					
+
 					__self.ajax(act, function(d){
 						__self._updateConfigAdmin(d);
 						__self._updateDiscountList(d);
@@ -321,7 +321,7 @@ Component.entryPoint = function(NS){
 				}
 			});
 		},
-		
+
 		_updateCartProductList: function(d, cartProductList){
 			if (!L.isValue(d) || !L.isValue(d['cartproducts']) || !L.isValue(d['cartproducts']['list'])){
 				return null;
@@ -334,23 +334,23 @@ Component.entryPoint = function(NS){
 			cartProductList.clear();
 			cartProductList.update(d['cartproducts']['list']);
 			var pList = cartProductList.productList = this.eshopManager._elementListUpdate(d['cartproducts']);
-			
+
 			cartProductList.foreach(function(item){
 				item.product = pList.get(item.productid);
 			});
-			
+
 			if (isCurrentUser){
 				this.updateCartInfoElements();
 			}
 		},
-		
+
 		updateCartInfoElements: function(){
 			var sm = 0, qt = 0;
 			this.cartProductList.foreach(function(item){
 				sm += item.getSum();
 				qt += item.quantity;
 			});
-			
+
 			// обновить данные на страницах
 			var elsQt = Dom.getElementsByClassName('eshop-cart-count');
 			for (var i=0; i<elsQt.length;i++){
@@ -372,7 +372,7 @@ Component.entryPoint = function(NS){
 				NS.life(callback);
 			});
 		},
-		
+
 		cartProductRemove: function(productid, callback){
 			var __self = this;
 			this.ajax({
@@ -393,7 +393,7 @@ Component.entryPoint = function(NS){
 				NS.life(callback, list);
 			});
 		},
-		
+
 		configAdminSave: function(sd, callback){
 			var __self = this;
 			this.ajax({
@@ -404,17 +404,17 @@ Component.entryPoint = function(NS){
 				NS.life(callback);
 			});
 		},
-		
+
 		_updateConfigAdmin: function(d){
 			if (!L.isValue(d) || !L.isValue(d['configadmin'])){ return null; }
-			
+
 			if (!L.isValue(this.configAdmin)){
 				this.configAdmin = new NS.ConfigAdmin(d['configadmin']);
 			}else{
 				this.configAdmin.update(d['configadmin']);
 			}
 		},
-		
+
 		_updatePaymentList: function(d){
 			if (!L.isValue(d) || !L.isValue(d['payments']) || !L.isValue(d['payments']['list'])){
 				return null;
@@ -465,7 +465,7 @@ Component.entryPoint = function(NS){
 				NS.life(callback);
 			});
 		},
-		
+
 		_updateDeliveryList: function(d){
 			if (!L.isValue(d) || !L.isValue(d['deliverys']) || !L.isValue(d['deliverys']['list'])){
 				return null;
@@ -514,9 +514,9 @@ Component.entryPoint = function(NS){
 			}, function(d){
 				__self.deliveryList.remove(deliveryid);
 				NS.life(callback);
-			});			
+			});
 		},
-		
+
 		_updateDiscountList: function(d){
 			if (!L.isValue(d) || !L.isValue(d['discounts']) || !L.isValue(d['discounts']['list'])){
 				return null;
@@ -555,7 +555,7 @@ Component.entryPoint = function(NS){
 			}, function(d){
 				__self.discountList.remove(discountid);
 				NS.life(callback);
-			});			
+			});
 		},
 		ordering: function(sd, callback){
 			var __self = this;
@@ -567,24 +567,24 @@ Component.entryPoint = function(NS){
 				NS.life(callback);
 			});
 		},
-		
+
 		orderLoad: function(orderid, callback){
 			this.ajax({
 				'do': 'order',
 				'orderid': orderid
 			}, function(d){
-	
+
 				var order = null;
 				if (L.isValue(d) && L.isValue(d['order'])){
 					order = new NS.Order(d['order']);
 				}
-				
+
 				NS.life(callback, order);
 			});
 		}
 	};
 	NS.manager = null;
-	
+
 	NS.initManager = function(callback, productToCart){
 		productToCart = productToCart|0;
 		if (L.isNull(NS.manager)){
@@ -599,5 +599,5 @@ Component.entryPoint = function(NS){
 			}
 		}
 	};
-	
+
 };
