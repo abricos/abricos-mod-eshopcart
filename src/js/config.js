@@ -5,15 +5,17 @@
 
 var Component = new Brick.Component();
 Component.requires = {
-    yahoo: ['tabview'],
+    yui: ['aui-tabview'],
     mod: [
         {name: '{C#MODNAME}', files: ['discountlist.js', 'paymentlist.js', 'deliverylist.js']}
     ]
 };
 Component.entryPoint = function(NS){
 
-    var L = YAHOO.lang,
-        buildTemplate = this.buildTemplate,
+    var Y = Brick.YUI,
+        L = Y.Lang;
+
+    var buildTemplate = this.buildTemplate,
         BW = Brick.mod.widget.Widget;
 
     var ConfigWidget = function(container){
@@ -22,7 +24,7 @@ Component.entryPoint = function(NS){
         });
     };
     YAHOO.extend(ConfigWidget, BW, {
-        init: function(cfg){
+        init: function(){
             this.discountWidget = null;
             this.paymentWidget = null;
             this.deliveryWidget = null;
@@ -47,17 +49,18 @@ Component.entryPoint = function(NS){
             this.elHide('loading');
             this.elShow('view');
 
-            new YAHOO.widget.TabView(this.gel('view'));
             this.discountWidget = new NS.DiscountListWidget(this.gel('discount'));
             this.paymentWidget = new NS.PaymentListWidget(this.gel('payment'));
             this.deliveryWidget = new NS.DeliveryListWidget(this.gel('delivery'));
             this.overWidget = new NS.EMailConfirmConfigWidget(this.gel('over'));
+
+            new Y.TabView({srcNode: this.gel('view')}).render();
         }
     });
     NS.ConfigWidget = ConfigWidget;
 
     var EMailConfirmConfigWidget = function(container, cfg){
-        cfg = L.merge({}, cfg || {});
+        cfg = Y.merge({}, cfg || {});
 
         EMailConfirmConfigWidget.superclass.constructor.call(this, container, {
             'buildTemplate': buildTemplate, 'tnames': 'email'

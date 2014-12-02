@@ -1,20 +1,20 @@
 <!--{widget}-->
-<div id="{i#id}" class="aw-eshop aw-catalog">
+<div id="{i#id}" class="aw-eshop aw-eshopcart aw-catalog">
 	<div id="{i#loading}" class="loading">
 		<img src="/images/loading.gif" /> Идет загрузка данных <br /> Пожалуйста, подождите...
 	</div>
-	<div id="{i#view}" style="display: none" class="yui-navset">
-		<ul class="yui-nav">
-			<li class="selected"><a href="#{i#discount}"><em>Скидки</em></a></li>
-			<li><a href="#{i#delivery}"><em>Доставка</em></a></li>
-			<li><a href="#{i#payment}"><em>Способы оплаты</em></a></li>
-			<li><a href="#{i#over}"><em>Прочие настройки</em></a></li>
+	<div id="{i#view}" style="display: none">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#{i#discount}">Скидки</a></li>
+			<li><a href="#{i#delivery}">Доставка</a></li>
+			<li><a href="#{i#payment}">Способы оплаты</a></li>
+			<li><a href="#{i#over}">Прочие настройки</a></li>
 		</ul>            
-		<div class="yui-content">
-			<div id="{i#discount}"></div>
-			<div id="{i#delivery}"></div>
-			<div id="{i#payment}"></div>
-			<div id="{i#over}"></div>
+		<div class="tab-content">
+			<div id="{i#discount}" class="tab-pane"></div>
+			<div id="{i#delivery}" class="tab-pane"></div>
+			<div id="{i#payment}" class="tab-pane"></div>
+			<div id="{i#over}" class="tab-pane"></div>
 		</div>
 	</div>
 </div>
@@ -41,8 +41,8 @@
 	
 		<div class="btns right r">
 			<span id="{i#btnsc}">
-				<a id="{i#bsave}" href="#" class="habtn">Сохранить</a>
-				<a id="{i#bcancel}" href="#" class="habtn" style="display: none">Отмена</a>
+				<a id="{i#bsave}" href="#" class="btn btn-default">Сохранить</a>
+				<a id="{i#bcancel}" href="#" class="btn btn-default" style="display: none">Отмена</a>
 			</span>
 			<span id="{i#btnpc}" style="display: none">
 				<img src="/images/loading.gif" /> Сохранение...

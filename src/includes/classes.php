@@ -250,7 +250,7 @@ class EShopCartDelivery extends AbricosItem {
         $this->price = doubleval($d['pc']);
         $this->fromZero = doubleval($d['zr']);
         $this->order = intval($d['ord']);
-        $this->default = intval($d['def']);
+        $this->default = isset($d['def']) ? intval($d['def']) : 0;
     }
 
     public function ToAJAX() {
