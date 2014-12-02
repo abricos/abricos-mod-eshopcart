@@ -15,9 +15,14 @@ if (false) {// обманка для удобного обращения к пе
     $product = new EShopElement();
 }
 
+$btl = $p["titleorder"];
+if (isset($product->ext['sklad']) && $product->ext['sklad']>0){
+    $btl = $p["titlebuy"];
+}
+
 $brick->content = Brick::ReplaceVarByData($brick->content, array(
     "productid" => $product->id,
-    "btl" => $p[$product->ext['sklad'] > 0 ? "titlebuy" : "titleorder"]
+    "btl" => $btl
 ));
 
 ?>
