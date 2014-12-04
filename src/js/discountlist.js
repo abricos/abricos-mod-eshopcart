@@ -6,7 +6,8 @@
 var Component = new Brick.Component();
 Component.requires = {
     mod: [
-        {name: '{C#MODNAME}', files: ['dragdrop.js', 'discounteditor.js']}
+        {name: 'catalog', files: ['dragdrop.js']},
+        {name: '{C#MODNAME}', files: ['discounteditor.js']}
     ]
 };
 Component.entryPoint = function(NS){
@@ -15,7 +16,8 @@ Component.entryPoint = function(NS){
         E = YAHOO.util.Event,
         L = YAHOO.lang,
         buildTemplate = this.buildTemplate,
-        BW = Brick.mod.widget.Widget;
+        BW = Brick.mod.widget.Widget,
+        NSCat = Brick.mod.catalog;
 
     var DiscountListWidget = function(container, cfg){
         cfg = L.merge({}, cfg || {});
@@ -77,7 +79,7 @@ Component.entryPoint = function(NS){
                     }
                 });
 
-                new NS.RowDragItem(div, {
+                w = new NSCat.RowDragItem(div, {
                     'endDragCallback': function(dgi, elDiv){
                         var chs = elList.childNodes, ordb = NS.manager.discountList.count();
                         var orders = [];
