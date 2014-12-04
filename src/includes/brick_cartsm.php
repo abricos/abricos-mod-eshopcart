@@ -8,12 +8,14 @@
 
 $brick = Brick::$builder->brick;
 $man = EShopCartModule::$instance->GetManager();
+$cMan = EShopModule::$instance->GetManager()->cManager;
 
 $cpList = $man->CartProductList();
 
 $brick->content = Brick::ReplaceVarByData($brick->content, array(
     "count" => $cpList->quantity,
-    "summ" => number_format($cpList->sum, 2, ',', ' ')
+    "summ" => number_format($cpList->sum, 2, ',', ' '),
+    "currency" => $cMan->CurrencyDefault()->postfix
 ));
 
 ?>

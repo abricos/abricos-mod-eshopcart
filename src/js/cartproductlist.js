@@ -99,7 +99,8 @@ Component.entryPoint = function(NS){
             }
 
             this.elSetHTML({
-                'sm': NS.numberFormat(sum)
+                'sm': NS.numberFormat(sum),
+                'currency': NS.manager.currency.postfix
             });
         },
         foreach: function(f){

@@ -48,6 +48,39 @@ Component.entryPoint = function(NS){
     NS.Item = SysNS.Item;
     NS.ItemList = SysNS.ItemList;
 
+
+    var Currency = function(d){
+        d = L.merge({
+            'isdefault': 0,
+            'title': '',
+            'codestr': '',
+            'codenum': 0,
+            'rateval': 0,
+            'ratedate': 0,
+            'prefix': '',
+            'postfix': '',
+            'ord': 0
+        }, d || {});
+        Currency.superclass.constructor.call(this, d);
+    };
+    YAHOO.extend(Currency, SysNS.Item, {
+        update: function(d){
+            this.isDefault = d['isdefault'] | 0 > 0;
+            this.title = d['title'];
+            this.codestr = d['codestr'];
+            this.codenum = d['codenum'];
+            this.rateval = d['rateval'];
+            this.ratedate = d['ratedate'];
+            this.prefix = d['prefix'];
+            this.postfix = d['postfix'];
+            this.ord = d['ord'];
+        }
+    });
+    /**
+     * @deprecated
+     */
+    NS.Currency = Currency;
+
     // элемент товара в корзине текущего пользователя
     var CartProduct = function(d){
         d = L.merge({
@@ -295,6 +328,7 @@ Component.entryPoint = function(NS){
             this.cartProductList = new CartProductList();
             this.configAdmin = null;
             this.eshopManager = null;
+            this.currency = null;
 
             var __self = this;
             R.load(function(){
@@ -307,6 +341,7 @@ Component.entryPoint = function(NS){
                     }
 
                     __self.ajax(act, function(d){
+                        __self._updateCurrencyDefault(d);
                         __self._updateConfigAdmin(d);
                         __self._updateDiscountList(d);
                         __self._updatePaymentList(d);
@@ -326,6 +361,12 @@ Component.entryPoint = function(NS){
                     NS.life(callback, request.data);
                 }
             });
+        },
+
+        _updateCurrencyDefault: function(d){
+            if (d && d.currency){
+                this.currency = new NS.Currency(d.currency);
+            }
         },
 
         _updateCartProductList: function(d, cartProductList){
@@ -365,6 +406,10 @@ Component.entryPoint = function(NS){
             var elsSm = Dom.getElementsByClassName('eshop-cart-summ');
             for (var i = 0; i < elsSm.length; i++){
                 elsSm[i].innerHTML = NS.numberFormat(sm);
+            }
+            var elsCy = Dom.getElementsByClassName('eshop-cart-currency');
+            for (var i = 0; i < elsCy.length; i++){
+                elsCy[i].innerHTML = this.currency.postfix;
             }
         },
 

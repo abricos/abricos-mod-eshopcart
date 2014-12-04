@@ -147,6 +147,11 @@ class EShopCartManager extends Ab_ModuleManager {
             $ret->configadmin = $obj->configadmin;
         }
 
+        Abricos::GetModule('eshop')->GetManager();
+        $catMan = EShopManager::$instance->cManager;
+        $obj = $catMan->CurrencyDefaultToAJAX();
+        $ret->currency = $obj->currency;
+
         return $ret;
     }
 
