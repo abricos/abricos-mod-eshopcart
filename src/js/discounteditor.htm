@@ -1,80 +1,79 @@
 <!--{widget}-->
 <div id="{i#id}" class="easyeditor discounteditor">
-	<div id="{i#loading}">
-		<div id="{i#loading}" class="loading">
-			<img src="/images/loading.gif" />
-		</div>
-	</div>
-	<div id="{i#view}" class="editform" style="display: none">
-	
-		<div class="r">
-			<input id="{i#tl}" class="title inp" onfocus="this.select();" />
+    <div id="{i#loading}" class="loading">
+        <img src="/images/loading.gif"/>
+    </div>
+    <div id="{i#view}" class="editform" style="display: none">
 
-			<dl class="dtp">
-				<dt>Тип скидки</dt>
-				<dd>
-					<select id="{i#tp}" class="inp">
-						<option value="0">Разовая</option>
-						<option value="1">Накопительная</option>
-					</select>
-				</dd>
-			</dl>
-			
-			<dl class="tp">
-				<dt>Тип числа</dt>
-				<dd>
-					<select id="{i#ptp}" class="inp">
-						<option value="0">В рублях</option>
-						<option value="1">В процентах</option>
-					</select>
-				</dd>
-			</dl>
-			
-			<dl class="pc">
-				<dt>Значение скидки</dt>
-				<dd>
-					<input id="{i#pc}" type="text" class="inp" />
-				</dd>
-			</dl>
+        <div class="r">
+            <input id="{i#tl}" class="title inp" onfocus="this.select();"/>
 
-			<dl class="fsm">
-				<dt>Начальная цена</dt>
-				<dd>
-					<input id="{i#fsm}" type="text" class="inp" />
-				</dd>
-			</dl>
+            <dl class="dtp">
+                <dt>Тип скидки</dt>
+                <dd>
+                    <select id="{i#tp}" class="inp">
+                        <option value="0">Разовая</option>
+                        <option value="1">Накопительная</option>
+                    </select>
+                </dd>
+            </dl>
 
-			<dl class="esm">
-				<dt>Конечная цена</dt>
-				<dd>
-					<input id="{i#esm}" type="text" class="inp" />
-				</dd>
-			</dl>
+            <dl class="tp">
+                <dt>Тип числа</dt>
+                <dd>
+                    <select id="{i#ptp}" class="inp">
+                        <option value="0">В рублях</option>
+                        <option value="1">В процентах</option>
+                    </select>
+                </dd>
+            </dl>
 
-			<dl class="dis">
-				<dt>Не применять</dt>
-				<dd>
-					<input id="{i#dis}" type="checkbox" />
-				</dd>
-			</dl>
-			
-			<dl class="descript">
-				<dt>Описание</dt>
-				<dd>
-					<textarea id="{i#dsc}" class="inp"></textarea>
-				</dd>
-			</dl>
-		</div>
-		
-		<div class="btns right r">
+            <dl class="pc">
+                <dt>Значение скидки</dt>
+                <dd>
+                    <input id="{i#pc}" type="text" class="inp"/>
+                </dd>
+            </dl>
+
+            <dl class="fsm">
+                <dt>Начальная цена</dt>
+                <dd>
+                    <input id="{i#fsm}" type="text" class="inp"/>
+                </dd>
+            </dl>
+
+            <dl class="esm">
+                <dt>Конечная цена</dt>
+                <dd>
+                    <input id="{i#esm}" type="text" class="inp"/>
+                </dd>
+            </dl>
+
+            <dl class="dis">
+                <dt>Не применять</dt>
+                <dd>
+                    <input id="{i#dis}" type="checkbox"/>
+                </dd>
+            </dl>
+
+            <dl class="descript">
+                <dt>Описание</dt>
+                <dd>
+                    <textarea id="{i#dsc}" class="inp"></textarea>
+                </dd>
+            </dl>
+        </div>
+
+        <div class="btns right r">
 			<span id="{i#btnsc}">
 				<a id="{i#bsave}" href="#" class="habtn">Сохранить</a>
 				<a id="{i#bcancel}" href="#" class="habtn">Отмена</a>
 			</span>
 			<span id="{i#btnpc}" style="display: none">
-				<img src="/images/loading.gif" /> Сохранение...
+				<img src="/images/loading.gif"/> Сохранение...
 			</span>
-			<div class="clear"></div>
-		</div>
-	</div>
+
+            <div class="clear"></div>
+        </div>
+    </div>
 </div>

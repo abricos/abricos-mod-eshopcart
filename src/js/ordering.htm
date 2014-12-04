@@ -1,116 +1,116 @@
 <!--{panel}-->
 <div class='hd'>Оформление заказа</div>
 <div class='bd aw-eshop aw-eshopcart'>
-	<div id="{i#widget}" class="viewinpanel"></div>
+    <div id="{i#widget}" class="viewinpanel"></div>
 </div>
 
 <!--{widget}-->
 <div id="{i#id}" class="ordering aw-eshop aw-catalog">
-	<div id="{i#loading}">
-		<div id="{i#loading}" class="loading">
-			<img src="/images/loading.gif" />
-		</div>
-	</div>
-	<div id="{i#view}" style="display: none">
-	
-		<div class="cartinfo">
-			Товаров - <span class="eshop-cart-count">-</span> 
-			на сумму <span class="eshop-cart-summ">-</span> руб.
-		</div>
-	
-		<div id="{i#auth}" style="display: none"></div>
-		<div id="{i#delivery}" style="display: none"></div>
-		<div id="{i#payment}" style="display: none"></div>
-		<div id="{i#accept}" style="display: none"></div>
-		<div id="{i#thanks}" style="display: none"></div>
-	</div>
+    <div id="{i#loading}" class="loading">
+        <img src="/images/loading.gif"/>
+    </div>
+    <div id="{i#view}" style="display: none">
+
+        <div class="cartinfo">
+            Товаров - <span class="eshop-cart-count">-</span>
+            на сумму <span class="eshop-cart-summ">-</span> руб.
+        </div>
+
+        <div id="{i#auth}" style="display: none"></div>
+        <div id="{i#delivery}" style="display: none"></div>
+        <div id="{i#payment}" style="display: none"></div>
+        <div id="{i#accept}" style="display: none"></div>
+        <div id="{i#thanks}" style="display: none"></div>
+    </div>
 </div>
 
 <!--{auth}-->
 <div id="{i#id}" class="auth">
 
-	<div class="contview">
-		<div id="{i#auth}"></div>
-		<div class="cmt">
-			Авторизация на сайте позволит получить бонусы и экономить 
-			время при последующих покупках
-		</div>
-	</div>
-	
-	<div class="btn-toolbar text-right">
-		<input id="{i#bnext}" type="button" value="Оформить без авторизации" class="btn btn-primary"/>
-	</div>
+    <div class="contview">
+        <div id="{i#auth}"></div>
+        <div class="cmt">
+            Авторизация на сайте позволит получить бонусы и экономить
+            время при последующих покупках
+        </div>
+    </div>
+
+    <div class="btn-toolbar text-right">
+        <input id="{i#bnext}" type="button" value="Оформить без авторизации" class="btn btn-primary"/>
+    </div>
 </div>
 
 <!--{delivery}-->
 <div id="{i#id}" class="delivery">
 
-	<div class="contview">
-		<h4>Выберите способ получения заказа</h4>
-		<div id="{i#table}"></div>
-		
-		<div class="editform">
-	
-			<div class="r">
-				
-				<dl class="fnm">
-					<dt>Имя <span class="red">*</span></dt>
-					<dd>
-						<input id="{i#fnm}" type="text" class="inp" />
-					</dd>
-				</dl>
-				
-				<dl class="lnm">
-					<dt>Фамилия <span class="red">*</span></dt>
-					<dd>
-						<input id="{i#lnm}" type="text" class="inp" />
-					</dd>
-				</dl>
+    <div class="contview">
+        <h4>Выберите способ получения заказа</h4>
 
-				<dl class="ph">
-					<dt>Телефон <span class="red">*</span></dt>
-					<dd>
-						<input id="{i#ph}" type="text" class="inp" />
-					</dd>
-				</dl>
-				
-				<dl class="address" id="{i#fieldadr}">
-					<dt>Адрес доставки <span class="red">*</span></dt>
-					<dd>
-						<textarea id="{i#adr}" class="inp"></textarea>
-					</dd>
-				</dl>
-				
-				<dl class="descript">
-					<dt>Дополнительная информация</dt>
-					<dd>
-						<textarea id="{i#dsc}" class="inp"></textarea>
-						<div class="dsc">Удобное время звонка, дополнительные номера телефонов, этаж и т.д.</div>
-					</dd>
-				</dl>
-			</div>		
-		</div>
-	</div>
-	
-	<div class="btn-toolbar text-right">
-		<input id="{i#bnext}" type="button" value="Продолжить" class="btn btn-primary"/>
-	</div>
+        <div id="{i#table}"></div>
+
+        <div class="editform">
+
+            <div class="r">
+
+                <dl class="fnm">
+                    <dt>Имя <span class="red">*</span></dt>
+                    <dd>
+                        <input id="{i#fnm}" type="text" class="inp"/>
+                    </dd>
+                </dl>
+
+                <dl class="lnm">
+                    <dt>Фамилия <span class="red">*</span></dt>
+                    <dd>
+                        <input id="{i#lnm}" type="text" class="inp"/>
+                    </dd>
+                </dl>
+
+                <dl class="ph">
+                    <dt>Телефон <span class="red">*</span></dt>
+                    <dd>
+                        <input id="{i#ph}" type="text" class="inp"/>
+                    </dd>
+                </dl>
+
+                <dl class="address" id="{i#fieldadr}">
+                    <dt>Адрес доставки <span class="red">*</span></dt>
+                    <dd>
+                        <textarea id="{i#adr}" class="inp"></textarea>
+                    </dd>
+                </dl>
+
+                <dl class="descript">
+                    <dt>Дополнительная информация</dt>
+                    <dd>
+                        <textarea id="{i#dsc}" class="inp"></textarea>
+
+                        <div class="dsc">Удобное время звонка, дополнительные номера телефонов, этаж и т.д.</div>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-toolbar text-right">
+        <input id="{i#bnext}" type="button" value="Продолжить" class="btn btn-primary"/>
+    </div>
 </div>
 
 <!--{deliverytable}-->
 <div class="deltbl">
-	<div class="delrow">
-		<input value="0" id="{i#mydel}" name="deliveryrow" type="radio" checked="checked" />
-		<label for="{i#mydel}">Заберу самостоятельно</label>
-	</div> 
-	{v#rows}
+    <div class="delrow">
+        <input value="0" id="{i#mydel}" name="deliveryrow" type="radio" checked="checked"/>
+        <label for="{i#mydel}">Заберу самостоятельно</label>
+    </div>
+    {v#rows}
 </div>
 
 <!--{deliveryrow}-->
 <div class="delrow">
-	<input id="{i#id}-{v#id}" name="deliveryrow" type="radio" /> 
-	<label for="{i#id}-{v#id}">{v#tl} {v#pc}</label>
-</div> 
+    <input id="{i#id}-{v#id}" name="deliveryrow" type="radio"/>
+    <label for="{i#id}-{v#id}">{v#tl} {v#pc}</label>
+</div>
 
 <!--{deliveryrowprice}-->
 <span> - {v#val} руб.</span>
@@ -118,89 +118,94 @@
 <!--{payment}-->
 <div id="{i#id}" class="payment">
 
-	<div class="contview">
-		<h4>Выберите способ оплаты</h4>
-		<div id="{i#table}"></div>
-	</div>
-	
-	<div class="btn-toolbar text-right">
-		<input id="{i#bprev}" type="button" value="Вернуться" class="btn btn-primary"/>
-		<input id="{i#bnext}" type="button" value="Продолжить" class="btn btn-primary"/>
-	</div>
+    <div class="contview">
+        <h4>Выберите способ оплаты</h4>
+
+        <div id="{i#table}"></div>
+    </div>
+
+    <div class="btn-toolbar text-right">
+        <input id="{i#bprev}" type="button" value="Вернуться" class="btn btn-primary"/>
+        <input id="{i#bnext}" type="button" value="Продолжить" class="btn btn-primary"/>
+    </div>
 </div>
 
 <!--{paymenttable}-->
 <div class="paytbl">
-	{v#rows}
+    {v#rows}
 </div>
 
 <!--{paymentrow}-->
 <div class="payrow">
-	<input id="{i#id}-{v#id}" name="paymentrow" type="radio" /> 
-	<label for="{i#id}-{v#id}">{v#tl}</label>
-</div> 
+    <input id="{i#id}-{v#id}" name="paymentrow" type="radio"/>
+    <label for="{i#id}-{v#id}">{v#tl}</label>
+</div>
 
 <!--{accept}-->
 <div id="{i#id}" class="accept">
 
-	<div class="contview">
-		<h4>Подтверждение заказа</h4>
-		
-		<table class="iinfo"><tbody>
-			<tr>
-				<td class="col1">Способ оплаты </td>
-				<td class="col2"><span id="{i#payment}"></span></td>
-			</tr>
-			<tr>
-				<td class="col1">Способ доставки </td>
-				<td class="col2">
-					<span id="{i#delivery}"></span>
-					<span id="{i#mydelivery}">Самостоятельный вывоз</span>
-				</td>
-			</tr>
-			<tr>
-				<td class="col1">Получатель </td>
-				<td class="col2"><div id="{i#fio}"></div></td>
-			</tr>
-			<tr>
-				<td class="col1">Телефон</td>
-				<td class="col2"><span id="{i#ph}"></span></td>
-			</tr>
-			<tr id="{i#contadr}">
-				<td class="col1">Адрес доставки</td>
-				<td class="col2">
-					<span id="{i#adr}"></span>
-				</td>
-			</tr>
-			<tr>
-				<td class="col1">Дополнительная информация</td>
-				<td class="col2"><span id="{i#dsc}"></span></td>
-			</tr>
-		</tbody></table>
-		
-		<div id="{i#cart}"></div>
-		
-	</div>
-	
-	<div class="text-right">
+    <div class="contview">
+        <h4>Подтверждение заказа</h4>
+
+        <table class="iinfo">
+            <tbody>
+            <tr>
+                <td class="col1">Способ оплаты</td>
+                <td class="col2"><span id="{i#payment}"></span></td>
+            </tr>
+            <tr>
+                <td class="col1">Способ доставки</td>
+                <td class="col2">
+                    <span id="{i#delivery}"></span>
+                    <span id="{i#mydelivery}">Самостоятельный вывоз</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">Получатель</td>
+                <td class="col2">
+                    <div id="{i#fio}"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">Телефон</td>
+                <td class="col2"><span id="{i#ph}"></span></td>
+            </tr>
+            <tr id="{i#contadr}">
+                <td class="col1">Адрес доставки</td>
+                <td class="col2">
+                    <span id="{i#adr}"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col1">Дополнительная информация</td>
+                <td class="col2"><span id="{i#dsc}"></span></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div id="{i#cart}"></div>
+
+    </div>
+
+    <div class="text-right">
 		<span id="{i#btns}" class="btn-toolbar">
 			<input id="{i#bprev}" type="button" value="Вернуться" class="btn btn-primary"/>
 			<input id="{i#bnext}" type="button" value="Подтвердить заказ" class="btn btn-primary"/>
 		</span>
 		<span id="{i#loading}" style="display: none">
-			<img src="/images/loading.gif" /> Сохранение...
+			<img src="/images/loading.gif"/> Сохранение...
 		</span>
-	</div>
+    </div>
 </div>
 
 <!--{thanks}-->
 <div id="{i#id}" class="close">
 
-	<div class="contview">
-		<h4>Спасибо! Ваш заказ принят!</h4>
-	</div>
-	
-	<div class="btn-toolbar text-right">
-		<input id="{i#bnext}" type="button" value="Закрыть" class="btn btn-primary"/>
-	</div>
+    <div class="contview">
+        <h4>Спасибо! Ваш заказ принят!</h4>
+    </div>
+
+    <div class="btn-toolbar text-right">
+        <input id="{i#bnext}" type="button" value="Закрыть" class="btn btn-primary"/>
+    </div>
 </div>
