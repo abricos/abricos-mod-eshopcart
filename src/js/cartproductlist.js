@@ -11,6 +11,8 @@ Component.requires = {
 };
 Component.entryPoint = function(NS){
 
+    var Y = Brick.YUI;
+
     var Dom = YAHOO.util.Dom,
         E = YAHOO.util.Event,
         L = YAHOO.lang,
@@ -169,10 +171,11 @@ Component.entryPoint = function(NS){
                 });
             }
             this.elSetHTML({
-                'qt': catprod.quantity,
                 'sm': NS.numberFormat(catprod.getSum())
             });
 
+            var elQt = Y.one(this.gel('qt'));
+            elQt.set('value', catprod.quantity);
         },
         onClick: function(el, tp){
             switch (el.id) {
