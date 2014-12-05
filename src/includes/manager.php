@@ -437,8 +437,14 @@ class EShopCartManager extends Ab_ModuleManager {
         if (!$this->IsAdminRole()) {
             return null;
         }
+        $sd = array_to_object($sd);
 
-        $paymentid = intval($sd->id);
+        $sd->id = isset($sd->id) ? intval($sd->id) : 0;
+        $sd->tl = isset($sd->tl) ? $sd->tl : "";
+        $sd->dsc = isset($sd->dsc) ? $sd->dsc : "";
+        $sd->def = isset($sd->def) ? $sd->def : 0;
+
+        $paymentid = $sd->id;
 
         $utm = Abricos::TextParser(true);
         $utm->jevix->cfgSetAutoBrMode(true);
