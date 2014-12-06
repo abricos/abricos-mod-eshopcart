@@ -66,6 +66,18 @@ class EShopCartQuery {
         return $db->insert_id();
     }
 
+    public static function CartProductUpdate(Ab_Database $db, UserItem $user, $productid, $quantity) {
+        $userid = $user->id;
+        $session = $user->id > 0 ? "" : UserModule::$instance->GetManager()->GetSessionManager()->key;
+
+        $sql = "
+            UPDATE ".$db->prefix."eshp_cart
+            SET quantity=".intval($quantity)."
+            WHERE ".($userid > 0 ? "userid=".bkint($userid) : "session='".bkstr($session)."'")."
+		";
+        $db->query_write($sql);
+    }
+
     public static function CartProductRemove(Ab_Database $db, UserItem $user, $productid) {
         $userid = $user->id;
         $session = $userid > 0 ? "" : UserModule::$instance->GetManager()->GetSessionManager()->key;

@@ -60,14 +60,19 @@ Component.entryPoint = function(NS){
             }
             this.elSetHTML('list', '');
         },
+        getProductList: function(){
+            var cfg = this.cfg;
+
+            return L.isValue(cfg['cartProductList'])
+                ? cfg['cartProductList'] : NS.manager.cartProductList;
+        },
         renderList: function(){
             this.clearList();
 
             var elList = this.gel('list'), ws = this.wsList,
                 __self = this, cfg = this.cfg;
 
-            var cartProductList = L.isValue(cfg['cartProductList'])
-                ? cfg['cartProductList'] : NS.manager.cartProductList;
+            var cartProductList = this.getProductList();
 
             cartProductList.foreach(function(cartProduct){
                 var div = document.createElement('div');
@@ -80,15 +85,21 @@ Component.entryPoint = function(NS){
                     },
                     'onSelectClick': function(w){
                         __self.onCartProductSelectClick(w);
+                    },
+                    onQuantityChange: function(w, q){
+                        __self.onCartProductQuantityChange(w, q);
                     }
                 });
 
                 ws[ws.length] = w;
             });
 
-            var sum = cartProductList.getSum();
+            this.renderSum();
+        },
+        renderSum: function(){
+            var sum = this.getProductList().getSum(),
+                deli = this.delivery;
 
-            var deli = this.delivery;
             if (!L.isValue(deli) || deli.price == 0){
                 this.elHide('delivery');
             } else {
@@ -122,6 +133,14 @@ Component.entryPoint = function(NS){
                 __self.renderList();
             });
         },
+        onCartProductQuantityChange: function(w, value){
+            var product = w.cartProduct;
+            product.quantity = value;
+            w.render();
+            this.renderSum();
+
+            NS.manager.cartProductUpdate(product.id, value);
+        },
         onCartProductSelectClick: function(w){
             this.allEditorClose(w);
         },
@@ -140,7 +159,8 @@ Component.entryPoint = function(NS){
     var CartProductRowWidget = function(container, cartProduct, cfg){
         cfg = L.merge({
             'onRemoveClick': null,
-            'onSelectClick': null
+            'onSelectClick': null,
+            'onQuantityChange': null
         }, cfg || {});
         CartProductRowWidget.superclass.constructor.call(this, container, {
             'buildTemplate': buildTemplate, 'tnames': 'row'
@@ -156,6 +176,12 @@ Component.entryPoint = function(NS){
             return {
                 'url': L.isValue(cartProduct.product) ? cartProduct.product.url() : ""
             };
+        },
+        onLoad: function(){
+            var instance = this;
+            Y.one(this.gel('qt')).on('change', function(e){
+                instance.onQuantityChange();
+            });
         },
         render: function(){
             var catprod = this.cartProduct;
@@ -174,23 +200,44 @@ Component.entryPoint = function(NS){
                 'sm': NS.numberFormat(catprod.getSum())
             });
 
-            var elQt = Y.one(this.gel('qt'));
-            elQt.set('value', catprod.quantity);
+            Y.one(this.gel('qt')).set('value', catprod.quantity);
         },
         onClick: function(el, tp){
             switch (el.id) {
                 case tp['bremove']:
                     this.onRemoveClick();
                     return true;
+                case tp['bqtrem']:
+                    this.addQuantity(-1);
+                    return true;
+                case tp['bqtadd']:
+                    this.addQuantity(1);
+                    return true;
             }
 
             return false;
+        },
+        addQuantity: function(value){
+            value = value | 0;
+            var el = Y.one(this.gel('qt'));
+            value += el.get('value') | 0;
+            if (value < 1){
+                return;
+            }
+            el.set('value', value);
+            this.onQuantityChange();
+        },
+        getQuantity: function(){
+            return Y.one(this.gel('qt')).get('value') | 0;
         },
         onRemoveClick: function(){
             NS.life(this.cfg['onRemoveClick'], this);
         },
         onSelectClick: function(){
             NS.life(this.cfg['onSelectClick'], this);
+        },
+        onQuantityChange: function(){
+            NS.life(this.cfg['onQuantityChange'], this, this.getQuantity());
         },
         hide: function(){
             Dom.addClass(this.gel('id'), 'hide');
