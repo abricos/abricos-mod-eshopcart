@@ -73,7 +73,8 @@ class EShopCartQuery {
         $sql = "
             UPDATE ".$db->prefix."eshp_cart
             SET quantity=".intval($quantity)."
-            WHERE ".($userid > 0 ? "userid=".bkint($userid) : "session='".bkstr($session)."'")."
+            WHERE productid=".bkint($productid)." AND
+                ".($userid > 0 ? "userid=".bkint($userid) : "session='".bkstr($session)."'")."
 		";
         $db->query_write($sql);
     }

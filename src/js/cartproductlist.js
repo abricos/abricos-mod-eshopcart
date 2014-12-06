@@ -134,12 +134,12 @@ Component.entryPoint = function(NS){
             });
         },
         onCartProductQuantityChange: function(w, value){
-            var product = w.cartProduct;
-            product.quantity = value;
+            var cartProduct = w.cartProduct;
+            cartProduct.quantity = value;
             w.render();
             this.renderSum();
 
-            NS.manager.cartProductUpdate(product.id, value);
+            NS.manager.cartProductUpdate(cartProduct.product.id, value);
         },
         onCartProductSelectClick: function(w){
             this.allEditorClose(w);

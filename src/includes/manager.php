@@ -66,7 +66,7 @@ class EShopCartManager extends Ab_ModuleManager {
             case "cartproductlist":
                 return $this->CartProductListToAJAX();
             case "productaddtocart":
-                return $this->CartProductListToAJAX();
+                return $this->CartProductAddToAJAX($d->productid);
             case "productupdateincart":
                 return $this->CartProductUpdateToAJAX($d->productid, $d->quantity);
             case "productremovefromcart":
@@ -281,7 +281,7 @@ class EShopCartManager extends Ab_ModuleManager {
 
         // $price = isset($optionBase['price']) ? $optionBase['price'] : "";
 
-        EShopCartQuery::CartProductUpdate($this->db, $this->user, $productid, $quantity);
+        EShopCartQuery::CartProductUpdate($this->db, Abricos::$user, $productid, $quantity);
     }
 
     public function CartProductUpdateToAJAX($productid, $quantity){

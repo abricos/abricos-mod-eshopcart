@@ -6,11 +6,14 @@
 [p=titlebuy]Купить[/p]
 [p=titleorder]Заказать[/p]
 
+[mjs=eshopcart]ui.js[/mjs]
+
 [*]-->
 
 <div class="aw-eshopcart-buybutton">
-	<a class="btn btn-default btn-product-buy product-{v#productid}" href="#" onclick="return eshopCartBuyClick(this);">
-		<span class="btl"><i class="fa fa-shopping-cart"></i> {v#btl}</span>
-		<img class="ldg" src="/modules/eshopcart/images/loading.gif" style="display: none" />
-	</a>
+    <button class="btn btn-default btn-product-buy"
+            data-toggle="product-to-cart" data-product="{v#productid}">
+        <span data-wait="hide"><i class="fa fa-shopping-cart"></i> {v#btl}</span>
+        <img data-wait="show" class="hide" src="/modules/eshopcart/images/loading.gif"/>
+    </button>
 </div>

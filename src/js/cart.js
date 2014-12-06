@@ -57,7 +57,7 @@ Component.entryPoint = function(NS){
 
     var CartViewPanel = function(cartConfig){
         this.cartConfig = L.merge({
-            'buttonElement': null // вызов корзины по нажатию на кнопку -купить-
+            'addToCart': 0
         }, cartConfig || {});
         CartViewPanel.superclass.constructor.call(this, {fixedcenter: true});
     };
@@ -66,7 +66,9 @@ Component.entryPoint = function(NS){
             return buildTemplate(this, 'panel').replace('panel');
         },
         onLoad: function(){
-            var cfg = this.cartConfig, TM = this._TM;
+            var cfg = this.cartConfig;
+            var TM = this._TM;
+            /*
             if (L.isValue(cfg['buttonElement']) && cfg['buttonElement'].className){
 
                 var arr = cfg['buttonElement'].className.split(' ');
@@ -78,6 +80,7 @@ Component.entryPoint = function(NS){
                     }
                 }
             }
+            /**/
             cfg['onLoadManager'] = function(){
                 Dom.setStyle(TM.getEl('panel.btns'), 'display', '');
             };
