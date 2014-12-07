@@ -40,7 +40,6 @@ Component.entryPoint = function(NS){
             CartProductListWidget.superclass.destroy.call(this);
         },
         onLoad: function(cfg){
-
             if (cfg['readOnly']){
                 Dom.addClass(this.gel('wrap'), 'rocplst');
             }
@@ -72,14 +71,13 @@ Component.entryPoint = function(NS){
             var elList = this.gel('list'), ws = this.wsList,
                 __self = this, cfg = this.cfg;
 
-            var cartProductList = this.getProductList();
-
-            cartProductList.foreach(function(cartProduct){
+            this.getProductList().foreach(function(cartProduct){
                 var div = document.createElement('div');
                 div['cartProduct'] = cartProduct;
 
                 elList.appendChild(div);
-                var w = new NS.CartProductRowWidget(div, cartProduct, {
+                ws[ws.length] = new NS.CartProductRowWidget(div, cartProduct, {
+                    'readOnly': cfg['readOnly'],
                     'onRemoveClick': function(w){
                         __self.onCartProductRemoveClick(w);
                     },
@@ -90,8 +88,6 @@ Component.entryPoint = function(NS){
                         __self.onCartProductQuantityChange(w, q);
                     }
                 });
-
-                ws[ws.length] = w;
             });
 
             this.renderSum();
@@ -136,6 +132,9 @@ Component.entryPoint = function(NS){
         onCartProductQuantityChange: function(w, value){
             var cartProduct = w.cartProduct;
             cartProduct.quantity = value;
+
+            this.getProductList().get(cartProduct.id).quantity = value;
+
             w.render();
             this.renderSum();
 
@@ -158,6 +157,7 @@ Component.entryPoint = function(NS){
 
     var CartProductRowWidget = function(container, cartProduct, cfg){
         cfg = L.merge({
+            'readOnly': false,
             'onRemoveClick': null,
             'onSelectClick': null,
             'onQuantityChange': null
@@ -184,7 +184,7 @@ Component.entryPoint = function(NS){
             });
         },
         render: function(){
-            var catprod = this.cartProduct;
+            var cfg = this.cfg, catprod = this.cartProduct;
 
             if (L.isValue(catprod.product)){
                 var prod = catprod.product;
@@ -193,7 +193,6 @@ Component.entryPoint = function(NS){
                     'tl': prod.title,
                     'url': prod.url(),
                     'pc': NS.numberFormat(prod.ext['price'])
-
                 });
             }
             this.elSetHTML({
@@ -201,6 +200,11 @@ Component.entryPoint = function(NS){
             });
 
             Y.one(this.gel('qt')).set('value', catprod.quantity);
+            if (cfg.readOnly){
+                this.elSetHTML({
+                    'qtro': catprod.quantity
+                });
+            }
         },
         onClick: function(el, tp){
             switch (el.id) {

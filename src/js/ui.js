@@ -5,7 +5,9 @@
  */
 
 var Component = new Brick.Component();
-Component.requires = {};
+Component.requires = {
+    yui: ['node']
+};
 Component.entryPoint = function(NS){
 
     var Y = Brick.YUI;

@@ -1,75 +1,95 @@
 <!--{widget}-->
 <div id="{i#id}" class="aw-eshop aw-eshopcart aw-catalog">
-	<div class="cartproductlist" id="{i#wrap}">
-		<table class="thead" id="{i#head}"><tbody><tr>
-			<td class="tl">&nbsp;</td>
-			<td class="pc">Цена</td>
-			<td class="qt">Количество</td>
-			<td class="sm">Сумма</td>
-			<td class="rm roitem">&nbsp;</td>
-		</tr></tbody></table>
-		
-		<div id="{i#list}" class="tlist"></div>
+    <div class="cartproductlist" id="{i#wrap}">
+        <table class="thead" id="{i#head}">
+            <tbody>
+            <tr>
+                <td class="tl">&nbsp;</td>
+                <td class="pc">Цена</td>
+                <td class="qt">Количество</td>
+                <td class="sm">Сумма</td>
+                <td class="rm roitem">&nbsp;</td>
+            </tr>
+            </tbody>
+        </table>
 
-		<table class="tdeli" id="{i#delivery}" style="display: none"><tbody><tr>
-			<td class="tl">Доставка</td>
-			<td class="pc">&nbsp;</td>
-			<td class="qt">&nbsp;</td>
-			<td class="sm">
-				<span id="{i#deliprice}"></span>
-			</td>
-			<td class="rm">&nbsp;руб.</td>
-		</tr></tbody></table>
-		
-		<table class="tsum" id="{i#sum}"><tbody><tr>
-			<td class="tl">Итого</td>
-			<td class="pc">&nbsp;</td>
-			<td class="qt">&nbsp;</td>
-			<td class="sm">
-				<span id="{i#sm}"></span>
-			</td>
-			<td class="rm">&nbsp;<span id="{i#currency}"></span></td>
-		</tr></tbody></table>
-	</div>
+        <div id="{i#list}" class="tlist"></div>
+
+        <table class="tdeli" id="{i#delivery}" style="display: none">
+            <tbody>
+            <tr>
+                <td class="tl">Доставка</td>
+                <td class="pc">&nbsp;</td>
+                <td class="qt">&nbsp;</td>
+                <td class="sm">
+                    <span id="{i#deliprice}"></span>
+                </td>
+                <td class="rm">&nbsp;руб.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="tsum" id="{i#sum}">
+            <tbody>
+            <tr>
+                <td class="tl">Итого</td>
+                <td class="pc">&nbsp;</td>
+                <td class="qt">&nbsp;</td>
+                <td class="sm">
+                    <span id="{i#sm}"></span>
+                </td>
+                <td class="rm">&nbsp;<span id="{i#currency}"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <!--{row}-->
 <div id="{i#id}" class="elrow">
-	<div id="{i#wrap}">
-		<table class="tline" id="{i#tline}"><tbody><tr>
-			<td class="tl">
-				<a href="{v#url}" id="{i#tl}" ></a>
-			</td>
-			<td class="pc" id="{i#pc}"></td>
-			<td class="qt">
-                <button id="{i#bqtrem}" class="btn btn-default btn-sm">-</button>
-                <input id="{i#qt}" value="1" class="form-control"/>
-                <button id="{i#bqtadd}" class="btn btn-default btn-sm">+</button>
-			</td>
-			<td class="sm" id="{i#sm}"></td>
-			<td class="rm roitem">
-				<a id="{i#bremove}" href="#" class="habtn">Удалить</a>
-			</td>
-		</tr></tbody></table>
-	</div>
+    <div id="{i#wrap}">
+        <table class="tline" id="{i#tline}">
+            <tbody>
+            <tr>
+                <td class="tl">
+                    <a href="{v#url}" id="{i#tl}"></a>
+                </td>
+                <td class="pc" id="{i#pc}"></td>
+                <td class="qt">
+                    <div class="text-center roitem">
+                        <button id="{i#bqtrem}" class="btn btn-default btn-sm">-</button>
+                        <input id="{i#qt}" value="1" class="form-control"/>
+                        <button id="{i#bqtadd}" class="btn btn-default btn-sm">+</button>
+                    </div>
+                    <span id="{i#qtro}"></span>
+                </td>
+                <td class="sm" id="{i#sm}"></td>
+                <td class="rm roitem">
+                    <a id="{i#bremove}" href="#" class="habtn">Удалить</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <!--{removepanel}-->
 <div class='hd'>Удаление</div>
 <div class='bd aw-eshopcart'>
-	<div id="{i#dialogremove}" class="field">
-		<p>
-			Вы действительно хотите товар из корзины? 
-		</p>
-		<div class="buttons right">
+    <div id="{i#dialogremove}" class="field">
+        <p>
+            Вы действительно хотите товар из корзины?
+        </p>
+
+        <div class="buttons right">
 			<span id="{i#btns}">
-				<input id="{i#bremove}" value="Удалить" type="button" />
-				<input id="{i#bcancel}" value="Отмена" type="button" />
+				<input id="{i#bremove}" value="Удалить" type="button"/>
+				<input id="{i#bcancel}" value="Отмена" type="button"/>
 			</span>
 			<span id="{i#bloading}" style="display: none">
-				<img src="/images/loading.gif" /> Удаление...
+				<img src="/images/loading.gif"/> Удаление...
 			</span>
-		</div>
-	</div>
+        </div>
+    </div>
 </div>
 

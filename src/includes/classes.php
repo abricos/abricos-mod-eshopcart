@@ -38,9 +38,9 @@ class EShopCartOrder extends AbricosItem {
         $this->firstName = $d['fnm'];
         $this->lastName = $d['lnm'];
         $this->phone = $d['ph'];
-        $this->address = $d['adr'];
+        $this->address = isset($d['adr']) ? $d['adr'] : "";
         $this->descript = $d['dsc'];
-        $this->quantity = $d['qt'];
+        $this->quantity = isset($d['qt']) ? $d['adr'] : 0;
         $this->sum = $d['sm'];
     }
 

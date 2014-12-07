@@ -6,8 +6,7 @@
 var Component = new Brick.Component();
 Component.requires = {
     mod: [
-        {name: '{C#MODNAME}', files: ['lib.js']},
-        {name: 'user', files: ['old-guest.js']}
+        {name: '{C#MODNAME}', files: ['lib.js']}
     ]
 };
 Component.entryPoint = function(NS){
@@ -41,11 +40,11 @@ Component.entryPoint = function(NS){
             }
             OrderingWidget.superclass.destroy.call(this);
         },
-        onLoad: function(cfg){
+        onLoad: function(){
             var __self = this;
             NS.initManager(function(){
                 if (UID == 0){
-                    Brick.ff('user', 'guest', function(){
+                    Brick.use('user', 'guest', function(){
                         __self._onLoadManager();
                     });
                 } else {
@@ -93,6 +92,8 @@ Component.entryPoint = function(NS){
                 }
             });
 
+            // TODO: Auth Widget Release
+            /*
             if (UID == 0){
                 this.widgets['auth'] = new NS.OrderingAuthWidget(this.gel('auth'), {
                     'onLogin': function(userid){
@@ -107,8 +108,8 @@ Component.entryPoint = function(NS){
             } else {
                 this.showWidget('delivery');
             }
-
-            // this.showAcceptPage();
+            /**/
+            this.showWidget('delivery');
         },
         onClick: function(el, tp){
             switch (el.id) {
