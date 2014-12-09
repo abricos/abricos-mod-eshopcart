@@ -712,7 +712,8 @@ class EShopCartManager extends Ab_ModuleManager {
     }
 
     private function EMailAdmin() {
-        return $this->module->GetPhrases()->Get('adm_emails');
+        $ph = $this->module->GetPhrases()->Get('adm_emails');
+        return $ph->value;
     }
 
     public function ConfigAdminSave($sd) {
@@ -720,9 +721,12 @@ class EShopCartManager extends Ab_ModuleManager {
             return null;
         }
 
+        $utmf = Abricos::TextParser(true);
+        $sd->emls = isset($sd->emls) ? $utmf->Parser($sd->emls) : "";
+
         $phrases = $this->module->GetPhrases();
         $phrases->Set('adm_emails', $sd->emls);
-        $phrases->Save();
+        Abricos::$phrases->Save();
 
         return true;
     }
