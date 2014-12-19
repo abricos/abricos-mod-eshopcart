@@ -17,7 +17,7 @@ class EShopCartModule extends Ab_Module {
 
     public function EShopCartModule() {
         // версия модуля
-        $this->version = "0.1.2";
+        $this->version = "0.1.3";
 
         // имя модуля
         $this->name = "eshopcart";

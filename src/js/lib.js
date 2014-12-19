@@ -240,6 +240,7 @@ Component.entryPoint = function(NS){
             this.ip = d['ip'];
             this.firstName = d['fnm'];
             this.lastName = d['lnm'];
+            this.email = d['eml'];
             this.phone = d['ph'];
             this.address = d['adr'];
             this.descript = d['dsc'];

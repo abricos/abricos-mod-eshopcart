@@ -16,6 +16,7 @@ class EShopCartOrder extends AbricosItem {
     public $ip;
     public $firstName;
     public $lastName;
+    public $email;
     public $phone;
     public $address;
     public $descript;
@@ -37,6 +38,7 @@ class EShopCartOrder extends AbricosItem {
         $this->ip = $d['ip'];
         $this->firstName = $d['fnm'];
         $this->lastName = $d['lnm'];
+        $this->email = $d['eml'];
         $this->phone = $d['ph'];
         $this->address = isset($d['adr']) ? $d['adr'] : "";
         $this->descript = $d['dsc'];
@@ -53,6 +55,7 @@ class EShopCartOrder extends AbricosItem {
         $ret->ip = $this->ip;
         $ret->fnm = $this->firstName;
         $ret->lnm = $this->lastName;
+        $ret->eml = $this->email;
         $ret->ph = $this->phone;
         $ret->adr = $this->address;
         $ret->dsc = $this->descript;

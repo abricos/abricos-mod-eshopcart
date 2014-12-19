@@ -279,6 +279,7 @@ Component.entryPoint = function(NS){
                 'lnm': this.gel('lnm').value,
                 'ph': this.gel('ph').value,
                 'adr': this.gel('adr').value,
+                'eml': this.gel('eml').value,
                 'dsc': this.gel('dsc').value
             };
         }
@@ -386,6 +387,7 @@ Component.entryPoint = function(NS){
                 'fio': cinfo['fnm'] + ' ' + cinfo['lnm'],
                 'ph': cinfo['ph'],
                 'adr': cinfo['adr'],
+                'eml': cinfo['eml'],
                 'dsc': cinfo['dsc'],
                 'delivery': L.isValue(deli) ? deli.title : 'Самостоятельный вывоз',
                 'payment': L.isValue(pay) ? pay.title : ''

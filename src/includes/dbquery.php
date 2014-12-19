@@ -120,12 +120,13 @@ class EShopCartQuery {
     public static function OrderApppend(Ab_Database $db, $userid, $paymentid, $deliveryid, $ci, $ip) {
         $sql = "
 			INSERT INTO ".$db->prefix."eshp_order
-			(userid, deliveryid, paymentid, firstname, lastname, phone, adress, extinfo, ip, dateline) VALUES (
+			(userid, deliveryid, paymentid, firstname, lastname, email, phone, adress, extinfo, ip, dateline) VALUES (
 				".bkint($userid).",
 				".bkint($deliveryid).",
 				".bkint($paymentid).",
 				'".bkstr($ci->fnm)."',
 				'".bkstr($ci->lnm)."',
+				'".bkstr($ci->eml)."',
 				'".bkstr($ci->ph)."',
 				'".bkstr($ci->adr)."',
 				'".bkstr($ci->dsc)."',
@@ -147,6 +148,7 @@ class EShopCartQuery {
 				o.ip as ip,
 				o.firstname as fnm,
 				o.lastname as lnm,
+				o.email as eml,
 				o.phone as ph,
 				o.adress as adress,
 				o.extinfo as dsc,
@@ -504,6 +506,7 @@ class EShopQuery {
 				o.ip as ip,
 				o.firstname as fnm,
 				o.lastname as lnm,
+				o.email as eml,
 				o.phone as ph,
 				o.adress as adress,
 				o.extinfo as extinfo,
@@ -581,13 +584,14 @@ class EShopQuery {
     public static function OrderAppend(Ab_Database $db, $d) {
         $sql = "
 			INSERT INTO ".$db->prefix."eshp_order 
-			(userid, deliveryid, paymentid, firstname, lastname, secondname, phone, adress, extinfo, ip, dateline) VALUES (
+			(userid, deliveryid, paymentid, firstname, lastname, secondname, email, phone, adress, extinfo, ip, dateline) VALUES (
 				".bkint($d->userid).",
 				".bkint($d->deliveryid).",
 				".bkint($d->paymentid).",
 				'".bkstr($d->firstname)."',
 				'".bkstr($d->lastname)."',
 				'".bkstr($d->secondname)."',
+				'".bkstr($d->email)."',
 				'".bkstr($d->phone)."',
 				'".bkstr($d->adress)."',
 				'".bkstr($d->extinfo)."',

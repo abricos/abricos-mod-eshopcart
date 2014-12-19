@@ -41,6 +41,7 @@ if ($updateManager->isInstall()) {
 			`firstname` varchar(50) NOT NULL DEFAULT '' COMMENT 'Имя',
 			`lastname` varchar(50) NOT NULL DEFAULT '' COMMENT 'Фамилия',
 			`secondname` varchar(50) NOT NULL DEFAULT '' COMMENT 'Отчество',
+			email varchar(50) NOT NULL DEFAULT '' COMMENT 'E-mail',
 			`phone` varchar(250) NOT NULL DEFAULT '' COMMENT 'Телефоны, если несколько - разделены запятой',
 			`adress` TEXT NOT NULL COMMENT 'Адрес доставки',
 			`extinfo` TEXT NOT NULL COMMENT 'Дополнительная информация',
@@ -142,9 +143,8 @@ if ($updateManager->isUpdate('0.1.0.1') && !$updateManager->isInstall()) {
 if ($updateManager->isUpdate('0.1.3') && !$updateManager->isInstall()) {
 
 	$db->query_write("
-		ALTER TABLE ".$pfx."eshp_payment
-			ADD `dateline` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
-			ADD `deldate` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
+		ALTER TABLE ".$pfx."eshp_order
+			ADD email varchar(50) NOT NULL DEFAULT '' COMMENT 'E-mail'
 	");
 }
 

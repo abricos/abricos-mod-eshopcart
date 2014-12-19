@@ -70,6 +70,7 @@ Component.entryPoint = function(NS){
             this.elSetHTML({
                 'fio': order.firstName + ' ' + order.lastName,
                 'ph': order.phone,
+                'eml': order.email,
                 'adr': order.address,
                 'dsc': order.descript,
                 'delivery': L.isValue(deli) ? deli.title : 'Самостоятельный вывоз',
