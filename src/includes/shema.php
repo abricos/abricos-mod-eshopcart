@@ -1,6 +1,7 @@
 <?php
 /**
  * Схема таблиц модуля
+ *
  * @package Abricos
  * @subpackage EShopCart
  * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.php
@@ -73,6 +74,10 @@ if ($updateManager->isInstall()) {
 			`disabled` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT 'Если 1, то отключен',
 			`price` double(10,2) unsigned NOT NULL DEFAULT 0 COMMENT 'Цена доставки',
 			`fromzero` double(10,2) unsigned NOT NULL DEFAULT 0 COMMENT 'Если заказ выше или равен этой сумме, то доставка бесплатна',
+			`def` tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT 'По умолчанию',
+			`descript` TEXT NOT NULL COMMENT '',
+			`dateline` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
+			`deldate` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления',
 			PRIMARY KEY  (`deliveryid`)
 		)".$charset);
 
@@ -87,6 +92,8 @@ if ($updateManager->isInstall()) {
 			`descript` TEXT NOT NULL COMMENT '',
 			`js` TEXT NOT NULL COMMENT '',
 			`php` TEXT NOT NULL COMMENT '',
+			`dateline` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
+			`deldate` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления',
 			PRIMARY KEY  (`paymentid`)
 		)".$charset);
 
@@ -105,12 +112,12 @@ if ($updateManager->isInstall()) {
 			`fromsum` double(10,2) unsigned NOT NULL DEFAULT 0 COMMENT '',
 			`endsum` double(10,2) unsigned NOT NULL DEFAULT 0 COMMENT '',
 			`dateline` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
-			PRIMARY KEY  (`discountid`)
+			`deldate` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления',
+			PRIMARY KEY (discountid)
 		)".$charset);
-
 }
 
-if ($updateManager->isUpdate('0.1.0.1')) {
+if ($updateManager->isUpdate('0.1.0.1') && !$updateManager->isInstall()) {
 
     $db->query_write("
 		ALTER TABLE ".$pfx."eshp_payment
@@ -131,4 +138,14 @@ if ($updateManager->isUpdate('0.1.0.1')) {
 			ADD `deldate` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
 	");
 }
+
+if ($updateManager->isUpdate('0.1.3') && !$updateManager->isInstall()) {
+
+	$db->query_write("
+		ALTER TABLE ".$pfx."eshp_payment
+			ADD `dateline` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
+			ADD `deldate` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
+	");
+}
+
 ?>
