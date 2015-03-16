@@ -23,11 +23,12 @@ class EShopCartManager extends Ab_ModuleManager {
 
     /**
      * Конфиг
+     *
      * @var EShopCartConfig
      */
     public $config = null;
 
-    public function __construct($module) {
+    public function __construct($module){
         parent::__construct($module);
 
         EShopCartManager::$instance = $this;
@@ -35,31 +36,31 @@ class EShopCartManager extends Ab_ModuleManager {
         $this->config = new EShopCartConfig(isset(Abricos::$config['module']['eshopcart']) ? Abricos::$config['module']['eshopcart'] : array());
     }
 
-    public function IsAdminRole() {
+    public function IsAdminRole(){
         return $this->IsRoleEnable(EShopCartAction::ADMIN);
     }
 
-    public function IsWriteRole() {
-        if ($this->IsAdminRole()) {
+    public function IsWriteRole(){
+        if ($this->IsAdminRole()){
             return true;
         }
         return $this->IsRoleEnable(EShopCartAction::WRITE);
     }
 
-    public function IsViewRole() {
-        if ($this->IsWriteRole()) {
+    public function IsViewRole(){
+        if ($this->IsWriteRole()){
             return true;
         }
         return $this->IsRoleEnable(EShopCartAction::VIEW);
     }
 
-    public function AJAX($d) {
+    public function AJAX($d){
 
-        if (isset($d->productaddtocart) && intval($d->productaddtocart) > 0) {
+        if (isset($d->productaddtocart) && intval($d->productaddtocart) > 0){
             $this->CartProductAdd($d->productaddtocart);
         }
 
-        switch ($d->do) {
+        switch ($d->do){
             case "initdata":
                 return $this->InitDataToAJAX();
 
@@ -110,7 +111,7 @@ class EShopCartManager extends Ab_ModuleManager {
         }
 
         // TODO: на удаление/переделку
-        switch ($d->do) {
+        switch ($d->do){
 
             case "orderbuild":
                 return $this->old_OrderBuild($d);
@@ -125,8 +126,8 @@ class EShopCartManager extends Ab_ModuleManager {
         return null;
     }
 
-    public function InitDataToAJAX() {
-        if (!$this->IsViewRole()) {
+    public function InitDataToAJAX(){
+        if (!$this->IsViewRole()){
             return null;
         }
 
@@ -145,7 +146,7 @@ class EShopCartManager extends Ab_ModuleManager {
         $ret->discounts = $obj->discounts;
 
         $obj = $this->ConfigAdminToAJAX();
-        if (!empty($obj)) {
+        if (!empty($obj)){
             $ret->configadmin = $obj->configadmin;
         }
 
@@ -157,15 +158,15 @@ class EShopCartManager extends Ab_ModuleManager {
         return $ret;
     }
 
-    private function CartProductListFillElements(EShopCartProductList $list) {
-        if ($list->Count() == 0) {
+    private function CartProductListFillElements(EShopCartProductList $list){
+        if ($list->Count() == 0){
             return;
         }
 
         Abricos::GetModule('eshop')->GetManager();
         $catMan = EShopManager::$instance->cManager;
         $cfg = new CatalogElementListConfig();
-        for ($i = 0; $i < $list->Count(); $i++) {
+        for ($i = 0; $i < $list->Count(); $i++){
             $item = $list->GetByIndex($i);
             array_push($cfg->elids, $item->productid);
         }
@@ -176,14 +177,15 @@ class EShopCartManager extends Ab_ModuleManager {
 
     /**
      * Список товаров в корзине текущего пользователя
+     *
      * @return EShopCartProductList
      */
-    public function CartProductList() {
-        if (!$this->IsViewRole()) {
+    public function CartProductList(){
+        if (!$this->IsViewRole()){
             return null;
         }
 
-        if (!empty($this->_cacheCartProductList)) {
+        if (!empty($this->_cacheCartProductList)){
             return $this->_cacheCartProductList;
         }
 
@@ -196,11 +198,11 @@ class EShopCartManager extends Ab_ModuleManager {
         $tQuantity = 0;
         $tSum = 0;
 
-        while (($d = $this->db->fetch_array($rows))) {
+        while (($d = $this->db->fetch_array($rows))){
             $item = new EShopCartProduct($d);
 
             $productid = $item->productid;
-            if (empty($checkDouble[$productid])) {
+            if (empty($checkDouble[$productid])){
                 $checkDouble[$productid] = $item;
                 $list->Add($item);
             } else {
@@ -214,8 +216,8 @@ class EShopCartManager extends Ab_ModuleManager {
         $list->quantity = $tQuantity;
         $list->sum = $tSum;
 
-        if (count($isDouble) > 0) {
-            foreach ($isDouble as $productid => $item) {
+        if (count($isDouble) > 0){
+            foreach ($isDouble as $productid => $item){
                 EShopCartQuery::CartProductUpdateDouble($this->db, $this->user, $item);
             }
         }
@@ -225,9 +227,9 @@ class EShopCartManager extends Ab_ModuleManager {
         return $list;
     }
 
-    public function CartProductListToAJAX() {
+    public function CartProductListToAJAX(){
         $list = $this->CartProductList();
-        if (empty($list)) {
+        if (empty($list)){
             return null;
         }
 
@@ -238,10 +240,11 @@ class EShopCartManager extends Ab_ModuleManager {
 
     /**
      * Добавить продукт в корзину
+     *
      * @param integer $productid
      */
-    public function CartProductAdd($productid, $quantity = 1) {
-        if (empty($productid) || !$this->IsWriteRole()) {
+    public function CartProductAdd($productid, $quantity = 1){
+        if (empty($productid) || !$this->IsWriteRole()){
             return null;
         }
 
@@ -249,24 +252,38 @@ class EShopCartManager extends Ab_ModuleManager {
         $catMan = EShopManager::$instance->cManager;
 
         $product = $catMan->Element($productid);
-        if (empty($product)) {
+        if (empty($product)){
             return null;
         }
+        $elType = $catMan->ElementTypeList()->Get(0);
+        $option = $elType->options->GetByName('price');
+        if (empty($option)){
+            return null;
+        }
+
         $optionBase = $product->detail->optionsBase;
 
-        $price = isset($optionBase['price']) ? $optionBase['price'] : "";
+        $price = doubleval(isset($optionBase['price']) ? $optionBase['price'] : 0);
+        $currencyDefault = $catMan->CurrencyDefault();
+
+        if ($price > 0 && $option->currencyid > 0 && $currencyDefault->id != $option->currencyid){
+            $currency = $catMan->CurrencyList()->Get($option->currencyid);
+            if (!empty($currency) && $currency->rateVal > 0){
+                $price = $price / $currency->rateVal;
+            }
+        }
 
         EShopCartQuery::CartProductAppend($this->db, $this->user, $productid, $quantity, $price);
     }
 
-    public function CartProductAddToAJAX($productid) {
+    public function CartProductAddToAJAX($productid){
         $this->CartProductAdd($productid);
 
         return $this->CartProductListToAJAX();
     }
 
-    public function CartProductUpdate($productid, $quantity = 1) {
-        if (empty($productid) || !$this->IsWriteRole()) {
+    public function CartProductUpdate($productid, $quantity = 1){
+        if (empty($productid) || !$this->IsWriteRole()){
             return null;
         }
 
@@ -274,7 +291,7 @@ class EShopCartManager extends Ab_ModuleManager {
         $catMan = EShopManager::$instance->cManager;
 
         $product = $catMan->Element($productid);
-        if (empty($product)) {
+        if (empty($product)){
             return null;
         }
         // $optionBase = $product->detail->optionsBase;
@@ -290,27 +307,27 @@ class EShopCartManager extends Ab_ModuleManager {
         return $this->CartProductListToAJAX();
     }
 
-    public function CartProductRemove($productid) {
-        if (!$this->IsWriteRole()) {
+    public function CartProductRemove($productid){
+        if (!$this->IsWriteRole()){
             return null;
         }
 
         EShopCartQuery::CartProductRemove($this->db, $this->user, $productid);
     }
 
-    public function CartProductRemoveToAJAX($productid) {
+    public function CartProductRemoveToAJAX($productid){
         $this->CartProductRemove($productid);
 
         return $this->CartProductListToAJAX();
     }
 
-    public function Ordering($sd) {
-        if (!$this->IsWriteRole()) {
+    public function Ordering($sd){
+        if (!$this->IsWriteRole()){
             return null;
         }
 
         $plist = $this->CartProductList();
-        if ($plist->Count() == 0) {
+        if ($plist->Count() == 0){
             return null;
         }
 
@@ -333,7 +350,7 @@ class EShopCartManager extends Ab_ModuleManager {
         $totalQty = 0;
         $totalSum = 0;
 
-        for ($i = 0; $i < $plist->Count(); $i++) {
+        for ($i = 0; $i < $plist->Count(); $i++){
             $p = $plist->GetByIndex($i);
             EShopCartQuery::OrderItemAppend($this->db, $orderid, $p->productid, $p->quantity, $p->price);
 
@@ -363,7 +380,7 @@ class EShopCartManager extends Ab_ModuleManager {
 
         $semails = $this->EMailAdmin();
         $aemails = explode(",", $semails);
-        foreach ($aemails as $email) {
+        foreach ($aemails as $email){
             $repd['email'] = $email = trim($email);
 
             $subject = Brick::ReplaceVarByData($v['newordersubj'], $repd);
@@ -373,14 +390,14 @@ class EShopCartManager extends Ab_ModuleManager {
         }
     }
 
-    public function OrderingToAJAX($sd) {
+    public function OrderingToAJAX($sd){
         $this->Ordering($sd);
 
         return $this->CartProductListToAJAX();
     }
 
-    public function OrderItemList($orderid) {
-        if (!$this->IsAdminRole()) {
+    public function OrderItemList($orderid){
+        if (!$this->IsAdminRole()){
             return null;
         }
 
@@ -388,7 +405,7 @@ class EShopCartManager extends Ab_ModuleManager {
 
         $list = new EShopCartProductList();
 
-        while (($d = $this->db->fetch_array($rows))) {
+        while (($d = $this->db->fetch_array($rows))){
             $list->Add(new EShopCartProduct($d));
         }
 
@@ -399,15 +416,16 @@ class EShopCartManager extends Ab_ModuleManager {
 
     /**
      * Заказ
+     *
      * @param integer $orderid
      */
-    public function Order($orderid) {
-        if (!$this->IsAdminRole()) {
+    public function Order($orderid){
+        if (!$this->IsAdminRole()){
             return null;
         }
 
         $row = EShopCartQuery::Order($this->db, $orderid);
-        if (empty($row)) {
+        if (empty($row)){
             return null;
         }
 
@@ -417,9 +435,9 @@ class EShopCartManager extends Ab_ModuleManager {
         return $item;
     }
 
-    public function OrderToAJAX($orderid) {
+    public function OrderToAJAX($orderid){
         $item = $this->Order($orderid);
-        if (empty($item)) {
+        if (empty($item)){
             return null;
         }
 
@@ -432,22 +450,22 @@ class EShopCartManager extends Ab_ModuleManager {
     /**
      * @return EShopCartPaymentList
      */
-    public function PaymentList() {
-        if (!$this->IsViewRole()) {
+    public function PaymentList(){
+        if (!$this->IsViewRole()){
             return null;
         }
 
         $list = new EShopCartPaymentList();
         $rows = EShopCartQuery::PaymentList($this->db);
-        while (($d = $this->db->fetch_array($rows))) {
+        while (($d = $this->db->fetch_array($rows))){
             $list->Add(new EShopCartPayment($d));
         }
         return $list;
     }
 
-    public function PaymentListToAJAX() {
+    public function PaymentListToAJAX(){
         $list = $this->PaymentList();
-        if (empty($list)) {
+        if (empty($list)){
             return null;
         }
 
@@ -460,8 +478,8 @@ class EShopCartManager extends Ab_ModuleManager {
      * @param object $sd
      * @return EShopCartPayment
      */
-    public function PaymentSave($sd) {
-        if (!$this->IsAdminRole()) {
+    public function PaymentSave($sd){
+        if (!$this->IsAdminRole()){
             return null;
         }
         $sd = array_to_object($sd);
@@ -481,23 +499,23 @@ class EShopCartManager extends Ab_ModuleManager {
         $sd->tl = $utmf->Parser($sd->tl);
         $sd->dsc = $utm->Parser($sd->dsc);
 
-        if ($paymentid == 0) {
+        if ($paymentid == 0){
             $paymentid = EShopCartQuery::PaymentAppend($this->db, $sd);
         } else {
             EShopCartQuery::PaymentUpdate($this->db, $paymentid, $sd);
         }
 
-        if (!empty($sd->def)) {
+        if (!empty($sd->def)){
             EShopCartQuery::PaymentDefaultSet($this->db, $paymentid);
         }
 
         return $paymentid;
     }
 
-    public function PaymentSaveToAJAX($sd) {
+    public function PaymentSaveToAJAX($sd){
         $paymentid = $this->PaymentSave($sd);
 
-        if (empty($paymentid)) {
+        if (empty($paymentid)){
             return null;
         }
 
@@ -506,8 +524,8 @@ class EShopCartManager extends Ab_ModuleManager {
         return $ret;
     }
 
-    public function PaymentListSetOrder($orders) {
-        if (!$this->IsAdminRole()) {
+    public function PaymentListSetOrder($orders){
+        if (!$this->IsAdminRole()){
             return null;
         }
 
@@ -516,8 +534,8 @@ class EShopCartManager extends Ab_ModuleManager {
         return true;
     }
 
-    public function PaymentRemove($paymentid) {
-        if (!$this->IsAdminRole()) {
+    public function PaymentRemove($paymentid){
+        if (!$this->IsAdminRole()){
             return null;
         }
 
@@ -529,22 +547,22 @@ class EShopCartManager extends Ab_ModuleManager {
     /**
      * @return EShopCartDeliveryList
      */
-    public function DeliveryList() {
-        if (!$this->IsViewRole()) {
+    public function DeliveryList(){
+        if (!$this->IsViewRole()){
             return null;
         }
 
         $list = new EShopCartDeliveryList();
         $rows = EShopCartQuery::DeliveryList($this->db);
-        while (($d = $this->db->fetch_array($rows))) {
+        while (($d = $this->db->fetch_array($rows))){
             $list->Add(new EShopCartDelivery($d));
         }
         return $list;
     }
 
-    public function DeliveryListToAJAX() {
+    public function DeliveryListToAJAX(){
         $list = $this->DeliveryList();
-        if (empty($list)) {
+        if (empty($list)){
             return null;
         }
 
@@ -557,8 +575,8 @@ class EShopCartManager extends Ab_ModuleManager {
      * @param object $sd
      * @return EShopCartDelivery
      */
-    public function DeliverySave($sd) {
-        if (!$this->IsAdminRole()) {
+    public function DeliverySave($sd){
+        if (!$this->IsAdminRole()){
             return null;
         }
 
@@ -572,23 +590,23 @@ class EShopCartManager extends Ab_ModuleManager {
         $sd->tl = $utmf->Parser($sd->tl);
         $sd->dsc = $utm->Parser($sd->dsc);
 
-        if ($deliveryid == 0) {
+        if ($deliveryid == 0){
             $deliveryid = EShopCartQuery::DeliveryAppend($this->db, $sd);
         } else {
             EShopCartQuery::DeliveryUpdate($this->db, $deliveryid, $sd);
         }
 
-        if (!empty($sd->def)) {
+        if (!empty($sd->def)){
             EShopCartQuery::DeliveryDefaultSet($this->db, $deliveryid);
         }
 
         return $deliveryid;
     }
 
-    public function DeliverySaveToAJAX($sd) {
+    public function DeliverySaveToAJAX($sd){
         $deliveryid = $this->DeliverySave($sd);
 
-        if (empty($deliveryid)) {
+        if (empty($deliveryid)){
             return null;
         }
 
@@ -597,8 +615,8 @@ class EShopCartManager extends Ab_ModuleManager {
         return $ret;
     }
 
-    public function DeliveryListSetOrder($orders) {
-        if (!$this->IsAdminRole()) {
+    public function DeliveryListSetOrder($orders){
+        if (!$this->IsAdminRole()){
             return null;
         }
 
@@ -607,8 +625,8 @@ class EShopCartManager extends Ab_ModuleManager {
         return true;
     }
 
-    public function DeliveryRemove($deliveryid) {
-        if (!$this->IsAdminRole()) {
+    public function DeliveryRemove($deliveryid){
+        if (!$this->IsAdminRole()){
             return null;
         }
 
@@ -621,22 +639,22 @@ class EShopCartManager extends Ab_ModuleManager {
     /**
      * @return EShopCartDiscountList
      */
-    public function DiscountList() {
-        if (!$this->IsViewRole()) {
+    public function DiscountList(){
+        if (!$this->IsViewRole()){
             return null;
         }
 
         $list = new EShopCartDiscountList();
         $rows = EShopCartQuery::DiscountList($this->db);
-        while (($d = $this->db->fetch_array($rows))) {
+        while (($d = $this->db->fetch_array($rows))){
             $list->Add(new EShopCartDiscount($d));
         }
         return $list;
     }
 
-    public function DiscountListToAJAX() {
+    public function DiscountListToAJAX(){
         $list = $this->DiscountList();
-        if (empty($list)) {
+        if (empty($list)){
             return null;
         }
 
@@ -649,8 +667,8 @@ class EShopCartManager extends Ab_ModuleManager {
      * @param object $sd
      * @return EShopCartDiscount
      */
-    public function DiscountSave($sd) {
-        if (!$this->IsAdminRole()) {
+    public function DiscountSave($sd){
+        if (!$this->IsAdminRole()){
             return null;
         }
 
@@ -664,23 +682,23 @@ class EShopCartManager extends Ab_ModuleManager {
         $sd->tl = $utmf->Parser($sd->tl);
         $sd->dsc = $utm->Parser($sd->dsc);
 
-        if ($discountid == 0) {
+        if ($discountid == 0){
             $discountid = EShopCartQuery::DiscountAppend($this->db, $sd);
         } else {
             EShopCartQuery::DiscountUpdate($this->db, $discountid, $sd);
         }
 
-        if (!empty($sd->def)) {
+        if (!empty($sd->def)){
             EShopCartQuery::DiscountDefaultSet($this->db, $discountid);
         }
 
         return $discountid;
     }
 
-    public function DiscountSaveToAJAX($sd) {
+    public function DiscountSaveToAJAX($sd){
         $discountid = $this->DiscountSave($sd);
 
-        if (empty($discountid)) {
+        if (empty($discountid)){
             return null;
         }
 
@@ -689,8 +707,8 @@ class EShopCartManager extends Ab_ModuleManager {
         return $ret;
     }
 
-    public function DiscountRemove($discountid) {
-        if (!$this->IsAdminRole()) {
+    public function DiscountRemove($discountid){
+        if (!$this->IsAdminRole()){
             return null;
         }
 
@@ -699,8 +717,8 @@ class EShopCartManager extends Ab_ModuleManager {
         return true;
     }
 
-    public function ConfigAdminToAJAX() {
-        if (!$this->IsAdminRole()) {
+    public function ConfigAdminToAJAX(){
+        if (!$this->IsAdminRole()){
             return null;
         }
 
@@ -711,13 +729,13 @@ class EShopCartManager extends Ab_ModuleManager {
         return $ret;
     }
 
-    private function EMailAdmin() {
+    private function EMailAdmin(){
         $ph = $this->module->GetPhrases()->Get('adm_emails');
         return $ph->value;
     }
 
-    public function ConfigAdminSave($sd) {
-        if (!$this->IsAdminRole()) {
+    public function ConfigAdminSave($sd){
+        if (!$this->IsAdminRole()){
             return null;
         }
 
@@ -732,39 +750,39 @@ class EShopCartManager extends Ab_ModuleManager {
     }
 
 
-    public function ArrayToObject($o) {
-        if (is_array($o)) {
+    public function ArrayToObject($o){
+        if (is_array($o)){
             $ret = new stdClass();
-            foreach ($o as $key => $value) {
+            foreach ($o as $key => $value){
                 $ret->$key = $value;
             }
             return $ret;
-        } else if (!is_object($o)) {
+        } else if (!is_object($o)){
             return new stdClass();
         }
         return $o;
     }
 
-    public function ToArray($rows, &$ids1 = "", $fnids1 = 'uid', &$ids2 = "", $fnids2 = '', &$ids3 = "", $fnids3 = '') {
+    public function ToArray($rows, &$ids1 = "", $fnids1 = 'uid', &$ids2 = "", $fnids2 = '', &$ids3 = "", $fnids3 = ''){
         $ret = array();
-        while (($row = $this->db->fetch_array($rows))) {
+        while (($row = $this->db->fetch_array($rows))){
             array_push($ret, $row);
-            if (is_array($ids1)) {
+            if (is_array($ids1)){
                 $ids1[$row[$fnids1]] = $row[$fnids1];
             }
-            if (is_array($ids2)) {
+            if (is_array($ids2)){
                 $ids2[$row[$fnids2]] = $row[$fnids2];
             }
-            if (is_array($ids3)) {
+            if (is_array($ids3)){
                 $ids3[$row[$fnids3]] = $row[$fnids3];
             }
         }
         return $ret;
     }
 
-    public function ToArrayId($rows, $field = "id") {
+    public function ToArrayId($rows, $field = "id"){
         $ret = array();
-        while (($row = $this->db->fetch_array($rows))) {
+        while (($row = $this->db->fetch_array($rows))){
             $ret[$row[$field]] = $row;
         }
         return $ret;
@@ -777,34 +795,37 @@ class EShopCartManager extends Ab_ModuleManager {
 
     /**
      * Статус заказа - Новый
+     *
      * @var integer
      */
     const ORDER_STATUS_NEW = 0;
 
     /**
      * Статус заказа - Принятый на исполнение
+     *
      * @var integer
      */
     const ORDER_STATUS_EXEC = 1;
 
     /**
      * Статус заказа - Закрытый
+     *
      * @var integer
      */
     const ORDER_STATUS_ARHIVE = 2;
 
 
-    public function DSProcess($name, $rows) {
+    public function DSProcess($name, $rows){
         $p = $rows->p;
         $db = $this->db;
 
-        switch ($name) {
+        switch ($name){
             case 'cart':
-                foreach ($rows->r as $r) {
-                    if ($r->f == 'd') {
+                foreach ($rows->r as $r){
+                    if ($r->f == 'd'){
                         $this->old_CartRemove($r->d->id);
                     }
-                    if ($r->f == 'u') {
+                    if ($r->f == 'u'){
                         $this->old_CartAppend($r->d);
                     }
                 }
@@ -812,10 +833,10 @@ class EShopCartManager extends Ab_ModuleManager {
         }
     }
 
-    public function DSGetData($name, $rows) {
+    public function DSGetData($name, $rows){
         $p = $rows->p;
 
-        switch ($name) {
+        switch ($name){
             case 'cart':
                 return $this->old_Cart($p->orderid);
 
@@ -852,8 +873,8 @@ class EShopCartManager extends Ab_ModuleManager {
 
     private $_productListData = null;
 
-    public function old_GetProductListData() {
-        if (!is_null($this->_productListData)) {
+    public function old_GetProductListData(){
+        if (!is_null($this->_productListData)){
             return $this->_productListData;
         }
 
@@ -866,7 +887,7 @@ class EShopCartManager extends Ab_ModuleManager {
         $adress = Abricos::$adress;
 
         $tag = $adress->dir[$adress->level - 1];
-        if (substr($tag, 0, 4) == 'page') {
+        if (substr($tag, 0, 4) == 'page'){
             $listPage = intval(substr($tag, 4, strlen($tag) - 4));
         }
 
@@ -882,16 +903,16 @@ class EShopCartManager extends Ab_ModuleManager {
      * Сформировать заказ клиента
      *
      */
-    public function old_OrderBuild($data) {
+    public function old_OrderBuild($data){
         $userid = $this->userid;
         $db = $this->db;
-        if ($this->user->id == 0 && $data->auth->type == 'reg') {
+        if ($this->user->id == 0 && $data->auth->type == 'reg'){
             // пользователь решил заодно и зарегистрироваться
             $login = $data->auth->login;
             $email = $data->auth->email;
             $pass = $data->auth->pass;
             $err = $this->user->GetManager()->Register($login, $pass, $email, true);
-            if ($err == 0) {
+            if ($err == 0){
                 $user = UserQuery::UserByName($db, $login);
                 $userid = $user['userid'];
             }
@@ -915,7 +936,7 @@ class EShopCartManager extends Ab_ModuleManager {
         EShopQuery::CartUserSessionFixed($db, $userid, $this->userSession);
 
         $rows = $this->CartByUserId($userid);
-        while (($row = $db->fetch_array($rows))) {
+        while (($row = $db->fetch_array($rows))){
             EShopQuery::OrderItemAppend($db, $orderid, $row['id'], $row['qty'], $row['pc']);
         }
         EShopQuery::CartClear($db, $userid, $this->userSession);
@@ -940,9 +961,9 @@ class EShopCartManager extends Ab_ModuleManager {
         ));
         $body = nl2br($body);
 
-        foreach ($arr as $email) {
+        foreach ($arr as $email){
             $email = trim($email);
-            if (empty($email)) {
+            if (empty($email)){
                 continue;
             }
 
@@ -953,13 +974,13 @@ class EShopCartManager extends Ab_ModuleManager {
     /**
      * Принять заказ на исполнение
      */
-    public function old_OrderAccept($orderid) {
-        if (!$this->IsAdminRole()) {
+    public function old_OrderAccept($orderid){
+        if (!$this->IsAdminRole()){
             return null;
         }
 
         $order = $this->old_Order($orderid);
-        if (empty($order)) {
+        if (empty($order)){
             return;
         }
         EShopQuery::old_OrderAccept($this->db, $orderid);
@@ -968,13 +989,13 @@ class EShopCartManager extends Ab_ModuleManager {
     /**
      * Исполнить заказ (закрыть)
      */
-    public function old_OrderClose($orderid) {
-        if (!$this->IsAdminRole()) {
+    public function old_OrderClose($orderid){
+        if (!$this->IsAdminRole()){
             return null;
         }
 
         $order = $this->old_Order($orderid);
-        if (empty($order)) {
+        if (empty($order)){
             return;
         }
         EShopQuery::old_OrderClose($this->db, $orderid);
@@ -985,13 +1006,13 @@ class EShopCartManager extends Ab_ModuleManager {
      *
      * @param integer $orderid идентификатор заказа
      */
-    public function old_OrderRemove($orderid) {
-        if (!$this->IsAdminRole()) {
+    public function old_OrderRemove($orderid){
+        if (!$this->IsAdminRole()){
             return null;
         }
 
         $order = $this->old_Order($orderid);
-        if (empty($order)) {
+        if (empty($order)){
             return;
         }
         EShopQuery::old_OrderRemove($this->db, $orderid);
@@ -1002,7 +1023,7 @@ class EShopCartManager extends Ab_ModuleManager {
      * Получить информацию для полей заказа товара
      *
      */
-    public function old_OrderLastInfo() {
+    public function old_OrderLastInfo(){
         return array(
             "fam" => "Ivanov",
             "im" => "Ivan",
@@ -1010,14 +1031,14 @@ class EShopCartManager extends Ab_ModuleManager {
         );
     }
 
-    public function old_CartUpdate($product) {
+    public function old_CartUpdate($product){
         $pcart = $this->old_CartItem($product->id);
-        if (empty($pcart)) { // Hacker???
+        if (empty($pcart)){ // Hacker???
             return;
         }
         $newQty = bkint($product->qty);
         EShopQuery::old_CartRemove($this->db, $product->id);
-        if ($newQty < 1) {
+        if ($newQty < 1){
             return;
         }
         return $this->old_CartAppend($product->id, $newQty);
@@ -1025,17 +1046,18 @@ class EShopCartManager extends Ab_ModuleManager {
 
     /**
      * Положить товар в корзину текущего пользователя
+     *
      * @return вернуть информацию по корзине
      */
-    public function old_CartAppend($productid, $quantity) {
+    public function old_CartAppend($productid, $quantity){
         $quantity = bkint($quantity);
-        if ($quantity < 1) {
+        if ($quantity < 1){
             return;
         }
         $db = $this->db;
 
         $product = $this->module->GetCatalogManager()->Element($productid, true);
-        if (empty($product)) {
+        if (empty($product)){
             // попытка добавить несуществующий продукт???
             return null;
         }
@@ -1045,13 +1067,13 @@ class EShopCartManager extends Ab_ModuleManager {
         return $this->old_CartInfo();
     }
 
-    public function old_CartItem($productid) {
+    public function old_CartItem($productid){
         return $this->db->fetch_array(EShopQuery::old_Cart($this->db, $this->userid, $this->userSession, $productid));
     }
 
-    public function old_CartRemove($productid) {
+    public function old_CartRemove($productid){
         $pcart = $this->old_CartItem($productid);
-        if (empty($pcart)) { // Hacker???
+        if (empty($pcart)){ // Hacker???
             return;
         }
         EShopQuery::old_CartRemove($this->db, $productid);
@@ -1060,7 +1082,7 @@ class EShopCartManager extends Ab_ModuleManager {
     /**
      * Получить информацию по корзине текущего пользователя
      */
-    public function old_CartInfo() {
+    public function old_CartInfo(){
         $info = EShopQuery::old_CartInfo($this->db, $this->userid, $this->userSession);
 
         return array(
@@ -1069,20 +1091,20 @@ class EShopCartManager extends Ab_ModuleManager {
         );
     }
 
-    public function old_Cart($orderid) {
+    public function old_Cart($orderid){
         $orderid = intval($orderid);
-        if ($orderid > 0) {
+        if ($orderid > 0){
             return $this->old_OrderItemList($orderid);
         }
         return EShopQuery::old_Cart($this->db, $this->userid, $this->userSession);
     }
 
-    public function CartByUserId($userid) {
+    public function CartByUserId($userid){
         return EShopQuery::old_Cart($this->db, $userid, $this->userSession);
     }
 
-    public function old_OrderTypeToStatus($type) {
-        switch ($type) {
+    public function old_OrderTypeToStatus($type){
+        switch ($type){
             case 'new':
                 return EShopCartManager::ORDER_STATUS_NEW;
             case 'exec':
@@ -1099,16 +1121,16 @@ class EShopCartManager extends Ab_ModuleManager {
      * Получить список заказов
      *
      */
-    public function old_Orders($type, $page, $limit) {
-        if (!$this->IsAdminRole()) {
+    public function old_Orders($type, $page, $limit){
+        if (!$this->IsAdminRole()){
             return null;
         }
         $status = $this->old_OrderTypeToStatus($type);
         return EShopQuery::old_Orders($this->db, $status, $page, $limit);
     }
 
-    public function old_OrdersCount($type) {
-        if (!$this->IsAdminRole()) {
+    public function old_OrdersCount($type){
+        if (!$this->IsAdminRole()){
             return null;
         }
         $status = $this->old_OrderTypeToStatus($type);
@@ -1118,10 +1140,10 @@ class EShopCartManager extends Ab_ModuleManager {
     /**
      * Получить информацию о заказе
      */
-    public function old_Order($orderid) {
-        if ($this->IsAdminRole()) {
+    public function old_Order($orderid){
+        if ($this->IsAdminRole()){
             return EShopQuery::old_Order($this->db, $orderid);
-        } else if ($this->userid > 0) {
+        } else if ($this->userid > 0){
             return EShopQuery::old_Order($this->db, $orderid, $this->userid);
         }
         return null;
@@ -1130,10 +1152,10 @@ class EShopCartManager extends Ab_ModuleManager {
     /**
      * Получить список продукции конкретного заказа
      */
-    public function old_OrderItemList($orderid) {
-        if ($this->IsAdminRole()) {
+    public function old_OrderItemList($orderid){
+        if ($this->IsAdminRole()){
             return EShopQuery::old_OrderItemList($this->db, $orderid);
-        } else if ($this->userid > 0) {
+        } else if ($this->userid > 0){
             return EShopQuery::old_OrderItemList($this->db, $orderid, $this->userid);
         }
         return null;

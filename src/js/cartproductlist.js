@@ -192,7 +192,7 @@ Component.entryPoint = function(NS){
                 this.elSetHTML({
                     'tl': prod.title,
                     'url': prod.url(),
-                    'pc': NS.numberFormat(prod.ext['price'])
+                    'pc': NS.numberFormat(catprod.price)
                 });
             }
             this.elSetHTML({

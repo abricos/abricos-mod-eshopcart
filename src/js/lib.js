@@ -98,13 +98,13 @@ Component.entryPoint = function(NS){
         update: function(d){
             this.productid = d['elid'] | 0;
             this.quantity = d['qt'] | 0;
-            this.price = d['pc'] | 0;
+            this.price = d['pc'] * 1;
         },
         getSum: function(){
             if (!L.isValue(this.product)){
                 return 0;
             }
-            return this.quantity * this.product.ext['price'];
+            return this.quantity * this.price;
         }
     });
     NS.CartProduct = CartProduct;
