@@ -341,6 +341,7 @@ class EShopCartManager extends Ab_ModuleManager {
         $ci->lnm = $utmf->Parser($ci->lnm);
         $ci->ph = $utmf->Parser($ci->ph);
         $ci->adr = $utmf->Parser($ci->adr);
+        $ci->eml = $utmf->Parser($ci->eml);
         $ci->dsc = $utmf->Parser($ci->dsc);
 
         $ip = $_SERVER['REMOTE_ADDR'];
@@ -373,6 +374,7 @@ class EShopCartManager extends Ab_ModuleManager {
             "fnm" => $ci->fnm,
             "lnm" => $ci->lnm,
             "ph" => $ci->ph,
+            "eml" => $ci->eml,
             "adr" => $ci->adr,
             "dsc" => $ci->dsc,
             "sitename" => SystemModule::$instance->GetPhrases()->Get('site_name')

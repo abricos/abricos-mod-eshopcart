@@ -150,7 +150,7 @@ class EShopCartQuery {
 				o.lastname as lnm,
 				o.email as eml,
 				o.phone as ph,
-				o.adress as adress,
+				o.adress as adr,
 				o.extinfo as dsc,
 				o.status as st,
 				sum(i.quantity) as qty,
