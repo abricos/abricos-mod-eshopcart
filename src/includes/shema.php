@@ -13,6 +13,41 @@ $updateManager = Ab_UpdateManager::$current;
 $db = Abricos::$db;
 $pfx = $db->prefix;
 
+// переход на версию, где функции покупки вынесены в отдельный модуль
+if ($updateManager->isUpdate('0.1.0.1')){
+
+    $rows = $db->query_read("
+        SHOW TABLES FROM ".$db->database."
+    ");
+
+    while (($row = $db->fetch_array($rows, Ab_Database::DBARRAY_NUM))){
+        switch ($row[0]){
+            case $pfx."eshp_payment":
+                $db->query_write("
+                    ALTER TABLE ".$pfx."eshp_payment
+                        ADD dateline int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
+                        ADD deldate int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
+                ");
+                break;
+            case $pfx."eshp_delivery":
+                $db->query_write("
+                    ALTER TABLE ".$pfx."eshp_delivery
+                        ADD def tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT 'По умолчанию',
+                        ADD descript TEXT NOT NULL COMMENT '',
+                        ADD dateline int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
+                        ADD deldate int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
+                ");
+                break;
+            case $pfx."eshp_discount":
+                $db->query_write("
+                    ALTER TABLE ".$pfx."eshp_discount
+                        ADD deldate int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
+                ");
+                break;
+        }
+    }
+}
+
 if ($updateManager->isInstall()){
     Abricos::GetModule('eshopcart')->permission->Install();
 
@@ -116,28 +151,6 @@ if ($updateManager->isInstall()){
 			deldate int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления',
 			PRIMARY KEY (discountid)
 		)".$charset);
-}
-
-if ($updateManager->isUpdate('0.1.0.1') && !$updateManager->isInstall()){
-
-    $db->query_write("
-		ALTER TABLE ".$pfx."eshp_payment
-			ADD dateline int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
-			ADD deldate int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
-	");
-
-    $db->query_write("
-		ALTER TABLE ".$pfx."eshp_delivery
-			ADD def tinyint(1) unsigned NOT NULL DEFAULT 0 COMMENT 'По умолчанию',
-			ADD descript TEXT NOT NULL COMMENT '',
-			ADD dateline int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата создания',
-			ADD deldate int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
-	");
-
-    $db->query_write("
-		ALTER TABLE ".$pfx."eshp_discount
-			ADD deldate int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'Дата удаления'
-	");
 }
 
 if ($updateManager->isUpdate('0.1.3') && !$updateManager->isInstall()){
