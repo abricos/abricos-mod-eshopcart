@@ -8,6 +8,11 @@
 
 $brick = Brick::$builder->brick;
 $man = EShopCartModule::$instance->GetManager();
+$modEshop = Abricos::GetModule('eshop');
+if (empty($modEshop)){
+    $brick->content = "";
+    return;
+}
 $cMan = EShopModule::$instance->GetManager()->cManager;
 
 $cpList = $man->CartProductList();
