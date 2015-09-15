@@ -42,12 +42,12 @@ Component.entryPoint = function(NS){
             var TM = buildTemplate(this, 'widget');
             container.innerHTML = TM.replace('widget');
 
-            new YAHOO.widget.TabView(TM.getElId('widget.id'));
+            new YAHOO.widget.TabView(TM.gel('widget.id'));
             this.page = {
-                'new': new OrderListNew(this, TM.getElId('widget.new')),
-                'exec': new OrderListExec(this, TM.getElId('widget.exec')),
-                'arhive': new OrderListArhive(this, TM.getElId('widget.arhive')),
-                'recycle': new OrderListRecycle(this, TM.getElId('widget.recycle'))
+                'new': new OrderListNew(this, TM.gel('widget.new')),
+                'exec': new OrderListExec(this, TM.gel('widget.exec')),
+                'arhive': new OrderListArhive(this, TM.gel('widget.arhive')),
+                'recycle': new OrderListRecycle(this, TM.gel('widget.recycle'))
             };
             DATA.request();
         },
@@ -111,26 +111,18 @@ Component.entryPoint = function(NS){
     };
     YAHOO.extend(OrderList, Brick.widget.TablePage, {
         initTemplate: function(){
-            return this._T['list'];
+            return this._TM.replace('list');
         },
         renderTableAwait: function(){
-            var TM = this._TM, T = this._T;
+            var TM = this._TM;
             TM.getEl("list.table").innerHTML = TM.replace('table', {
-                'btns': this.extButtonsCount > 0 ? T['btnh' + this.listType] : '',
-                'rows': T['rowwait']
+                'btns': this.extButtonsCount > 0 ? TM.replace('btnh' + this.listType) : '',
+                'rows': TM.replace('rowwait')
             });
         },
         renderRow: function(di){
             var TM = this._TM, T = this._T;
 
-            /*
-             var user = "";
-             if (di['uid'] > 0){
-             user = TM.replace('usertpname', {'uid': di['uid'], 'unm': di['unm']});
-             }else{
-             user = TM.replace('usertpip', { 'uid': di['uid'], 'unm': di['ip']});
-             }
-             /**/
             return TM.replace('row', {
                 'btns': this.extButtonsCount > 0 ? T['btn' + this.listType] : '',
                 'fnm': di['fnm'],
