@@ -22,5 +22,3 @@ $brick->content = Brick::ReplaceVarByData($brick->content, array(
     "summ" => number_format($cpList->sum, 2, ',', ' '),
     "currency" => $cMan->CurrencyDefault()->postfix
 ));
-
-?>

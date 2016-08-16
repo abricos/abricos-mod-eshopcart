@@ -15,7 +15,7 @@ class EShopCartModule extends Ab_Module {
 
     private $_manager = null;
 
-    public function EShopCartModule() {
+    public function __construct(){
         // версия модуля
         $this->version = "0.1.3";
 
@@ -30,15 +30,15 @@ class EShopCartModule extends Ab_Module {
     /**
      * @return EShopCartManager
      */
-    public function GetManager() {
-        if (is_null($this->_manager)) {
+    public function GetManager(){
+        if (is_null($this->_manager)){
             require_once 'includes/manager.php';
             $this->_manager = new EShopCartManager($this);
         }
         return $this->_manager;
     }
 
-    public function GetContentName() {
+    public function GetContentName(){
         return "";
     }
 
@@ -52,8 +52,7 @@ class EShopCartAction {
 
 class EShopCartPermission extends Ab_UserPermission {
 
-    public function EShopCartPermission(EShopCartModule $module) {
-
+    public function __construct(EShopCartModule $module){
         $defRoles = array(
             new Ab_UserRole(EShopCartAction::VIEW, Ab_UserGroup::GUEST),
             new Ab_UserRole(EShopCartAction::VIEW, Ab_UserGroup::REGISTERED),
@@ -69,7 +68,7 @@ class EShopCartPermission extends Ab_UserPermission {
         parent::__construct($module, $defRoles);
     }
 
-    public function GetRoles() {
+    public function GetRoles(){
         return array(
             EShopCartAction::VIEW => $this->CheckAction(EShopCartAction::VIEW),
             EShopCartAction::WRITE => $this->CheckAction(EShopCartAction::WRITE),
@@ -79,5 +78,3 @@ class EShopCartPermission extends Ab_UserPermission {
 }
 
 Abricos::ModuleRegister(new EShopCartModule());
-
-?>

@@ -1164,5 +1164,3 @@ class EShopCartManager extends Ab_ModuleManager {
     }
 
 }
-
-?>

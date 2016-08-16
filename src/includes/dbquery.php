@@ -776,6 +776,3 @@ class EShopQuery {
         return $db->query_write($sql);
     }
 }
-
-
-?>

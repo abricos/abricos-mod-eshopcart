@@ -160,5 +160,3 @@ if ($updateManager->isUpdate('0.1.3') && !$updateManager->isInstall()){
 			ADD email varchar(50) NOT NULL DEFAULT '' COMMENT 'E-mail'
 	");
 }
-
-?>

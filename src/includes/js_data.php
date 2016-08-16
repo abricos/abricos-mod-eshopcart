@@ -59,5 +59,3 @@ foreach ($ds->ts as $ts) {
 }
 
 $brick->param->var['obj'] = json_encode($ret);
-
-?>
